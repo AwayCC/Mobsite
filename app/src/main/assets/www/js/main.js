@@ -13,6 +13,7 @@ var myResponses = {
         if(this.statusBar != null)
             this.statusBar.innerHTML = "double tap at \("+x+", "+y+").";
         console.log("double tap.");
+        Android.openPhotoDialog();
     },
     onLongPressStart : function(){
         if(this.statusBar != null)
@@ -44,6 +45,7 @@ var myResponses = {
         if(this.statusBar != null)
             this.statusBar.innerHTML = "2FingerMoveRight.";
         console.log("2FingerMoveRight.");
+        Android.getProjectsPathAndContentJSON();
     },
     onPinchIn : function(){
         if(this.statusBar != null)

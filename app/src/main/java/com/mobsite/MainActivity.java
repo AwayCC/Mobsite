@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -26,6 +28,26 @@ import org.apache.cordova.Config;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.api.CordovaInterface;
 import org.apache.cordova.api.CordovaPlugin;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
+import java.util.Date;
+import java.util.Queue;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +56,8 @@ public class MainActivity extends Activity
                          implements CordovaInterface {
 
     private static final String _logTag = "MainActivity";
+    private static String projectName = "";
+    private String projectPath;
 
     protected CordovaWebView cwv = null;
     protected FrameLayout mainll;
@@ -44,6 +68,12 @@ public class MainActivity extends Activity
     protected Vibrator vibrator;
     private boolean splash = true;
 
+    // Variables for importing photos.
+    private static final int REQUEST_GALLERY = 11;
+    private static final int REQUEST_CAMERA = 13;
+    private Uri newPhoto;
+    private int imgCount = 1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.v(_logTag, "onCreate(): starts.");
@@ -52,6 +82,13 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_activity);
 
+        // Get project name from intent.
+        if (getIntent().getExtras() != null){
+            projectName = getIntent().getExtras().getString("projectName");
+            projectPath = getFilesDir() +File.separator+ getResources().getString(R.string.user_projects_path) +File.separator+ projectName;
+        }
+        Log.v(_logTag, projectName);
+
         Log.v(_logTag, "onCreate(): find views & preparation.");
         splashVid = (VideoView) findViewById(R.id.splash_vid);
         splashView = (RelativeLayout) findViewById(R.id.splash_view);
@@ -59,8 +96,8 @@ public class MainActivity extends Activity
         splashVid.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                if(splash) {
-                    splashVid.seekTo(0 * 1000);
+                if (splash) {
+                    splashVid.seekTo(0);
                     splashVid.start();
                 } else {
                     splashView.setVisibility(View.GONE);
@@ -136,6 +173,59 @@ public class MainActivity extends Activity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+
+        // the following code is for using camera.
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_GALLERY:
+                    Log.v(_logTag, "gallery");
+                    if (intent != null) {
+                        newPhoto = intent.getData();
+                    }
+                    break;
+                case REQUEST_CAMERA:
+                    Log.v(_logTag, "camera");
+                    try {
+                        File internalStorage = new File(projectPath, "img");
+                        if (!internalStorage.exists())
+                            internalStorage.mkdirs();
+
+                        File savedImage = new File(internalStorage, "img" + imgCount + ".jpg");
+                        while (savedImage.exists()){
+                            imgCount++;
+                            savedImage = new File(internalStorage, "img" + imgCount + ".jpg");
+                        }
+                        Log.v("pix", savedImage.getPath());
+                        savedImage.createNewFile();
+
+                        OutputStream fout = new BufferedOutputStream(new FileOutputStream(savedImage));
+                        InputStream in = new BufferedInputStream(getContentResolver().openInputStream(newPhoto));
+                        /*String mLine = reader.readLine();
+                        while (mLine != null) {
+                            fout.write(mLine.getBytes("utf-8"));
+                            mLine = reader.readLine();
+                        }
+                        */
+                        int c;
+                        while ((c = in.read()) != -1){
+                            fout.write(c);
+                        }
+                        fout.flush();
+                        //byte[] buffer = new byte[5 * 1024];
+                        //while (in.read(buffer) > -1)
+                        //    fout.write(buffer);
+                        fout.close();
+                    } catch (FileNotFoundException fne) {
+                        Log.e(_logTag, "no file.");
+                        fne.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
+            }
+        }// end
+
         CordovaPlugin callback = this.activityResultCallback;
         if (callback != null) {
             callback.onActivityResult(requestCode, resultCode, intent);
@@ -153,7 +243,7 @@ public class MainActivity extends Activity
     /*
     * The following function is called in onCreate() to set up gestures of CordovaWebView.
     */
-    private void setCordovaWebViewGestures(final CordovaWebView cordovaWV){
+    private void setCordovaWebViewGestures(final CordovaWebView cordovaWV) {
         /*
         * @params CordovaWebView cwv : The embedded CordovaWebView of the activity.
         * @return void               : No return needed.
@@ -193,18 +283,15 @@ public class MainActivity extends Activity
     }
 
 
-    /*
-    * JavascriptInterface functions
-    */
+    /**
+     * JavascriptInterface functions
+     */
 
     @JavascriptInterface
-    public void showToast(String msg){
-        Log.v("WebInterface", "fired");
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
+    public void showToast(String msg) { Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(); }
 
     @JavascriptInterface
-    public void showDialog(String msg){
+    public void showDialog(String msg) {
         Log.v("JSinterface", msg);
         new AlertDialog.Builder(this)
                 .setTitle("html code")
@@ -219,12 +306,13 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public void hideSplashView(){
-        splash = false;
-    }
+    public void hideSplashView() { splash = false; }
 
     @JavascriptInterface
-    public void setSelectedHTML(String s){
+    public String getProjectName() { return projectName; }
+
+    @JavascriptInterface
+    public void setSelectedHTML(String s) {
         selectedHTML = s;
         runOnUiThread(new Runnable() {
             @Override
@@ -234,9 +322,9 @@ public class MainActivity extends Activity
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 mainll.addView(shadow);
 
-                String prefix = "<link rel=\"stylesheet\" href=\"android_asset/css/bootstrap.min.css\">\n"+
-                                "<script src=\"android_asset/js/jquery-1.11.1.min.js\"></script>\n" +
-                                "<script src=\"android_asset/js/bootstrap.min.js\"></script>\n";
+                String prefix = "<link rel=\"stylesheet\" href=\"android_asset/css/bootstrap.min.css\">\n" +
+                        "<script src=\"android_asset/js/jquery-1.11.1.min.js\"></script>\n" +
+                        "<script src=\"android_asset/js/bootstrap.min.js\"></script>\n";
                 selectedHTML = prefix + selectedHTML;
                 shadow.loadData(selectedHTML, "text/html", "utf-8");
             }
@@ -244,11 +332,11 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public void startDrag(){
+    public void startDrag() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(shadow == null){
+                if (shadow == null) {
                     vibrator.vibrate(100);
                     return;
                 }
@@ -273,5 +361,102 @@ public class MainActivity extends Activity
                 cwv.startDrag(null, myShadowBuilder, null, 0);
             }
         });
+    }
+
+    @JavascriptInterface
+    public void openPhotoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("My Title");
+        builder.setItems(new CharSequence[]{"Gallery", "Camera"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0:
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("image/*");
+                        Intent choose = Intent.createChooser(intent, "Choose a Picture From");
+                        startActivityForResult(choose, REQUEST_GALLERY);
+                        break;
+                    case 1:
+                        Intent getCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+                        File cameraHolder;
+                        /*
+                        if( Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ) {
+                            cameraHolder = new File(Environment.getExternalStorageDirectory(), "my_test_dir");
+                        } else
+                            cameraHolder = getCacheDir();
+                        */
+
+                        cameraHolder = new File(getCacheDir(), "mobsite");
+                        if (!cameraHolder.exists())
+                            cameraHolder.mkdirs();
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+                        String timestamp = dateFormat.format(new Date());
+                        String imageFilename = "picture" + timestamp + ".jpg";
+
+                        File photo = new File(cameraHolder, imageFilename);
+                        try {
+                            if (!photo.exists())
+                                photo.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Log.v(_logTag, (photo.isFile())?photo.getPath():"nope");
+                        newPhoto = Uri.fromFile(photo);
+                        getCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                        startActivityForResult(getCamera, REQUEST_CAMERA);
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
+
+    @JavascriptInterface
+    public String getProjectsPathAndContentJSON() {
+        JSONArray projects = new JSONArray();
+        File projectStorage = new File(projectPath);
+        Log.v("project Storage", projectStorage.getPath());
+        ArrayDeque<File> paths = new ArrayDeque<File>();
+        paths.addLast(projectStorage);
+
+        while(!paths.isEmpty()) {
+            JSONObject project = new JSONObject();
+            File f = paths.getFirst();
+            //Log.v("file", f.getPath());
+            if(f.isDirectory()) {
+                File[] files = f.listFiles();
+                for (File file : files)
+                    paths.addLast(file);
+
+            } else {
+                try{
+                    FileInputStream fin = new FileInputStream(f);
+                    byte[] buffer = new byte[(int)f.length()];
+                    fin.read(buffer);
+
+                    String content = new String(buffer, "utf-8");
+                    Log.v("path", f.getPath());
+                    //Log.v("content", content);
+
+                    String fileName = f.getPath().substring(projectPath.length()+1);
+                    project.put("content", content);
+                    project.put("path", fileName);
+                    projects.put(project);
+                }
+                catch (JSONException jsonE){ jsonE.printStackTrace();}
+                catch (IOException e) { e.printStackTrace(); }
+            }
+
+            paths.removeFirst();
+        }
+        return projects.toString();
+    }
+
+    @JavascriptInterface
+    public void saveProject() {
+
     }
 }
