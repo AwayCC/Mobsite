@@ -309,7 +309,7 @@ public class MainActivity extends Activity
     public void hideSplashView() { splash = false; }
 
     @JavascriptInterface
-    public String getProjectName() { return projectName; }
+    public String getProjectPath() { return projectPath; }
 
     @JavascriptInterface
     public void setSelectedHTML(String s) {
