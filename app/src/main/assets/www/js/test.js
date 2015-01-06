@@ -15,17 +15,14 @@ var settingshow = false;
 var controlpanelshow = false;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
-    $("#innercontent").first().load("./test.html", function()          
+    $("#innercontent").first().load("./www/index.html", function()          
     {
         scwidth=document.body.clientWidth;
         scheight=document.body.clientHeight;
     });
+   // $("innercontent").src="test.html";
     header=$("#header");
     footer=$("#footer");
-    
-    $("#innercontent").click(function(event) {
-        alert(event.target.id);
-    });
     $("#addbtn").click(function(event) {
        Addpaneltoggle();
     });
@@ -140,6 +137,7 @@ function Addpanelshow()
     if(!onanimate)
     {
     onanimate = true;
+    $( "#Add-panel" ).css("left","2%");
     $( "#Add-panel" ).transition({ opacity: 1 });
     $( "#Add-panel" ).transition({ x: 100},function(){onanimate=false;});
     addpanelshow=!addpanelshow;
@@ -151,9 +149,11 @@ function Addpanelhide()
     if(!onanimate)
     {
     onanimate = true;
+    
     $( "#Add-panel" ).transition({ opacity: 0 });
-    $( "#Add-panel" ).transition({ x: 0},function(){onanimate=false;});
+    $( "#Add-panel" ).transition({ x: 0},function(){onanimate=false;$( "#Add-panel" ).css("left","-25%");});
     addpanelshow=!addpanelshow;
+        
     }
 };
 function Addpaneltoggle()
@@ -172,6 +172,7 @@ function Settingpaneltoggle()
 };
 function Settingpanelshow()
 {
+    $( "#setting-panel" ).css("top","11%");
     $('#setting').transition({ rotate: '180deg' });
         $( "#setting-panel" ).transition({ opacity: 1 });
     settingshow=!settingshow;
@@ -179,7 +180,7 @@ function Settingpanelshow()
 function Settingpanelhide()
 {
     $('#setting').transition({ rotate: '0deg' });
-        $( "#setting-panel" ).transition({ opacity: 0 });
+        $( "#setting-panel" ).transition({ opacity: 0 },function(){$( "#setting-panel" ).css("top","-80%");});
     settingshow=!settingshow;
 };
 function Controlpaneltoggle()

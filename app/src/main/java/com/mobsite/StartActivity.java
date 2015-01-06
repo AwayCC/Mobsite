@@ -50,6 +50,7 @@ public class StartActivity extends Activity {
     Openre_Listener openre_listener;
     Newbtn_Listener newbtn_listener;
     Newre_Listener newre_listener;
+    TranslateAnimation aniright;
     Choose_Listener choose_listener;
     View selected;
     private List<Map<String, String>> planetsList = new ArrayList<Map<String, String>>();

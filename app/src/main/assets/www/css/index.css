@@ -40,7 +40,7 @@ border-radius: 10px;
     width: 20%;
     position: fixed;
     left: 75.2%;
-    top:11%;
+    top:-80%;
     background-color: #464342;
 }
 .bubble_top:after 
@@ -89,7 +89,7 @@ top: 8%;
     background-color: #464342;
     color: white;
     top: 17%;
-    left: 2%;
+    left: -25%;
    
     border-radius: 0.75em;
     padding:0;
@@ -102,7 +102,7 @@ top: 8%;
     height: 8%;
     min-height: 20px;
     width: 100%;
-    background-color: #242525;
+    background-color: #242525;  
     border-top-left-radius: 0.75em;
     border-top-right-radius: 0.75em;
     display: table;
@@ -114,6 +114,15 @@ top: 8%;
     text-align: center;
     vertical-align: middle;
     display: table-cell;
+}
+#Addmenu
+{
+    height: 88%;
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    background-color: #128FC1;
 }
 #Add-panel::before {
     color: #000;
@@ -207,7 +216,8 @@ body {
 }
 #innercontent
 {
-    position:  absolute;
+    //overflow: scroll;
+    position:  relative;
     top:20%;
     left: 15%;
     margin-top: -50px;
@@ -216,8 +226,8 @@ body {
         background-image: none;
     background-color: white;
     width: 87%;
-    height: auto;
-    min-height: 87%;
+    //height: 80%;
+    //min-height: 80%;
     box-shadow: 0px 10px 15px #161415;
 }
 h1 {
