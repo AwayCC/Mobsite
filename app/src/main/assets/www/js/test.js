@@ -15,124 +15,18 @@ var settingshow = false;
 var controlpanelshow = false;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
-    $("#innercontent").first().load("./www/index.html", function()          
-    {
-        scwidth=document.body.clientWidth;
-        scheight=document.body.clientHeight;
-    });
-   // $("innercontent").src="test.html";
-    header=$("#header");
-    footer=$("#footer");
-    $("#addbtn").click(function(event) {
-       Addpaneltoggle();
-    });
-    $("#test").click(function(event) {
-       Shadowcover();
-    });
-    $("#tool").click(function(event) {
-       Controlpaneltoggle();
-    });
-    $("#shadow").click(function(event){
-        Shadowfade();
-    });
-    $("#fullscreen").click(function(event){
-        fullscreenpreview();
-    });
-    $("#setting").click(function(event) {
-       Settingpaneltoggle();
-    });
-    $ ("#controlpanel").on("touchstart click",function(startEvent)
-    {
-        if(pos)
-        {
-        $( "#controlpanel" ).css("left","-100%");
-        $( "#controlcontent" ).transition({ x: -controlpro });
-        $( "#controlpanel" ).transition({ opacity: 0},300,'snap',function(){
-            pos=false;
-        });
-        }
-        
-    });
-    $ ("#controlpanel").on("touchstart click",function(startEvent)
-    {
-        /*if(!ter)
-        {
-        header.transition({y:-terheight});
-        footer.transition({y:terheight});
-        ter=true;
-        }
-        else
-        {
-            header.transition({y:0});
-            footer.transition({y:0});
-            ter=false;
-        }*/
-    });
-    $ ("#innercontent").on("touchstart click",function(startEvent)
-    {
-        /*if(!ter)
-        {
-        header.transition({y:-terheight});
-        footer.transition({y:terheight});
-        ter=true;
-        }
-        else
-        {
-            header.transition({y:0});
-            footer.transition({y:0});
-            ter=false;
-        }*/
-    });
-    /*interact('.draggable')
-    .draggable({
-        // allow dragging of multple elements at the same time
-        max: Infinity,
-
-        // call this function on every dragmove event
-        onmove: function (event) {
-            var target = event.target,
-                // keep the dragged position in the data-x/data-y attributes
-                x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-            // translate the element
-            target.style.webkitTransform =
-            target.style.transform =
-                'translate(' + x + 'px, ' + y + 'px)';
-
-            // update the posiion attributes
-            target.setAttribute('data-x', x);
-            target.setAttribute('data-y', y);
-        },
-        // call this function on every dragend event
-        onend: function (event) {
-            var textEl = event.target.querySelector('p');
-            
-            textEl && (textEl.textContent =
-                'moved a distance of '
-                + (Math.sqrt(event.dx * event.dx +
-                             event.dy * event.dy)|0) + 'px');
-        }
-    })
-    // enable inertial throwing
-    .inertia(true)
-    // keep the element within the area of it's parent
-    .restrict({
-        drag: "parent",
-        endOnly: true,
-        elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-    });
-
-    // allow more than one interaction at a time
-    interact.maxInteractions(Infinity);*/
-    
+    $("#innercontent").first().load("./www/index.html");
+    $("#Addmenu").first().load("./elements.html");
+    scwidth=document.body.clientWidth;
+    scheight=document.body.clientHeight;
+    EnvironmentInit();
 });
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
     alert(rect.width);
     return true;
 };
-function Addpanelshow()
+function AddPanelShow()
 {
     if(!onanimate)
     {
@@ -144,7 +38,7 @@ function Addpanelshow()
     }
     
 };
-function Addpanelhide()
+function AddPanelHide()
 {
     if(!onanimate)
     {
@@ -156,46 +50,46 @@ function Addpanelhide()
         
     }
 };
-function Addpaneltoggle()
+function AddPanelToggle()
 {
     if(!addpanelshow)
-    Addpanelshow();
+    AddPanelShow();
     else
-    Addpanelhide();
+    AddPanelHide();
 };
-function Settingpaneltoggle()
+function SettingPanelToggle()
 {
     if(!settingshow)
-        Settingpanelshow();
+        SettingPanelShow();
     else
-       Settingpanelhide(); 
+       SettingPanelHide();
 };
-function Settingpanelshow()
+function SettingPanelShow()
 {
     $( "#setting-panel" ).css("top","11%");
     $('#setting').transition({ rotate: '180deg' });
         $( "#setting-panel" ).transition({ opacity: 1 });
     settingshow=!settingshow;
 };
-function Settingpanelhide()
+function SettingPanelHide()
 {
     $('#setting').transition({ rotate: '0deg' });
         $( "#setting-panel" ).transition({ opacity: 0 },function(){$( "#setting-panel" ).css("top","-80%");});
     settingshow=!settingshow;
 };
-function Controlpaneltoggle()
+function ControlPanelToggle()
 {
     if(!controlpanelshow)
-        Controlpanelshow();
+        ControlPanelShow();
     else
-       Controlpanelhide();
+        ControlPanelHide();
 };
-function Controlpanelshow()
+function ControlPanelShow()
 {
     $('#tool').transition({ rotate: '90deg' });
     controlpanelshow=!controlpanelshow;
 };
-function Controlpanelhide()
+function ControlPanelHide()
 {
     $('#tool').transition({ rotate: '0deg' });
     controlpanelshow=!controlpanelshow;
@@ -205,31 +99,33 @@ function OrientationChanged()
     scwidth=$("#innercontent").width();
     controlpro=scwidth*0.07;
 };
-function Shadowcover()
+function ShadowCover()
 {
     $("#shadow").transition({ x:scwidth});
 };
 
-function fullscreenpreview()
+function FullScreenPreview()
 {    $("#innercontent").transition({ y:-$("#innercontent").height()*2});
      $("#header").transition({ y:-scheight},600,function(){
      $("#preview-panel").first().load("./test.html", function()          
     {
         $("#preview-panel").css("height","auto");
-         
-        $("#preview-panel").transition({ y:scheight},function()
-        {
-            
-            
-            $("#innercontent").transition({ opacity:0});
-        
-        });        
+        $("#preview-panel").transition({ y:scheight},function(){$("#innercontent").transition({ opacity:0});});        
     });
     });
     
     
 };
-function Shadowfade()
+function EnvironmentInit()
+{
+    $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
+    $("#test")      .on("touchstart click",function(startEvent){ShadowCover();});
+    $("#tool")      .on("touchstart click",function(startEvent){ControlPanelToggle();});
+    $("#shadow")    .on("touchstart click",function(startEvent){ShadowFade();});
+    $("#fullscreen").on("touchstart click",function(startEvent){FullScreenPreview();});
+    $("#setting")   .on("touchstart click",function(startEvent){SettingPanelToggle();});
+}
+function ShadowFade()
 {
     $("#shadow").transition({ x:0});
     $("#shadow").transition({ x:0});

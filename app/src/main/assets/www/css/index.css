@@ -196,10 +196,10 @@ body {
 #shadow
 {
     position: fixed;
-    left: -100%;
+    left: -200%;
     top: 0;
     height: 100%;
-    width: 100%;
+    width: 200%;
     background-color: black;
     opacity: 0.5;
     z-index: 10;
