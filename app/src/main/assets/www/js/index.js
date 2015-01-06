@@ -13,10 +13,10 @@ var addpanelshow = false;
 var onanimate = false;
 var settingshow = false;
 var controlpanelshow = false;
+var githubpanelshow=false;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
     $("#innercontent").first().load("./www/index.html");
-    $("#Addmenu").first().load("./elements.html");
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
@@ -124,11 +124,27 @@ function EnvironmentInit()
     $("#shadow")    .on("touchstart click",function(startEvent){ShadowFade();});
     $("#fullscreen").on("touchstart click",function(startEvent){FullScreenPreview();});
     $("#setting")   .on("touchstart click",function(startEvent){SettingPanelToggle();});
+    $("#github")    .on("touchstart click",function(startEvent){githubPanelShow();})
+}
+function githubPanelShow()
+{
+    githubpanelshow=true;
+    ShadowCover();
+    $("#githubPanel").css("opacity","0");
+    $("#githubPanel").css("left","15%");
+    setTimeout("$('#githubPanel').transition({opacity: 1 })",500);
+}
+function githubPanelHide()
+{
+    $('#githubPanel').transition({opacity: 0 });
+    setTimeout("$('#githubPanel').css('left','-1000%');githubpanelshow=false;",500);
 }
 function ShadowFade()
 {
-    $("#shadow").transition({ x:0});
-    $("#shadow").transition({ x:0});
+    if(githubpanelshow)
+     githubPanelHide();
+    setTimeout("$('#shadow').transition({ x:0});",500);
+    
 };
 window.addEventListener('orientationchange', OrientationChanged);
 function sleep(milliseconds) {

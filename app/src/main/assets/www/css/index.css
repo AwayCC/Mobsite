@@ -117,12 +117,15 @@ top: 8%;
 }
 #Addmenu
 {
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: auto;
     height: 88%;
     margin-top: 5%;
     margin-left: 5%;
     margin-right: 5%;
     width: 90%;
-    background-color: #128FC1;
+    background-color: transparent;
 }
 #Add-panel::before {
     color: #000;
@@ -495,11 +498,25 @@ a.option_container img.displayed {
     border-top-left-radius: 8px;
     text-align: center;
 }
+#githubPanel
+{
+    background-color: white;
+    position: fixed;
+    width: 70%;
+    height: 50%;
+    left: 15%;
+    top: 25%;
+    z-index: 200;
+}
 #toolmark img
 {
     padding-top: 10%;
     height: 90%;
     width: auto;
+}
+.item
+{
+    width: 100%;
 }
 #toolpanel
 {
@@ -572,6 +589,38 @@ a.image_container img {
     position: absolute;
     right: 0;
     bottom: 0;
+}
+.element
+{
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 20%;
+   border: 2px;
+    border-style: dotted;
+    border-color: #242525;
+    background-color: transparent;
+    position: relative;
+    text-align: center;
+}
+.element h1
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: block;
+    color: white;
+    text-align: center;
+}
+.element p
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: block;
+    color: white;
+    text-align: center;
 }
 #menuimg
 {
