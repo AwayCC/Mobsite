@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -60,7 +61,7 @@ public class MainActivity extends Activity
     private String projectPath;
 
     protected CordovaWebView cwv = null;
-    protected FrameLayout mainll;
+    protected LinearLayout mainll;
     protected String selectedHTML;
     protected CordovaWebView shadow;
     protected VideoView splashVid;
@@ -108,7 +109,7 @@ public class MainActivity extends Activity
         splashVid.start();
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        mainll = (FrameLayout) findViewById(R.id.mainLL);
+        mainll = (LinearLayout) findViewById(R.id.mainLL);
         LayoutTransition splashTrans = new LayoutTransition();
         splashTrans.enableTransitionType(LayoutTransition.DISAPPEARING);
         mainll.setLayoutTransition(splashTrans);
@@ -320,7 +321,9 @@ public class MainActivity extends Activity
                 shadow = new CordovaWebView(MainActivity.this);
                 shadow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
-                mainll.addView(shadow);
+                splashView.addView(shadow);
+                shadow.setAlpha(0);
+                shadow.invalidate();
 
                 String prefix = "<link rel=\"stylesheet\" href=\"android_asset/css/bootstrap.min.css\">\n" +
                         "<script src=\"android_asset/js/jquery-1.11.1.min.js\"></script>\n" +
@@ -341,7 +344,7 @@ public class MainActivity extends Activity
                     return;
                 }
                 shadow.layout(0, 0, shadow.getWidth(), shadow.getContentHeight());
-                mainll.removeView(shadow);
+                splashView.removeView(shadow);
                 View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(shadow) {
                     @Override
                     public void onProvideShadowMetrics(Point size, Point touch) {
