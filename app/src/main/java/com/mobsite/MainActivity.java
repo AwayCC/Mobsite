@@ -318,9 +318,11 @@ public class MainActivity extends Activity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                splashView.removeView(shadow);
                 shadow = new CordovaWebView(MainActivity.this);
                 shadow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
+
                 splashView.addView(shadow);
                 shadow.setAlpha(0);
                 shadow.invalidate();
@@ -344,7 +346,6 @@ public class MainActivity extends Activity
                     return;
                 }
                 shadow.layout(0, 0, shadow.getWidth(), shadow.getContentHeight());
-                splashView.removeView(shadow);
                 View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(shadow) {
                     @Override
                     public void onProvideShadowMetrics(Point size, Point touch) {

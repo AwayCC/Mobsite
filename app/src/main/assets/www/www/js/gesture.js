@@ -166,9 +166,11 @@ function setGestureListener(responses){
    var onTouchEnd = function(event){
       touch_up = true;
       if(event.touches.length == 0) {
-         if(touch_longPress)
+         if(touch_longPress){
              responses.onLongPressEnd();
-         touch_longPress = false;
+             touch_longPress = false;
+             return;
+         }
       }
           
       if(!touch_2Finger && !touch_longPress){
