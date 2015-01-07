@@ -4,11 +4,11 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>NM Final Default</title>
-    <link rel="stylesheet" href="www/framework.css">
+    <link rel="stylesheet" href="framework.css">
     <!-- Bootstrap -->
 </head>
 
-<body id="bd">
+<body id="innercontent">
     <div id="myGestureListener">
         <span id="gestureStatus"></span> : (<span id="x"></span>,<span id="y"></span>)
     </div>
@@ -23,12 +23,12 @@
                 <h2>Beautifully designed,<br/> gracefully used.</h2>
             </div>
             <div class="column selectable col-md-7">
-                <img src="www/image/01.jpg" />
+                <img src="image/01.jpg" />
             </div>
         </div>
         <div id="slide2" class="selectable row slide">
             <div class="column selectable col-md-7">
-                <img src="www/image/02.jpg" />
+                <img src="image/02.jpg" />
             </div>
             <div class="column selectable col-md-5">
                 <h2>Finger-Oriented.</h2>
@@ -42,15 +42,15 @@
                 <div class="selectable row">
                     <div class="column selectable col-md-4">
                         <h3 class="selectable">Designer</h3>
-                        <img class="selectable" src="www/image/03.jpg" style="width:100%" />
+                        <img class="selectable" src="image/03.jpg" style="width:100%" />
                     </div>
                     <div class="column selectable col-md-4">
                         <h3 class="selectable">Programmer</h3>
-                        <img class="selectable" src="www/image/04.jpg" style="width:100%" />
+                        <img class="selectable" src="image/04.jpg" style="width:100%" />
                     </div>
                     <div class="column selectable col-md-4">
                         <h3 class="selectable">UX Designer</h3>
-                        <img class="selectable" src="www/image/05.jpg" style="width:100%" />
+                        <img class="selectable" src="image/05.jpg" style="width:100%" />
                     </div>
                 </div>
             </div>
@@ -64,9 +64,11 @@
         </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script type="text/javascript" src="www/js/motions.js"></script>
-    <script type="text/javascript" src="www/js/gesture.js"></script>
+    <script type="text/javascript" src="js/motions.js"></script>
+    <script type="text/javascript" src="js/gesture.js"></script>
     <script>
         // Start touchEvent Listener
         manager.init();

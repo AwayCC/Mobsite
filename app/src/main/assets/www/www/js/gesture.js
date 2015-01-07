@@ -1,20 +1,19 @@
 // gestureListener
 var Android = (Android) ? Android : {
-   startDrag: function(){
-   },
-   setSelectedHTML: function(s){}
+   startDrag: function(){},
+   setSelectedHTML: function(s){},
+   hideSplashView: function(){}
 };
 function setGestureListener(responses){
 
 
-   console.log("gestureListner starts");
+   console.log("gestureListener starts");
 
    /******************
     * Configurations *
     ******************/
    var isConsoleEnable = true;
-   var myListener = document.getElementById("innercontent");
-   var myStatusBar = document.getElementById("gestureStatus");
+   var myListener = responses.listener;
 
    /******************
     * Implementation *
@@ -35,8 +34,6 @@ function setGestureListener(responses){
       touch_2fingerRightCount = 0,
       touch_pinchInCount = 0,
       touch_pinchOutCount = 0;
-
-   responses.statusBar = myStatusBar;
 
    var onTouchStart = function(event){
       if(touch_longPress)

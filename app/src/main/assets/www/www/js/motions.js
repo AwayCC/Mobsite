@@ -176,6 +176,7 @@ manager.dualSwipe = function(direction){
 
 // Configuration for gestureListener
 manager.config = {
+   listener : document.getElementById("innercontent"),
    longPressThreshold   : 600,
    doubleTapThreshold   : 125,
    gestureCountThreshold: 10,
