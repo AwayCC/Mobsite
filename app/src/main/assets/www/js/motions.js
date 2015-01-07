@@ -271,6 +271,7 @@ manager.initDrag = function(){
          }
       };
       var dragStart = function(){
+         Android.startDrag();
       };
       var dragMove = function(x, y){
          $("#x")[0].innerHTML = x;
@@ -359,4 +360,7 @@ manager.init = function(){
             break;
       }
    };
+
+   manager.initDrag();
+
 };

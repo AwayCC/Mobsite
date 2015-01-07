@@ -181,7 +181,6 @@ function setGestureListener(responses){
       if(touch_still && !touch_up && !touch_2Finger){
          touch_longPress = true;
          responses.onLongPressStart(touch_x, touch_y);
-         Android.startDrag();
          myLog("onLongPressStart");
       }
    };
