@@ -14,6 +14,7 @@ var onanimate = false;
 var settingshow = false;
 var controlpanelshow = false;
 var githubpanelshow=false;
+var isFullScreen=false;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
     $("#innercontent").first().load("./www/index.html");
@@ -105,17 +106,29 @@ function ShadowCover()
 };
 
 function FullScreenPreview()
-{    $("#innercontent").transition({ y:-$("#innercontent").height()*2});
-     $("#header").transition({ y:-scheight},600,function(){
-     $("#preview-panel").first().load("./test.html", function()          
+{   
+    isFullScreen=true;
+     ShadowCover();
+    $('#preview-panel').first().load('./www/index.html');
+    $('#preview-panel').css('top','0');  
+    setTimeout("$('#preview-panel').transition({ opacity: 1 });",500);
+    setTimeout("$('#innercontent').css('top','0'); ",800);
+    setTimeout("$('#preview-control').transition({y:scheight/10});",500);
+}
+function FullScreenCancel()
+{
+    $("#innercontent").css("top","20%");
+    $("#preview-control").transition({y:0});
+    $("#preview-panel").transition({ opacity: 0 },function()
     {
+        $("#preview-panel").css("top","-100%");
         $("#preview-panel").css("height","auto");
-        $("#preview-panel").transition({ y:scheight},function(){$("#innercontent").transition({ opacity:0});});        
+        $("#preview-panel").empty();   
+        
     });
-    });
-    
-    
-};
+    ShadowFade();
+    isFullScreen=false;
+}
 function EnvironmentInit()
 {
     $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
@@ -125,6 +138,7 @@ function EnvironmentInit()
     $("#fullscreen").on("touchstart click",function(startEvent){FullScreenPreview();});
     $("#setting")   .on("touchstart click",function(startEvent){SettingPanelToggle();});
     $("#github")    .on("touchstart click",function(startEvent){githubPanelShow();})
+    $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();})
 }
 function githubPanelShow()
 {
