@@ -3,7 +3,7 @@
  */
 
 // My manager class
-
+console.log("asasdfasdfasdfasdfasfsadfsadfdf");
 var manager = {};
 manager.canvasState = Object.freeze({
    "unselected": 0,
@@ -322,8 +322,6 @@ manager.initDrag = function(){
 manager.init = function(){
    window.isMouseDown = false;
    manager.state = manager.canvasState.unselected;
-
-
    // Add some attributes to DOM element
    var selectableObjects = document.querySelectorAll(".selectable");
    for(var i = 0; i<selectableObjects.length;++i){
@@ -362,3 +360,8 @@ manager.init = function(){
 
    manager.initDrag();
 };
+console.log("FUUUUUUUUUUUUCK");
+        manager.init();
+        console.log("YOOOOOOOOOOOOOOOUUUUUUUUUUUU");
+        Android.hideSplashView();
+        setGestureListener(manager.config);

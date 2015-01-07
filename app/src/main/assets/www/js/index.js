@@ -17,10 +17,11 @@ var githubpanelshow=false;
 var isFullScreen=false;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
-    $("#innercontent").first().load("./www/index.html");
+    
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
+    $("#innercontent").first().load("./www/index.html");
 });
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
