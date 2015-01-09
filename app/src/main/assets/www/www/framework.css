@@ -6,7 +6,13 @@ body {} div {} .selectable {} .column {
     margin: 10px 0;
 }
 .selected {
-    border: solid 1px #ffff00;
+    background-color: rgba(0, 96, 230, 0.32);
+    border-width: 0;
+    z-index: 100;
+    margin: 0;
+    padding:0;
+    position: absolute;
+    display: none;
 }
 #myGestureListener {
     position: fixed;
@@ -15,4 +21,7 @@ body {} div {} .selectable {} .column {
     top: 0;
     right: 0;
     z-index: 100;
+}
+.cursorEntry{
+    display: none;
 }

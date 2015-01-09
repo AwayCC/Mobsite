@@ -3,78 +3,84 @@
 
 <head lang="en">
     <meta charset="UTF-8">
-    <title>NM Final Default</title>
+    <title>Mobsite</title>
     <link rel="stylesheet" href="framework.css">
     <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
 </head>
 
 <body id="innercontent">
-    <div id="myGestureListener">
-        <span id="gestureStatus"></span> : (<span id="x"></span>,<span id="y"></span>)
+<div id="myGestureListener">
+    <span id="gestureStatus"></span> : (<span id="x"></span>,<span id="y"></span>)
+</div>
+<div class="container-fluid ">
+    <div id="slide0" class="selectable row">
+        <div class="selectable column col-md-12">
+            <h1>Canvas Pad</h1>
+        </div>
     </div>
-    <div class="container-fluid">
-        <div id="slide0" class="selectable row">
-            <div class="selectable column col-md-12">
-                <h1>Canvas Pad</h1>
-            </div>
+    <div id="slide1" class="selectable row slide">
+        <div class="column col-md-5">
+            <h2>Beautifully designed,<br/> gracefully used.</h2>
         </div>
-        <div id="slide1" class="selectable row slide">
-            <div class="column selectable col-md-5">
-                <h2>Beautifully designed,<br/> gracefully used.</h2>
-            </div>
-            <div class="column selectable col-md-7">
-                <img src="image/01.jpg" />
-            </div>
+        <div class="column col-md-7">
+            <img src="image/01.jpg"/>
         </div>
-        <div id="slide2" class="selectable row slide">
-            <div class="column selectable col-md-7">
-                <img src="image/02.jpg" />
-            </div>
-            <div class="column selectable col-md-5">
-                <h2>Finger-Oriented.</h2>
-                <p>為了讓使用者感受到最方便的操作方式
-                    <br/>我們使用了最接近直覺的觸控手勢來操作網頁上的各個元件。</p>
-            </div>
+    </div>
+    <div id="slide2" class="selectable row slide">
+        <div class="column col-md-7">
+            <img src="image/02.jpg"/>
         </div>
-        <div class="selectable row slide">
-            <div class="column selectable col-md-12">
-                <h2>Canvas Pad is for</h2>
-                <div class="selectable row">
-                    <div class="column selectable col-md-4">
-                        <h3 class="selectable">Designer</h3>
-                        <img class="selectable" src="image/03.jpg" style="width:100%" />
-                    </div>
-                    <div class="column selectable col-md-4">
-                        <h3 class="selectable">Programmer</h3>
-                        <img class="selectable" src="image/04.jpg" style="width:100%" />
-                    </div>
-                    <div class="column selectable col-md-4">
-                        <h3 class="selectable">UX Designer</h3>
-                        <img class="selectable" src="image/05.jpg" style="width:100%" />
-                    </div>
+        <div class="column col-md-5">
+            <h2>Finger-Oriented.</h2>
+
+            <p>為了讓使用者感受到最方便的操作方式
+                <br/>我們使用了最接近直覺的觸控手勢來操作網頁上的各個元件。</p>
+        </div>
+    </div>
+    <div class="selectable row slide">
+        <div class="column selectable col-md-12">
+            <h2>Canvas Pad is for</h2>
+
+            <div class="selectable row">
+                <div class="column col-md-4">
+                    <h3 class="selectable">Designer</h3>
+                    <img class="selectable" src="image/03.jpg" style="width:100%"/>
+                </div>
+                <div class="column col-md-4">
+                    <h3 class="selectable">Programmer</h3>
+                    <img class="selectable" src="image/04.jpg" style="width:100%"/>
+                </div>
+                <div class="column col-md-4">
+                    <h3 class="selectable">UX Designer</h3>
+                    <img class="selectable" src="image/05.jpg" style="width:100%"/>
                 </div>
             </div>
         </div>
-        <div class="selectable row slide">
-            <h2 class="selectable">For more information, check the links below</h2>
-        </div>
-        <div class="selectable row slide">
-            <p style="text-align:right;"><a href="test.html">NMLab Group 1.
-                <br/>All rights reserved.</a></p>
-        </div>
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script type="text/javascript" src="js/motions.js"></script>
-    <script type="text/javascript" src="js/gesture.js"></script>
-    <script>
-        // Start touchEvent Listener
+    <div class="selectable row slide">
+        <h2 class="selectable">For more information, check the links below</h2>
+    </div>
+    <div class="selectable row slide">
+        <p style="text-align:right;">NMLab Group 1.
+            <br/>All rights reserved.</p>
+    </div>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script type="text/javascript" src="js/motions.js"></script>
+<script type="text/javascript" src="js/gesture.js"></script>
+<script>
+    // Start touchEvent Listener
+    window.onload = function(){
         manager.init();
+        manager.initDrag();
         Android.hideSplashView();
         setGestureListener(manager.config);
-    </script>
-    <!--<script type="text/javascript" src="js/index.js"></script>-->
+    }
+</script>
+<!--<script type="text/javascript" src="js/index.js"></script>-->
 </body>
 </html>
