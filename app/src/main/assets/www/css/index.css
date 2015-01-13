@@ -100,12 +100,13 @@ top: 8%;
 #Addmark
 {
     height: 8%;
-    min-height: 20px;
+    min-height: 30px;
     width: 100%;
     background-color: #242525;  
     border-top-left-radius: 0.75em;
     border-top-right-radius: 0.75em;
     display: table;
+    color: white;
     vertical-align: middle;
     text-align: center;
 }
@@ -137,12 +138,11 @@ body {
     
     background-image:none;
     background-attachment:fixed;
-    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    font-family:'Helvetica Neue', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
     height:100%;
     margin:0px;
     padding:0px;
-    text-transform:uppercase;
     width:100%;
     background-color:#BBBFBF;
 }
@@ -230,7 +230,7 @@ body {
     background-color: white;
     width: 87%;
     //height: 80%;
-    //min-height: 80%;
+    min-height: 80%;
     box-shadow: 0px 10px 15px #161415;
 }
 h1 {
@@ -243,13 +243,24 @@ h1 {
 }
 #preview-panel
 {
-    background-color: red;
+    opacity: 0;
+    background-color: white;
     width: 100%;
     height: auto;
     min-height: 100%;
     top: -100%;
     left: 0;
     position:  absolute;
+    z-index: 200;
+}
+#preview-control
+{
+    height: 10%;
+    width: 5%;
+    position: fixed;
+    z-index: 250;
+    right: 0;
+    top: -10%;
 }
 .ui-btn-inner
 {
@@ -280,7 +291,17 @@ h1 {
     background-color:#4B946A;
     display:none;
 }
-
+#propertyPanel
+{
+    position: fixed;
+    height:40%;
+    width: 20%;
+    left: 0;
+    top: -40%;
+    z-index: 300;
+    background-color: green;
+    border-radius: 8px;
+}
 @keyframes fade {
     from { opacity: 1.0; }
     50% { opacity: 0.4; }

@@ -13,9 +13,6 @@ manager.canvasState = Object.freeze({
 manager.state = manager.canvasState.unselected;
 manager.selectedObject = null;
 manager.Cursor = undefined;
-manager.root = undefined;
-manager.rootID = "innercontent";
-manager.selectedMask = undefined;
 
 /*
  * For these traversal functions below, parameter is a DOM object.
@@ -106,8 +103,8 @@ manager.removeClass = function(node, text){
    }
 };
 manager.deselect = function(){
+   manager.removeClass(manager.selectedObject, "selected");
    manager.selectedObject = undefined;
-   if(manager.selectedMask)manager.selectedMask.style.display = "none";
    manager.state = manager.canvasState.unselected;
 };
 manager.assignSelection = function(o){
@@ -116,19 +113,13 @@ manager.assignSelection = function(o){
    if(o == manager.selectedObject){
       return;
    } // Speed up the process.
+   if(manager.selectedObject){
+      manager.deselect();
+   }
    manager.selectedObject = o;
-
-   var c = manager.selectedMask;
-   var t = o.getBoundingClientRect();
-   c.style.display = "none";
-   c.style.top = (t.top + window.scrollY) + "px";
-   c.style.left = (t.left + window.scrollX) + "px";
-   c.style.display = "block";
-   c.style.width = t.width + "px";
-   c.style.height = t.height + "px";
-
-   manager.state = manager.canvasState.selected;
    Android.setSelectedHTML(o.htmlText);
+   manager.addClass(o, "selected");
+   manager.state = manager.canvasState.selected;
 };
 manager.updateAccessible = function(x, y, o){
 };
@@ -147,7 +138,8 @@ manager.click = function(x, y){
       manager.deselect();
       return;
    }
-   if(t == manager.selectedMask)return;
+   var rect = t.getBoundingClientRect();
+   console.log(rect.top, rect.bottom, rect.left, rect.right, rect.height, rect.width);
    t = manager.getParentSelectable(t, true);
    if(t){
       manager.assignSelection(t);
@@ -156,7 +148,7 @@ manager.click = function(x, y){
    }
 };
 manager.doubleClick = function(x, y){
-   manager.deselect();
+
 };
 manager.dualSwipe = function(direction){
    // direction 1:up 2:down 3:left 4:right
@@ -182,12 +174,9 @@ manager.dualSwipe = function(direction){
 };
 
 
-/************************
- *     Configuration    *
- ***********************/
+// Configuration for gestureListener
 manager.config = {
-
-   listener             : document.getElementById(manager.rootID),
+   listener : document.getElementById("innercontent"),
    longPressThreshold   : 600,
    doubleTapThreshold   : 125,
    gestureCountThreshold: 10,
@@ -224,14 +213,9 @@ manager.initDrag = function(){
       var hoverObject = null;
       var hoverObjectOnTop = false;
       var hoverParents = [];
-      var dragCount = manager.config.dragCount;
-      var dragDelay = manager.config.dragDelay;
 
       // helper functions for dragging
       var initParentsAccessible = function(node){
-      };
-      var findCursorEntry = function(){
-
       };
       var getHoverParentAccessible = function(node, canReturnMe){
          if(!node){
@@ -255,6 +239,7 @@ manager.initDrag = function(){
       // function hooks definiton
       var setCursor = function(){
          // TODO: Not that easy... The accessible item and the floating item should be taken into account
+         if(same) return;
          if(hoverObject.accessible){
             hoverObject.appendChild(manager.Cursor);
          }else{
@@ -286,16 +271,9 @@ manager.initDrag = function(){
             return true;
          }
       };
-      var dragStart = function(x, y){
-         if(manager.selectedMask){
-            manager.selectedMask.style.display = "none";
-            manager.state = manager.canvasState.dragging;
-         }
+      var dragStart = function(){
       };
       var dragMove = function(x, y){
-         if(manager.state != manager.canvasState.dragging){
-            return;
-         }
          $("#x")[0].innerHTML = x;
          $("#y")[0].innerHTML = y;
       };
@@ -306,13 +284,6 @@ manager.initDrag = function(){
          }
          hoverObject = null;
          hoverObjectOnTop = false;
-
-         if(manager.selectedMask && manager.selectedObject){
-            manager.selectedMask.style.display = "block";
-            manager.state = manager.canvasState.selected;
-            return;
-         }
-         manager.state = manager.canvasState.unselected;
       };
 
       return {
@@ -341,44 +312,30 @@ manager.initDrag = function(){
    manager.updateCursorPosition = tempDragObject.updateCursor;
 
    // Configure manager.config to enable dragging
-   manager.config.dragDelay = 1000;
-   manager.config.dragCount = 10;
    manager.config.onLongPressStart = tempDragObject.dragStart;
    manager.config.onLongPressMove = tempDragObject.dragMove;
    manager.config.onLongPressEnd = tempDragObject.dragEnd;
 };
-manager.dfs = function(r){
-   var c = r.firstChild;
-   r.ac = [];
-   var x = false;
-   var s = document.createElement("hr");
-   s.setAttribute("class", "cursorEntry");
 
-};
-manager.initTree = function(){
-   manager.root = document.getElementById(manager.rootID);
-   manager.dfs(manager.root);
-};
 manager.init = function(){
    window.isMouseDown = false;
    manager.state = manager.canvasState.unselected;
 
 
    // Add some attributes to DOM element
-   //var selectableObjects = document.querySelectorAll(".selectable");
-   //for(var i = 0; i < selectableObjects.length; ++i){
-   //   selectableObjects[i].selectable = true;
-   //}
-   $.each($(".selectable"), function(i, val){
-      val.selectable = true;
-      val.accessible = true;
-   });
-   $.each($(".column"), function(i, val){
-      val.accessible = true;
-   });
-   $.each($(".slide"), function(i, val){
-      val.accessible = true;
-   });
+   var selectableObjects = document.querySelectorAll(".selectable");
+   for(var i = 0; i<selectableObjects.length;++i){
+      selectableObjects[i].selectable = true;
+   }
+   //$.each($(".selectable"), function(i, val){
+   //   val.selectable = true;
+   //});
+   //$.each($(".column"), function(i, val){
+   //   val.accessible = true;
+   //});
+   //$.each($(".slide"), function(i, val){
+   //   val.accessible = true;
+   //});
 
    // Define my own event listener
    window.onkeypress = function(e){
@@ -400,11 +357,4 @@ manager.init = function(){
             break;
       }
    };
-
-   manager.initTree();
-
-   // Define selectedMask
-   manager.selectedMask = document.createElement("hr");
-   manager.addClass(manager.selectedMask, "selected");
-   document.body.appendChild(manager.selectedMask);
 };

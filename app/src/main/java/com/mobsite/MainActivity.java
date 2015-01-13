@@ -14,11 +14,13 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.widget.AbsoluteLayout;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,7 +63,7 @@ public class MainActivity extends Activity
     private String projectPath;
 
     protected CordovaWebView cwv = null;
-    protected LinearLayout mainll;
+    protected FrameLayout mainll, shadowP;
     protected String selectedHTML;
     protected CordovaWebView shadow;
     protected VideoView splashVid;
@@ -93,7 +95,6 @@ public class MainActivity extends Activity
         Log.v(_logTag, "onCreate(): find views & preparation.");
         splashVid = (VideoView) findViewById(R.id.splash_vid);
         splashView = (RelativeLayout) findViewById(R.id.splash_view);
-
         splashVid.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -108,11 +109,16 @@ public class MainActivity extends Activity
         splashVid.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash));
         splashVid.start();
 
+        shadow = (CordovaWebView) findViewById(R.id.shadow);
+
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        mainll = (LinearLayout) findViewById(R.id.mainLL);
+        mainll = (FrameLayout) findViewById(R.id.mainLL);
         LayoutTransition splashTrans = new LayoutTransition();
         splashTrans.enableTransitionType(LayoutTransition.DISAPPEARING);
         mainll.setLayoutTransition(splashTrans);
+
+        shadowP = (FrameLayout) findViewById(R.id.shadow_parent);
+        shadowP.setAlpha(0);
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
@@ -252,35 +258,35 @@ public class MainActivity extends Activity
         * The following codes are for setting drag listeners.
         * "drag start", "drag end" callback functions are executed here.
         */
-        cordovaWV.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                final int action = dragEvent.getAction();
-                switch (action) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        return true;
+        cordovaWV.setOnTouchListener(new View.OnTouchListener() {
 
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        return true;
+            public boolean onTouch(View v, MotionEvent event) {
+                final int action = event.getAction();
+                switch(action){
+                    case MotionEvent.ACTION_DOWN:
 
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        // tell javascript.
-                        cordovaWV.loadUrl("javascript:" +
-                                "");
-                        return true;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
+                                                                                   FrameLayout.LayoutParams.WRAP_CONTENT);
+                        lp.setMargins((int)event.getRawX(), (int)event.getRawY(), 0, 0);
+                        shadow.setLayoutParams(lp);
+                        break;
                 }
+                //Log.v("spy on touch events", event.toString());
                 return false;
             }
         });
+
+
+        cordovaWV.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                Log.v("spy on drag events", dragEvent.toString());
+                return false;
+            }
+        });
+
     }
 
 
@@ -318,14 +324,19 @@ public class MainActivity extends Activity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                splashView.removeView(shadow);
+                //shadow.setVisibility(View.INVISIBLE);
+                //mainll.removeView(shadow);
+                shadowP.removeView(shadow);
                 shadow = new CordovaWebView(MainActivity.this);
-                shadow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+
+                shadow.setLayoutParams(new ViewGroup.LayoutParams(cwv.getWidth()*2/3,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                splashView.addView(shadow);
-                shadow.setAlpha(0);
-                shadow.invalidate();
+                //mainll.addView(shadow);
+                shadowP.addView(shadow);
+                shadowP.setAlpha(0);
+                shadowP.invalidate();
+
 
                 String prefix = "<link rel=\"stylesheet\" href=\"android_asset/css/bootstrap.min.css\">\n" +
                         "<script src=\"android_asset/js/jquery-1.11.1.min.js\"></script>\n" +
@@ -345,24 +356,17 @@ public class MainActivity extends Activity
                     vibrator.vibrate(100);
                     return;
                 }
-                shadow.layout(0, 0, shadow.getWidth(), shadow.getContentHeight());
-                View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(shadow) {
-                    @Override
-                    public void onProvideShadowMetrics(Point size, Point touch) {
-                        int width, height;
 
-                        width = getView().getWidth() / 2;
-                        height = getView().getHeight();
-                        size.set(width, height);
 
-                        // Sets the touch point's position
-                        touch.set(width / 4, height / 4);
-                    }
-                };
-
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
+                        FrameLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(50,100,0,0);
+                shadow.setLayoutParams(lp);
+                shadowP.setAlpha(1f);
+                shadowP.invalidate();
+                //shadow.setVisibility(View.VISIBLE);
                 // Drag starts.
                 vibrator.vibrate(100);
-                cwv.startDrag(null, myShadowBuilder, null, 0);
             }
         });
     }
