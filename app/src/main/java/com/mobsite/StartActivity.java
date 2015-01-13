@@ -1,12 +1,19 @@
 package com.mobsite;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -16,11 +23,15 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,8 +65,12 @@ public class StartActivity extends Activity {
     Choose_Listener choose_listener;
     View selected;
     private List<Map<String, String>> planetsList = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> oldProjectsList = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> templateList = new ArrayList<Map<String, String>>();
     SimpleAdapter OpenAdapter, NewAdapter;
-    ;
+    private VideoView splashVid;
+    private RelativeLayout splashView;
+    private boolean splash = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +78,28 @@ public class StartActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.start_activity);
+
+        splashVid = (VideoView) findViewById(R.id.splash_vid);
+        splashView = (RelativeLayout) findViewById(R.id.splash_view);
+        splashVid.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if (splash) {
+                    splashVid.seekTo(0);
+                    splashVid.start();
+                } else {
+                    splashView.setVisibility(View.GONE);
+                }
+            }
+        });
+        splashVid.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash));
+        splashVid.start();
+
+        FrameLayout startFrame = (FrameLayout) findViewById(R.id.startFrame);
+        LayoutTransition splashTrans = new LayoutTransition();
+        splashTrans.enableTransitionType(LayoutTransition.DISAPPEARING);
+        startFrame.setLayoutTransition(splashTrans);
+
         layoutregist();
         testbtn.setOnClickListener(new Testbtn_Listener(this));
         newbtn.setOnClickListener(newbtn_listener);
@@ -74,12 +111,13 @@ public class StartActivity extends Activity {
         int height = size.y;
         iniList();
 
-        OpenAdapter = new SimpleAdapter(this, planetsList, R.layout.listtext, new String[]{"Open"}, new int[]{android.R.id.text1});
-        NewAdapter = new SimpleAdapter(this, planetsList, R.layout.listtext, new String[]{"New"}, new int[]{android.R.id.text1});
+        OpenAdapter = new SimpleAdapter(this, oldProjectsList, R.layout.listtext, new String[]{"Open"}, new int[]{android.R.id.text1});
+        NewAdapter = new SimpleAdapter(this, templateList, R.layout.listtext, new String[]{"New"}, new int[]{android.R.id.text1});
         openmenu.setAdapter(OpenAdapter);
         openmenu.setSelected(true);
         newmenu.setAdapter(NewAdapter);
         newmenu.setSelected(true);
+        splash = false;
     }
 
     private void layoutregist() {
@@ -101,7 +139,17 @@ public class StartActivity extends Activity {
     }
 
     private void iniList() {
-        planetsList.add(createPlanet("Open", "Mercury"));
+        Vector<String> projectNames = getProjectNames();
+        for(String s : projectNames){
+            oldProjectsList.add(addProjectName("Open", s));
+        }
+
+        templateList.add(addProjectName("New","template_1"));
+        templateList.add(addProjectName("New","template_2"));
+        templateList.add(addProjectName("New","template_3"));
+        templateList.add(addProjectName("New","default"));
+        /*
+        planetsList.add(addProjectName("Open", "Mercury"));
         planetsList.add(createPlanet("Open", "Venus"));
         planetsList.add(createPlanet("Open", "Mars"));
         planetsList.add(createPlanet("Open", "Jupiter"));
@@ -109,20 +157,80 @@ public class StartActivity extends Activity {
         planetsList.add(createPlanet("New", "Uranus"));
         planetsList.add(createPlanet("New", "Neptune"));
         planetsList.add(createPlanet("New", "GG"));
-
+        */
     }
 
+    private HashMap<String, String> addProjectName(String key, String name) {
+        HashMap<String, String> project = new HashMap<String, String>();
+        project.put(key, name);
+        return project;
+    }
+
+    /*
     private HashMap<String, String> createPlanet(String key, String name) {
         HashMap<String, String> planet = new HashMap<String, String>();
         planet.put(key, name);
         return planet;
-    }
+    }*/
 
     class Choose_Listener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             if (view == selected) {
-                Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_LONG).show();
+
+                HashMap<String, String> data = (HashMap<String, String>) adapterView.getItemAtPosition(i);
+
+                if(data.containsKey("Open")/* && oldProjectsList.size() > 0*/){
+                    // from open list.
+                    String selectedProject = data.get("Open");
+                    Intent edit = new Intent();
+                    edit.setClass(StartActivity.this, MainActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectName", selectedProject);
+                    edit.putExtras(bundle);
+                    startActivity(edit);
+                } else {
+                    // from new list.
+                    final String templateName = data.get("New");
+
+                    LayoutInflater inflater = StartActivity.this.getLayoutInflater();
+                    final View v = inflater.inflate(R.layout.new_project_dialog, null);
+                    new AlertDialog.Builder(StartActivity.this)
+                            .setView(v)
+                            .setTitle("New project name")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //do nothing !
+                                    EditText editText = (EditText) v.findViewById(R.id.newProjectName);
+                                    String newName = editText.getText().toString();
+
+                                    if (newName.equals("")) {
+                                        Toast toast = Toast.makeText(StartActivity.this, "Input is empty", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
+                                        toast.show();
+                                        return;
+                                    }
+
+                                    if (newProject(newName, templateName)) {
+                                        Intent edit = new Intent();
+                                        edit.setClass(StartActivity.this, MainActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("projectName", newName);
+                                        edit.putExtras(bundle);
+                                        startActivity(edit);
+                                    } else {
+                                        Toast toast = Toast.makeText(StartActivity.this, "This name is already in use. Use another.", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
+                                        toast.show();
+                                    }
+                                }
+                            })
+                            .show();
+                }
+
                 return;
             }
 
@@ -363,6 +471,7 @@ public class StartActivity extends Activity {
 
         @Override
         public void onClick(View view) {
+
             Intent edit = new Intent();
             edit.setClass(StartActivity.this, MainActivity.class);
 
@@ -374,7 +483,6 @@ public class StartActivity extends Activity {
             bundle.putString("projectName", name);
             edit.putExtras(bundle);
 
-            getProjectNames();
             startActivity(edit);
         }
 
@@ -399,7 +507,7 @@ public class StartActivity extends Activity {
         return projectNames;
     }
 
-    private boolean newProject(String name) {
+    private boolean newProject(String name, String template) {
         File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
         Log.v("new folder", newProject.getPath());
         /*try{
@@ -416,12 +524,12 @@ public class StartActivity extends Activity {
             newProject.mkdirs();
 
             // html files.
-            copyInitFile("init/index.html", new File(newProject, "index.html"));
+            copyInitFile("init/"+template+"/index.html", new File(newProject, "index.html"));
 
             // css files.
             File css = new File(newProject, "css");
             css.mkdirs();
-            copyInitFile("init/css/bootstrap.css", new File(css, "bootstrap.css"));
+            copyInitFile("init/"+template+"/css/bootstrap.css", new File(css, "bootstrap.css"));
             // see if there is more files...
 
         }
@@ -437,6 +545,7 @@ public class StartActivity extends Activity {
                                         new InputStreamReader(in, "UTF-8"));
             String mLine = reader.readLine();
             while (mLine != null) {
+                mLine += "\n";
                 fout.write(mLine.getBytes("utf-8"));
                 mLine = reader.readLine();
             }

@@ -3,24 +3,32 @@ package com.mobsite;
 import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsoluteLayout;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,11 +37,14 @@ import android.widget.Toast;
 import android.widget.VideoView;
 import org.apache.cordova.Config;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.CordovaWebViewClient;
 import org.apache.cordova.api.CordovaInterface;
 import org.apache.cordova.api.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -66,10 +77,10 @@ public class MainActivity extends Activity
     protected FrameLayout mainll, shadowP;
     protected String selectedHTML;
     protected CordovaWebView shadow;
-    protected VideoView splashVid;
-    protected RelativeLayout splashView;
+    private boolean enableShadow = false,
+                    selectedShadow = false;
+    private ProgressDialog pDialog;
     protected Vibrator vibrator;
-    private boolean splash = true;
 
     // Variables for importing photos.
     private static final int REQUEST_GALLERY = 11;
@@ -85,6 +96,11 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_activity);
 
+        pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setTitle("Opening project...");
+        pDialog.show();
+
         // Get project name from intent.
         if (getIntent().getExtras() != null){
             projectName = getIntent().getExtras().getString("projectName");
@@ -93,32 +109,13 @@ public class MainActivity extends Activity
         Log.v(_logTag, projectName);
 
         Log.v(_logTag, "onCreate(): find views & preparation.");
-        splashVid = (VideoView) findViewById(R.id.splash_vid);
-        splashView = (RelativeLayout) findViewById(R.id.splash_view);
-        splashVid.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                if (splash) {
-                    splashVid.seekTo(0);
-                    splashVid.start();
-                } else {
-                    splashView.setVisibility(View.GONE);
-                }
-            }
-        });
-        splashVid.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash));
-        splashVid.start();
-
         shadow = (CordovaWebView) findViewById(R.id.shadow);
+        shadow.setVisibility(View.INVISIBLE);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mainll = (FrameLayout) findViewById(R.id.mainLL);
-        LayoutTransition splashTrans = new LayoutTransition();
-        splashTrans.enableTransitionType(LayoutTransition.DISAPPEARING);
-        mainll.setLayoutTransition(splashTrans);
 
         shadowP = (FrameLayout) findViewById(R.id.shadow_parent);
-        shadowP.setAlpha(0);
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
@@ -187,12 +184,15 @@ public class MainActivity extends Activity
                 case REQUEST_GALLERY:
                     Log.v(_logTag, "gallery");
                     if (intent != null) {
+                        Log.v("intent", "NOT NULL!");
                         newPhoto = intent.getData();
                     }
                     break;
                 case REQUEST_CAMERA:
                     Log.v(_logTag, "camera");
                     try {
+                        //if(intent == null){ Log.v("intent", "IS NULL!"); Log.v("size", ""+photo.length()); break; }
+
                         File internalStorage = new File(projectPath, "img");
                         if (!internalStorage.exists())
                             internalStorage.mkdirs();
@@ -222,6 +222,9 @@ public class MainActivity extends Activity
                         //while (in.read(buffer) > -1)
                         //    fout.write(buffer);
                         fout.close();
+
+                        Log.v("FIle size", "File is this big : "+savedImage.length());
+
                     } catch (FileNotFoundException fne) {
                         Log.e(_logTag, "no file.");
                         fne.printStackTrace();
@@ -261,17 +264,26 @@ public class MainActivity extends Activity
         cordovaWV.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
+                //Log.v("spy on drag events", event.toString());
                 final int action = event.getAction();
                 switch(action){
                     case MotionEvent.ACTION_DOWN:
 
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
-                                                                                   FrameLayout.LayoutParams.WRAP_CONTENT);
-                        lp.setMargins((int)event.getRawX(), (int)event.getRawY(), 0, 0);
-                        shadow.setLayoutParams(lp);
+                        if(enableShadow){
+                            shadow.setVisibility(View.VISIBLE);
+                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT);
+                            lp.setMargins((int)event.getRawX()-shadow.getWidth()/2,
+                                          (int)event.getRawY()-shadow.getContentHeight()/3,
+                                           0, 0);
+                            shadow.setLayoutParams(lp);
+                        }
                         break;
+                    case MotionEvent.ACTION_UP:
+                        enableShadow = false;
+                        shadow.setVisibility(View.INVISIBLE);
                 }
                 //Log.v("spy on touch events", event.toString());
                 return false;
@@ -282,7 +294,7 @@ public class MainActivity extends Activity
         cordovaWV.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
-                Log.v("spy on drag events", dragEvent.toString());
+
                 return false;
             }
         });
@@ -298,10 +310,10 @@ public class MainActivity extends Activity
     public void showToast(String msg) { Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(); }
 
     @JavascriptInterface
-    public void showDialog(String msg) {
+    public void showDialog(String title, String msg) {
         Log.v("JSinterface", msg);
         new AlertDialog.Builder(this)
-                .setTitle("html code")
+                .setTitle(title)
                 .setMessage(msg)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -313,10 +325,13 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public void hideSplashView() { splash = false; }
+    public void hideSplashView() { pDialog.dismiss(); }
 
     @JavascriptInterface
     public String getProjectPath() { return projectPath; }
+
+    @JavascriptInterface
+    public String getProjectName() { return projectName; }
 
     @JavascriptInterface
     public void setSelectedHTML(String s) {
@@ -343,21 +358,19 @@ public class MainActivity extends Activity
                         "<script src=\"android_asset/js/bootstrap.min.js\"></script>\n";
                 selectedHTML = prefix + selectedHTML;
                 shadow.loadData(selectedHTML, "text/html", "utf-8");
+                selectedShadow = true;
             }
         });
     }
+
+    @JavascriptInterface
+    public void deselect() { selectedShadow = false; }
 
     @JavascriptInterface
     public void startDrag() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (shadow == null) {
-                    vibrator.vibrate(100);
-                    return;
-                }
-
-
                 FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
                         FrameLayout.LayoutParams.WRAP_CONTENT);
                 lp.setMargins(50,100,0,0);
@@ -367,14 +380,63 @@ public class MainActivity extends Activity
                 //shadow.setVisibility(View.VISIBLE);
                 // Drag starts.
                 vibrator.vibrate(100);
+                enableShadow = (selectedShadow)?true:false;
             }
         });
     }
 
     @JavascriptInterface
+    public void openTextInputDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        final View v = inflater.inflate(R.layout.multiline_text_input_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(v)
+                .setTitle("Input Content")
+                .setPositiveButton("Ok", null)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // do nothing !
+                    }
+                })
+                .create();
+
+        String output = "";
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "clcik", Toast.LENGTH_SHORT).show();
+                        EditText input = (EditText) v.findViewById(R.id.inputText);
+                        String inputHTML = input.getText().toString();
+                        String output = "";
+                        Log.v("before sanitize", inputHTML);
+                        inputHTML = inputHTML.replace("&","&amp");
+                        inputHTML = inputHTML.replace("<","&lt");
+                        inputHTML = inputHTML.replace(">","&gt");
+                        Log.v("after sanitize", inputHTML);
+                        if(output.isEmpty()){
+
+                        } else {
+                            //dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+        dialog.show();
+    }
+
+    private File photo;
+
+    @JavascriptInterface
     public void openPhotoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("My Title");
+        builder.setTitle("Input Image From...");
         builder.setItems(new CharSequence[]{"Gallery", "Camera"}, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -395,7 +457,7 @@ public class MainActivity extends Activity
                             cameraHolder = getCacheDir();
                         */
 
-                        cameraHolder = new File(getCacheDir(), "mobsite");
+                        cameraHolder = new File(getExternalCacheDir(), "mobsite");
                         if (!cameraHolder.exists())
                             cameraHolder.mkdirs();
 
@@ -403,7 +465,7 @@ public class MainActivity extends Activity
                         String timestamp = dateFormat.format(new Date());
                         String imageFilename = "picture" + timestamp + ".jpg";
 
-                        File photo = new File(cameraHolder, imageFilename);
+                        photo = new File(cameraHolder, imageFilename);
                         try {
                             if (!photo.exists())
                                 photo.createNewFile();
@@ -411,15 +473,65 @@ public class MainActivity extends Activity
                             e.printStackTrace();
                         }
 
-                        //Log.v(_logTag, (photo.isFile())?photo.getPath():"nope");
+                        Log.v(_logTag, (photo.isFile())?photo.getPath():"nope");
                         newPhoto = Uri.fromFile(photo);
-                        getCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                        Log.v("URI", newPhoto.toString());
+                        getCamera.putExtra(MediaStore.EXTRA_OUTPUT, newPhoto);
                         startActivityForResult(getCamera, REQUEST_CAMERA);
                         break;
                 }
             }
         });
         builder.show();
+    }
+
+    @JavascriptInterface
+    public void openBrowserDialog() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final ProgressDialog pDialog = new ProgressDialog(MainActivity.this);
+                pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pDialog.setTitle("connecting to Google...");
+
+
+                LayoutInflater inflater = getLayoutInflater();
+                View v = inflater.inflate(R.layout.link_input_dialog, null);
+                final EditText input = (EditText) v.findViewById(R.id.currentURL);
+
+                WebView browser = (WebView) v.findViewById(R.id.browser);
+                //Config.init(this);
+                browser.setWebViewClient(new WebViewClient() {
+                    public void onPageFinished(WebView view, String url) {
+                        Toast.makeText(MainActivity.this, "new page", Toast.LENGTH_SHORT).show();
+                        pDialog.dismiss();
+                        input.setText(view.getUrl());
+                    }
+                });
+                browser.loadUrl("https://www.google.com");
+
+
+                final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setView(v)
+                        .setTitle("Navigate To The Site")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // do nothing !
+                            }
+                        })
+                        .show();
+                pDialog.show();
+            }
+        });
+
     }
 
     @JavascriptInterface
@@ -465,6 +577,10 @@ public class MainActivity extends Activity
 
     @JavascriptInterface
     public void saveProject() {
-
+        File root = new File(projectPath+"/img");
+        Log.v("peek","what's inside : ");
+        for (String s : root.list()){
+            Log.v("",s);
+        }
     }
 }
