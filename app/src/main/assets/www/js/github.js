@@ -610,7 +610,7 @@
           if (err && err.error!=404) return cb(err);
           _request("PUT", repoPath + "/contents/" + path, {
             message: message,
-            content: btoa(content),
+            content: content, // needs modification.
             branch: branch,
             sha: sha
           }, cb);

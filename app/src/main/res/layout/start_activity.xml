@@ -1,170 +1,188 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:backgroundTintMode="screen"
-    android:background="@drawable/start_bg"
-    android:weightSum="100"
-    android:orientation="vertical"
-    android:clipChildren="false"
+    android:id="@+id/startFrame"
     >
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTintMode="screen"
+        android:background="@drawable/start_bg"
         android:weightSum="100"
-        android:layout_weight="15">
+        android:orientation="vertical"
+        android:clipChildren="false">
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="20"
-            android:layout_height="fill_parent"
-            android:background="@drawable/start_markerlogo"
-            android:backgroundTintMode="screen"></LinearLayout>
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:weightSum="100"
+            android:layout_weight="15">
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="20"
+                android:layout_height="fill_parent"
+                android:background="@drawable/start_markerlogo"
+                android:backgroundTintMode="screen"></LinearLayout>
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="75"
-        android:weightSum="1000"
-        android:clipChildren="false" android:clipToPadding="false">
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="100"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            >
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/newreturn"
-                android:src="@drawable/start_leftarrow"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
-                android:focusableInTouchMode="false"
-                android:visibility="gone" />
         </LinearLayout>
-
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="350"
-            android:layout_height="fill_parent"
-            android:clipChildren="false" android:clipToPadding="false"
-            android:id="@+id/openbtncon">
-            <FrameLayout
-                android:layout_width="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="75"
+            android:weightSum="1000"
+            android:clipChildren="false" android:clipToPadding="false">
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="100"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newreturn"
+                    android:src="@drawable/start_leftarrow"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerInside"
+                    android:focusableInTouchMode="false"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="350"
                 android:layout_height="fill_parent"
                 android:clipChildren="false" android:clipToPadding="false"
-                android:id="@+id/openlayer">
-
-                <LinearLayout
+                android:id="@+id/openbtncon">
+                <FrameLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:clipChildren="true" android:clipToPadding="true"
-                    android:id="@+id/opmucon"
-                    android:background="@drawable/start_button"
-                    android:visibility="gone"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp">
-                    <ListView
+                    android:clipChildren="false" android:clipToPadding="false"
+                    android:id="@+id/openlayer">
+
+                    <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:id="@+id/openmenu"
-                        android:visibility="visible"
-                        android:scrollbars="none"/>
+                        android:clipChildren="true" android:clipToPadding="true"
+                        android:id="@+id/opmucon"
+                        android:background="@drawable/start_button"
+                        android:visibility="gone"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp">
+                        <ListView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/openmenu"
+                            android:visibility="visible"
+                            android:scrollbars="none"/>
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/openbtn"
-                    android:src="@drawable/start_openbtn"
-                    android:interpolator="@android:anim/linear_interpolator"/>
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/openbtn"
+                        android:src="@drawable/start_openbtn"
+                        android:interpolator="@android:anim/linear_interpolator"/>
 
-            </FrameLayout>
+                </FrameLayout>
 
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="100"
-            android:layout_height="fill_parent"></LinearLayout>
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="350"
-            android:layout_height="fill_parent"
-            android:clipChildren="false" android:clipToPadding="false"
-            android:id="@+id/newbtncon">
-
-            <FrameLayout
-                android:layout_width="fill_parent"
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="100"
+                android:layout_height="fill_parent"></LinearLayout>
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="350"
                 android:layout_height="fill_parent"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:id="@+id/newlayer">
+                android:clipChildren="false" android:clipToPadding="false"
+                android:id="@+id/newbtncon">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:clipChildren="true"
-                    android:clipToPadding="true"
-                    android:id="@+id/newmucon"
-                    android:visibility="gone"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:background="@drawable/start_button"
-                    android:paddingRight="5dp"
-                    android:paddingLeft="5dp">
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:id="@+id/newlayer">
 
-                    <ListView
+                    <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:id="@+id/newmenu"
-                        android:visibility="visible"
-                        android:scrollbars="none"/>
-                </LinearLayout>
+                        android:clipChildren="true"
+                        android:clipToPadding="true"
+                        android:id="@+id/newmucon"
+                        android:visibility="gone"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:background="@drawable/start_button"
+                        android:paddingRight="5dp"
+                        android:paddingLeft="5dp">
+
+                        <ListView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/newmenu"
+                            android:visibility="visible"
+                            android:scrollbars="none"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/newbtn"
+                        android:src="@drawable/start_newbtn"
+                        android:interpolator="@android:anim/linear_interpolator"/>
+
+                </FrameLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="100"
+                android:layout_height="fill_parent"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/newbtn"
-                    android:src="@drawable/start_newbtn"
-                    android:interpolator="@android:anim/linear_interpolator"/>
-
-            </FrameLayout>
-
+                    android:layout_height="wrap_content"
+                    android:id="@+id/opreturn"
+                    android:src="@drawable/start_rightarrow"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerInside"
+                    android:focusableInTouchMode="false"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="100"
-            android:layout_height="fill_parent"
-            android:gravity="center">
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="10">
 
-            <ImageView
-                android:layout_width="fill_parent"
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/opreturn"
-                android:src="@drawable/start_rightarrow"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
-                android:focusableInTouchMode="false"
-                android:visibility="gone" />
+                android:text="New Button"
+                android:id="@+id/testbtn" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+
+    <RelativeLayout
+        android:id="@+id/splash_view"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="10">
+        android:layout_height="fill_parent"
+        android:background="#000000">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/testbtn" />
-    </LinearLayout>
+        <VideoView
+            android:id="@+id/splash_vid"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
-
-</LinearLayout>
+</FrameLayout>
