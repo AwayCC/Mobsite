@@ -121,8 +121,8 @@ public class MainActivity extends Activity
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
         //cwv.loadUrl(Config.getStartUrl());
-        //cwv.loadUrl("file:///android_asset/www/cloud.html");
-        cwv.loadUrl("file://"+projectPath+"/tool.html");
+        //cwv.loadUrl("file:///android_asset/project/tool.html");
+        //cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures(cwv);
     }
