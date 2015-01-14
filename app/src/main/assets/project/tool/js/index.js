@@ -27,26 +27,26 @@ jQuery(document).ready(function($){
     document.getElementById("projecttitle").innerHTML = Android.getProjectName();
     console.log(Android.getProjectPath());
 
-    $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    //$("#innercontent").first().load("index.html");
-    //galleryMember=["abc","bcd"];
-    galleryMember=Android.getGalleryPaths();
+    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+    $("#innercontent").first().load("index.html");
+    //galleryMember=Android.getGalleryPaths();
+    galleryMember={"abc","bcd"};
     galleryInitialize(galleryMember);
     Android.hideSplashView();
 });
-function galleryInitialize( member)
+function test(){
+    var rect = $("#header")[0].getBoundingClientRect();
+    alert(rect.width);
+    return true;
+};
+function galleryInitialize(var member)
 {
     alert(member.length);
     /*for (var i = 0; i < member.length; i++) 
     {
         
     }*/
-};
-function test(){
-    var rect = $("#header")[0].getBoundingClientRect();
-    alert(rect.width);
-    return true;
-};
+}
 function AddPanelShow()
 {
     if(!onanimate)

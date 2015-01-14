@@ -15,7 +15,6 @@ var settingshow = false;
 var controlpanelshow = false;
 var githubpanelshow=false;
 var isFullScreen=false;
-var galleryMember;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
     
@@ -27,21 +26,10 @@ jQuery(document).ready(function($){
     document.getElementById("projecttitle").innerHTML = Android.getProjectName();
     console.log(Android.getProjectPath());
 
-    $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    //$("#innercontent").first().load("index.html");
-    //galleryMember=["abc","bcd"];
-    galleryMember=Android.getGalleryPaths();
-    galleryInitialize(galleryMember);
+    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+    $("#innercontent").first().load("index.html");
     Android.hideSplashView();
 });
-function galleryInitialize( member)
-{
-    alert(member.length);
-    /*for (var i = 0; i < member.length; i++) 
-    {
-        
-    }*/
-};
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
     alert(rect.width);
