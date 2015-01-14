@@ -17,6 +17,7 @@ var githubpanelshow=false;
 var isFullScreen=false;
 var galleryMember;
 jQuery(document).ready(function($){
+    console.log("helloworld!!!:D");
     var freeBounds = document.getElementById('propertypanel');
     
     scwidth=document.body.clientWidth;
@@ -24,16 +25,15 @@ jQuery(document).ready(function($){
     EnvironmentInit();
 
     // set title.
-   // document.getElementById("projecttitle").innerHTML = Android.getProjectName();
-   // console.log(Android.getProjectPath());
+    document.getElementById("projecttitle").innerHTML = Android.getProjectName();
+    console.log(Android.getProjectPath());
 
     //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-   // $("#innercontent").first().load("index.html");
+    $("#innercontent").first().load("index.html");
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
     $("#innercontent").on("touchstart click",function(startEvent){
-    var computedStyle = getComputedStyle(event.target, null);
-    alert(computedStyle.backgroundColor);
+    showProperty(event.target);
     });
     var tester=[{'path':'tree.jpg'}];
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
@@ -45,6 +45,22 @@ jQuery(document).ready(function($){
     Galleria.run('#galleria');
     Android.hideSplashView();
 });
+function showProperty(tar)
+{
+    var computedStyle = getComputedStyle(event.target, null);
+    document.getElementById("properCategory").innerHTML=tar.tagName;
+    if(tar.tagName=="IMG")
+    document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');
+    if(tar.tagName=="P"||tar.tagName[0]=="H")
+    document.getElementById("properContent").innerHTML=tar.innerHTML;
+    document.getElementById("properHeight").innerHTML=computedStyle.height;
+    document.getElementById("properWidth").innerHTML=computedStyle.width;
+    document.getElementById("properColor").innerHTML=computedStyle.color;
+    document.getElementById("properBackgound").innerHTML=computedStyle.backgroundColor;
+    document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
+    document.getElementById("properPadding").innerHTML=computedStyle.padding;
+    document.getElementById("properSource").innerHTML=tar.src;
+}
 function galleryImport(member)
 {
     

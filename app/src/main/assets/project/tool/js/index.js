@@ -24,29 +24,62 @@ jQuery(document).ready(function($){
     EnvironmentInit();
 
     // set title.
-    document.getElementById("projecttitle").innerHTML = Android.getProjectName();
-    console.log(Android.getProjectPath());
+   // document.getElementById("projecttitle").innerHTML = Android.getProjectName();
+   // console.log(Android.getProjectPath());
 
     //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     $("#innercontent").first().load("index.html");
+    //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
-    galleryMember={"abc","bcd"};
+    $("#innercontent").on("touchstart click",function(startEvent){
+    showProperty(event.target);
+    });
+    var tester=[{'path':'tree.jpg'}];
+    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
+    // Initialize Galleria
+    
+    //Galleria.ready(function(event){alert(abc);});
+    galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
+    Galleria.run('#galleria');
     Android.hideSplashView();
 });
+function showProperty(tar)
+{
+    var computedStyle = getComputedStyle(event.target, null);
+    document.getElementById("properCategory").innerHTML=tar.tagName;
+    if(tar.tagName=="IMG")
+    document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');
+    if(tar.tagName=="P"||tar.tagName[0]=="H")
+    document.getElementById("properContent").innerHTML=tar.innerHTML;
+    document.getElementById("properHeight").innerHTML=computedStyle.height;
+    document.getElementById("properWidth").innerHTML=computedStyle.width;
+    document.getElementById("properColor").innerHTML=computedStyle.color;
+    document.getElementById("properBackgound").innerHTML=computedStyle.backgroundColor;
+    document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
+    document.getElementById("properPadding").innerHTML=computedStyle.padding;
+    document.getElementById("properSource").innerHTML=tar.src;
+}
+function galleryImport(member)
+{
+    
+}
+function galleryInitialize( member)
+{
+    var gallery=$(galleria);
+   // console.log(member+"Here~");
+    var memObj=JSON.parse(member);
+    for (var i = 0; i < memObj.length; i++) 
+    {
+       // alert(memObj[i].path);
+        gallery.append("<a href="+memObj[i].path+"><img src='"+memObj[i].path+"',data-big='"+memObj[i].path+"' data-title='Biandintz eta zaldiak' data-description='Horses on Bianditz mountain, in Navarre, Spain.'></a>");
+    }
+};
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
     alert(rect.width);
     return true;
 };
-function galleryInitialize(var member)
-{
-    alert(member.length);
-    /*for (var i = 0; i < member.length; i++) 
-    {
-        
-    }*/
-}
 function AddPanelShow()
 {
     if(!onanimate)
@@ -81,6 +114,7 @@ function AddPanelToggle()
 };
 function SettingPanelToggle()
 {
+     galleryInitialize(galleryMember);
     if(!settingshow)
         SettingPanelShow();
     else
