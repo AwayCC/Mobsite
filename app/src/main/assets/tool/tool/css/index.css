@@ -131,15 +131,43 @@ top: 8%;
 #galleria{height:320px}
 #galleryPanel
 {
+    border-radius: 8px;
     position: fixed;
     height: auto;
     width: 50%;
     top: 50%;
     left: 10%;
-   background-color: blue;
+   background-color: #404040;
 }
 #Add-panel::before {
     color: #000;
+}
+.galleria-theme-classic .galleria-stage 
+{
+    top: 0;
+    bottom: 5px;
+    padding-left: 1%;
+    padding-right: 1%;
+    
+    background-color: #191919;
+}
+.galleria-thumbnails-list
+{
+    padding-top: 2px;
+    border:0;
+    border-top: 2px;
+    border-color: white;
+    border-style: solid;
+    padding-bottom: 2px;
+    top:0;
+    background-color: #202020;
+}
+.galleria-theme-classic
+{
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+   
+    background-color: transparent;
 }
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
