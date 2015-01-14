@@ -12,21 +12,49 @@ manager.config = {
    listener             : document.getElementById("innerContent"),
    longPressThreshold   : 600,
    doubleTapThreshold   : 125,
-   gestureCountThreshold: 7,
-   onSingleTap          : function(){},
-   onDoubleTap          : function(){},
-   onLongPressStart     : function(){},
-   onLongPressMove      : function(){},
-   onLongPressEnd       : function(){},
-   on2FingerMoveUp      : function(){},
-   on2FingerMoveDown    : function(){},
-   on2FingerMoveLeft    : function(){},
-   on2FingerMoveRight   : function(){},
-   onPinchIn            : function(){},
-   onPinchOut           : function(){}
+   gestureCountThreshold: 5,
+   onSingleTap          : function(){
+   },
+   onDoubleTap          : function(){
+   },
+   onLongPressStart     : function(){
+   },
+   onLongPressMove      : function(){
+   },
+   onLongPressEnd       : function(){
+   },
+   on2FingerMoveUp      : function(){
+   },
+   on2FingerMoveDown    : function(){
+   },
+   on2FingerMoveLeft    : function(){
+   },
+   on2FingerMoveRight   : function(){
+   },
+   onPinchIn            : function(){
+   },
+   onPinchOut           : function(){
+   }
 };
 manager.preLoad = function(){
    // TODO : Do something that should be done before any initiation.
+   var elements = document.getElementById("innerContent").getElementsByTagName("*");
+   for(var i = elements.length - 1; i >= 0; --i){
+      var e = elements[i];
+      switch(e.tagName.toLowerCase()){
+         case "br":
+         case "span":
+         case "hr":
+         case "script":
+         case undefined:
+         case null:
+            continue;
+         default :
+            if(!e.hasAttribute("data-not-selectable")){
+               e.selectable = true;
+            }
+      }
+   }
 };
 
 manager.init = function(){

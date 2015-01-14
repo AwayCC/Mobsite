@@ -5,7 +5,7 @@ body {} div {} .selectable {} .column {
 .slide {
     margin: 10px 0;
 }
-.selected {
+.selectionMask {
     background-color: rgba(0, 96, 230, 0.32);
     border-width: 0;
     z-index: 100;
@@ -13,6 +13,14 @@ body {} div {} .selectable {} .column {
     padding:0;
     position: absolute;
     display: none;
+}
+.selectionMaskDragging{
+    background-color: rgba(0, 96, 230, 0.11);
+    border-width: 0;
+    z-index: 100;
+    margin: 0;
+    padding:0;
+    position: absolute;
 }
 #myGestureListener {
     position: fixed;

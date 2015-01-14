@@ -10,9 +10,10 @@ manager.initSelect = function(){
    var initObj = (function(){
       // Define selection mask
       var selectionMask = document.createElement("hr");
-      selectionMask.className += "selected";
+      selectionMask.className += "selectionMask";
       document.body.appendChild(selectionMask);
-
+      console.log("initSelect: Add selection mask.")
+      console.log(selectionMask);
       // Helper functions
       var getParentSelectable = function(node, canReturnMe){
          if(!node){
@@ -50,7 +51,7 @@ manager.initSelect = function(){
          }
 
          while(node.previousElementSibling){
-            if(node.previousElementSibling.selectable != null){
+            if(node.previousElementSibling.selectable == null){
                node = node.previousElementSibling;
                continue;
             }
@@ -67,7 +68,7 @@ manager.initSelect = function(){
             return undefined;
          }
          while(node.nextElementSibling){
-            if(node.nextElementSibling.selectable != null){
+            if(node.nextElementSibling.selectable == null){
                node = node.nextElementSibling;
                continue;
             }
@@ -111,6 +112,7 @@ manager.initSelect = function(){
             deselect();
             return;
          }
+         if(t == selectionMask)return;
          t = getParentSelectable(t, true);
          if(t){
             assignSelection(t);
