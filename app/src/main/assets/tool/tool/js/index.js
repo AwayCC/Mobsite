@@ -27,10 +27,14 @@ jQuery(document).ready(function($){
    // document.getElementById("projecttitle").innerHTML = Android.getProjectName();
    // console.log(Android.getProjectPath());
 
-   // $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    //$("#innercontent").first().load("index.html");
+    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+   // $("#innercontent").first().load("index.html");
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
+    $("#innercontent").on("touchstart click",function(startEvent){
+    var computedStyle = getComputedStyle(event.target, null);
+    alert(computedStyle.backgroundColor);
+    });
     var tester=[{'path':'tree.jpg'}];
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
     // Initialize Galleria
@@ -39,7 +43,7 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-  //  Android.hideSplashView();
+    Android.hideSplashView();
 });
 function galleryImport(member)
 {

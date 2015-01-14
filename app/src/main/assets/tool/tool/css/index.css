@@ -122,6 +122,12 @@ top: 8%;
     vertical-align: middle;
     text-align: center;
 }
+#galleryMark p
+{
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
 #Addmark p
 {
     text-align: center;
@@ -343,13 +349,13 @@ h1 {
 }
 #propertyPanel
 {
-    position: fixed;
+   position: fixed;
     height:40%;
-    width: 20%;
-    left: 0;
-    top: -40%;
-    z-index: 300;
-    background-color: green;
+    width: 30%;
+    right: 0%;
+    top:50%;
+    z-index: 10;
+    background-color: #464342;
     border-radius: 8px;
 }
 @keyframes fade {
