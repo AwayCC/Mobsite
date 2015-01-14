@@ -99,6 +99,7 @@ public class MainActivity extends Activity
         pDialog = new ProgressDialog(MainActivity.this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setTitle("Opening project...");
+        pDialog.setCanceledOnTouchOutside(false);
         pDialog.show();
 
         // Get project name from intent.
@@ -579,5 +580,11 @@ public class MainActivity extends Activity
         }
 
 
+    }
+
+    @JavascriptInterface
+    public String[] getGalleryPaths(){
+        String[] test = {"mosite", "rocks"};
+        return test;
     }
 }

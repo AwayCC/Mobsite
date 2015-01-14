@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -204,21 +205,19 @@ public class StartActivity extends Activity {
                     LayoutInflater inflater = StartActivity.this.getLayoutInflater();
                     final View v = inflater.inflate(R.layout.new_project_dialog, null);
 
-
-
                     final AlertDialog dialog = new AlertDialog.Builder(StartActivity.this)
                             .setView(v)
                             .setTitle("New project name")
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //do nothing !
-                                    ProgressDialog pDialog = new ProgressDialog(v.getContext());
-                                    pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                                    pDialog.setTitle("Initiating project...");
-                                    pDialog.show();
                                     EditText editText = (EditText) v.findViewById(R.id.newProjectName);
                                     String newName = editText.getText().toString();
+
+                                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                                            Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(editText.getWindowToken(),
+                                            InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                                     if (newName.equals("")) {
                                         Toast toast = Toast.makeText(StartActivity.this, "Input is empty", Toast.LENGTH_LONG);
@@ -227,24 +226,16 @@ public class StartActivity extends Activity {
                                         return;
                                     }
 
-                                    InputMethodManager imm = (InputMethodManager)getSystemService(
-                                            Context.INPUT_METHOD_SERVICE);
-                                    imm.hideSoftInputFromWindow(editText.getWindowToken(),
-                                                                InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-                                    if (newProject(newName, templateName)) {
-                                        Intent edit = new Intent();
-                                        edit.setClass(StartActivity.this, MainActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("projectName", newName);
-                                        edit.putExtras(bundle);
-                                        startActivity(edit);
-                                        pDialog.dismiss();
-                                    } else {
+                                    if (!newProjectValid(newName)) {
                                         Toast toast = Toast.makeText(StartActivity.this, "This name is already in use. Use another.", Toast.LENGTH_LONG);
                                         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
                                         toast.show();
+                                        return;
                                     }
+
+                                    InitTask task = new InitTask();
+                                    task.setProjectStrs(newName, templateName);
+                                    task.execute();
                                 }
                             })
                             .show();
@@ -528,6 +519,14 @@ public class StartActivity extends Activity {
         return projectNames;
     }
 
+    private boolean newProjectValid(String name){
+        File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
+        if(newProject.exists())
+            return false;
+        else
+            return true;
+    }
+
     private boolean newProject(String name, String template) {
         File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
         Log.v("new folder", newProject.getPath());
@@ -607,5 +606,48 @@ public class StartActivity extends Activity {
             fout.close();
             Log.v("file debug", to.getPath()+" saved size "+to.length());
         } catch (IOException e){ e.printStackTrace(); }
+    }
+
+    private class InitTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog pDialog;
+        private String newName, templateName;
+
+        public void setProjectStrs(String n, String t){
+            newName = n;
+            templateName = t;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pDialog = new ProgressDialog(StartActivity.this);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.setTitle("Initiating project...");
+            pDialog.setCanceledOnTouchOutside(false);
+            StartActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pDialog.show();
+                }
+            });
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            newProject(newName, templateName);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            pDialog.dismiss();
+            Intent edit = new Intent();
+            edit.setClass(StartActivity.this, MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("projectName", newName);
+            edit.putExtras(bundle);
+            startActivity(edit);
+        }
+
     }
 }
