@@ -11,6 +11,7 @@ manager.initSelect = function(){
       // Define selection mask
       var selectionMask = document.createElement("hr");
       selectionMask.className += "selectionMask";
+      selectionMask.selectionMask = true;
       document.body.appendChild(selectionMask);
       console.log("initSelect: Add selection mask.")
       console.log(selectionMask);
@@ -99,9 +100,10 @@ manager.initSelect = function(){
 
          manager.selectedObject = o;
          Android.setSelectedHTML(o.htmlText);
-         if(showProperty){
-            showProperty(o);
-         }
+         // TODO: add this to enable showing properties
+         //if(showProperty != undefined){
+         //   showProperty(o);
+         //}
 
       };
       var deselect = function(){
@@ -144,6 +146,7 @@ manager.initSelect = function(){
          if(g)assignSelection(g);
       };
       return {
+         selectionMask: selectionMask,
          onSingleTap       : select,
          onDoubleTap       : deselect,
          assignSelection   : assignSelection,
@@ -154,6 +157,7 @@ manager.initSelect = function(){
       }
    })();
    manager.selectedObject = undefined;
+   manager.selectionMask = initObj.selectionMask;
    manager.assignSelection = initObj.assignSelection;
    manager.config.onSingleTap = initObj.onSingleTap;
    manager.config.onDoubleTap = initObj.onDoubleTap;
