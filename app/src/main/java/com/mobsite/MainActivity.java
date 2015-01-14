@@ -119,7 +119,9 @@ public class MainActivity extends Activity
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
-        cwv.loadUrl(Config.getStartUrl());
+        //cwv.loadUrl(Config.getStartUrl());
+        //cwv.loadUrl("file:///android_asset/www/cloud.html");
+        cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures(cwv);
     }
@@ -535,7 +537,7 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public String getProjectsPathAndContentJSON() {
+    public String getProjectsPathJSON() {
         JSONArray projects = new JSONArray();
         File projectStorage = new File(projectPath);
         Log.v("project Storage", projectStorage.getPath());
@@ -546,28 +548,21 @@ public class MainActivity extends Activity
             JSONObject project = new JSONObject();
             File f = paths.getFirst();
             //Log.v("file", f.getPath());
-            if(f.isDirectory()) {
+            if(f.isDirectory() && f.getName().equals("tool")) {
                 File[] files = f.listFiles();
                 for (File file : files)
                     paths.addLast(file);
 
             } else {
+                if(f.getName().equals("tool.html")) continue;
                 try{
-                    FileInputStream fin = new FileInputStream(f);
-                    byte[] buffer = new byte[(int)f.length()];
-                    fin.read(buffer);
-
-                    String content = new String(buffer, "utf-8");
-                    Log.v("path", f.getPath());
-                    //Log.v("content", content);
-
-                    String fileName = f.getPath().substring(projectPath.length()+1);
-                    project.put("content", content);
+                    //String fileName = f.getPath().substring(projectPath.length()+1);
+                    String fileName = f.getName();
+                    Log.v("project Storage", fileName);
                     project.put("path", fileName);
                     projects.put(project);
                 }
                 catch (JSONException jsonE){ jsonE.printStackTrace();}
-                catch (IOException e) { e.printStackTrace(); }
             }
 
             paths.removeFirst();
@@ -577,10 +572,12 @@ public class MainActivity extends Activity
 
     @JavascriptInterface
     public void saveProject() {
-        File root = new File(projectPath+"/img");
+        File root = new File(projectPath);
         Log.v("peek","what's inside : ");
         for (String s : root.list()){
             Log.v("",s);
         }
+
+
     }
 }

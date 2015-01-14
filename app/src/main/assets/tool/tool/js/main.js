@@ -164,9 +164,9 @@ function openDeployDialog(){
                             // completed deploy task!
                             dismissDialogs();
                          });
-
+            console.log("****  :");
             var request = new XMLHttpRequest();
-            request.open("GET", "../../"+Android.getProjectPath()+"/img/img2.jpg", true);
+            request.open("GET", "img/img1.jpg", true);
             //request.open("GET", "../../"+Android.getProjectPath()+"/index.html", true);
             request.responseType = 'arraybuffer';
             request.onload = function(e){
