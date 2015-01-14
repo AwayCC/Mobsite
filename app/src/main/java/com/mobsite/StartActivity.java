@@ -3,12 +3,15 @@ package com.mobsite;
 import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -21,6 +24,7 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,16 +37,19 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Vector;
 
 
@@ -197,15 +204,20 @@ public class StartActivity extends Activity {
 
                     LayoutInflater inflater = StartActivity.this.getLayoutInflater();
                     final View v = inflater.inflate(R.layout.new_project_dialog, null);
-                    new AlertDialog.Builder(StartActivity.this)
+
+                    final AlertDialog dialog = new AlertDialog.Builder(StartActivity.this)
                             .setView(v)
                             .setTitle("New project name")
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //do nothing !
                                     EditText editText = (EditText) v.findViewById(R.id.newProjectName);
                                     String newName = editText.getText().toString();
+
+                                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                                            Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(editText.getWindowToken(),
+                                            InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                                     if (newName.equals("")) {
                                         Toast toast = Toast.makeText(StartActivity.this, "Input is empty", Toast.LENGTH_LONG);
@@ -214,21 +226,21 @@ public class StartActivity extends Activity {
                                         return;
                                     }
 
-                                    if (newProject(newName, templateName)) {
-                                        Intent edit = new Intent();
-                                        edit.setClass(StartActivity.this, MainActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("projectName", newName);
-                                        edit.putExtras(bundle);
-                                        startActivity(edit);
-                                    } else {
+                                    if (!newProjectValid(newName)) {
                                         Toast toast = Toast.makeText(StartActivity.this, "This name is already in use. Use another.", Toast.LENGTH_LONG);
                                         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
                                         toast.show();
+                                        return;
                                     }
+
+                                    InitTask task = new InitTask();
+                                    task.setProjectStrs(newName, templateName);
+                                    task.execute();
                                 }
                             })
                             .show();
+
+                    //pDialog.show();
                 }
 
                 return;
@@ -507,6 +519,14 @@ public class StartActivity extends Activity {
         return projectNames;
     }
 
+    private boolean newProjectValid(String name){
+        File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
+        if(newProject.exists())
+            return false;
+        else
+            return true;
+    }
+
     private boolean newProject(String name, String template) {
         File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
         Log.v("new folder", newProject.getPath());
@@ -522,34 +542,112 @@ public class StartActivity extends Activity {
         else {
             // initialize the project with files.
             newProject.mkdirs();
+            String assetPath = "init/"+template;
+            String[] list;
+            try{
+                // copy template files
+                list = getAssets().list(assetPath);
+                for (String subPath : list){
+                    copyRecursively(assetPath+"/"+subPath, newProject);
+                }
 
-            // html files.
-            copyInitFile("init/"+template+"/index.html", new File(newProject, "index.html"));
-
-            // css files.
-            File css = new File(newProject, "css");
-            css.mkdirs();
-            copyInitFile("init/"+template+"/css/bootstrap.css", new File(css, "bootstrap.css"));
-            // see if there is more files...
-
+                // copy mobsite tool files
+                assetPath = "tool";
+                list = getAssets().list(assetPath);
+                for (String subPath : list){
+                    copyRecursively(assetPath+"/"+subPath, newProject);
+                }
+            }catch (IOException e){ e.printStackTrace(); }
         }
         return true;
+    }
+
+    private void copyRecursively(String assetPath, File toFolder){
+        //Log.v("file debug", assetPath);
+        String[] list;
+        try{
+            list = getAssets().list(assetPath);
+            String fileName = assetPath.substring(assetPath.lastIndexOf("/"));
+            if(list.length > 0){ // A folder
+                Log.v("file debug", assetPath+" is folder...");
+                File newFolder = new File(toFolder, fileName);
+                Log.v("file debug", "NEW folder : "+newFolder.getPath());
+                newFolder.mkdirs();
+                for (String subPath : list){
+
+                    copyRecursively(assetPath + "/" + subPath, newFolder);
+                }
+            }
+            else{ // A file.
+                Log.v("file debug", assetPath+" is file...");
+
+                File newFile = new File(toFolder, fileName);
+                newFile.createNewFile();
+
+                Log.v("file debug", "copy from * "+assetPath+" * to * "+newFile.getPath());
+                copyInitFile(assetPath, newFile);
+            }
+        }catch (IOException e){ e.printStackTrace(); }
     }
 
     private void copyInitFile(String from, File to){
         try {
             to.createNewFile();
-            InputStream in  = this.getAssets().open(from);
+            InputStream in  = new BufferedInputStream(this.getAssets().open(from));
             FileOutputStream fout = new FileOutputStream(to);
-            BufferedReader reader = new BufferedReader(
-                                        new InputStreamReader(in, "UTF-8"));
-            String mLine = reader.readLine();
-            while (mLine != null) {
-                mLine += "\n";
-                fout.write(mLine.getBytes("utf-8"));
-                mLine = reader.readLine();
+
+            int c;
+            byte[] buffer = new byte[10*1024];
+            while ((c = in.read(buffer)) != -1){
+                //fout.write(c);
+                fout.write(buffer, 0, c);
             }
+            fout.flush();
             fout.close();
+            Log.v("file debug", to.getPath()+" saved size "+to.length());
         } catch (IOException e){ e.printStackTrace(); }
+    }
+
+    private class InitTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog pDialog;
+        private String newName, templateName;
+
+        public void setProjectStrs(String n, String t){
+            newName = n;
+            templateName = t;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pDialog = new ProgressDialog(StartActivity.this);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.setTitle("Initiating project...");
+            pDialog.setCanceledOnTouchOutside(false);
+            StartActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pDialog.show();
+                }
+            });
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            newProject(newName, templateName);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            pDialog.dismiss();
+            Intent edit = new Intent();
+            edit.setClass(StartActivity.this, MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("projectName", newName);
+            edit.putExtras(bundle);
+            startActivity(edit);
+        }
+
     }
 }

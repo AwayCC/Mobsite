@@ -15,12 +15,26 @@ var settingshow = false;
 var controlpanelshow = false;
 var githubpanelshow=false;
 var isFullScreen=false;
+var sWidth;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
     
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
+<<<<<<< HEAD
+   // $("#innercontent").first().load("./gallery/classic-demo.html");
+    //$("#galleryPanel").first().load("./gallery/classic-demo.html");
+    $("#innercontent").on("touchstart click",function(startEvent){
+    var computedStyle = getComputedStyle(event.target, null);
+    alert(computedStyle.backgroundColor);
+    $("#propertyPanel").draggable();
+    Galleria.loadTheme('galleria.classic.min.js');
+
+    // Initialize Galleria
+    Galleria.run('#galleria');
+});
+=======
 
     // set title.
     document.getElementById("projecttitle").innerHTML = Android.getProjectName();
@@ -28,6 +42,7 @@ jQuery(document).ready(function($){
     $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     //$("#innercontent").first().load("./www/index.html");
     Android.hideSplashView();
+>>>>>>> origin/master
 });
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();

@@ -4,10 +4,15 @@
     <meta charset="utf-8">
     <title>Computer World</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/typicons.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link rel="stylesheet" type="text/css" href="css/github.css">
+    <link rel="stylesheet" type="text/css" href="tool/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="tool/css/typicons.min.css"/>
+    <link rel="stylesheet" type="text/css" href="tool/css/index.css" />
+    <link rel="stylesheet" type="text/css" href="tool/css/github.css">
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+
+        <!-- load Galleria -->
+        <script src="tool/gallery/galleria-1.4.2.min.js"></script>
 </head>
 <body id="test1">
     <div id="header" >
@@ -123,34 +128,34 @@
         </div>
     <div id="toolpanel">
         <div id="toolmark">
-            <img src="img/icons/wrench.png">
+            <img src="tool/img/icons/wrench.png">
         </div>
-        <a id="addbtn" class="option_container"><img class="displayed" src="img/icons/add.png"/></a>
-        <a class="option_container"><img class="displayed" id="delebtn" src="img/icons/Delete.png"/></a>
-        <a class="option_container"><img class="displayed" id="editbtn" src="img/icons/Edit.png"/></a>
-        <a class="option_container"><img class="displayed" id="dissbtn" src="img/icons/Diselect.png"/></a>
-        <a class="option_container"><img class="displayed" id="copybtn" src="img/icons/copyy.png"/></a>
-        <a class="option_container"><img class="displayed" id="pastbtn" src="img/icons/pastee.png"/></a>
+        <a id="addbtn" class="option_container"><img class="displayed" src="tool/img/icons/add.png"/></a>
+        <a class="option_container"><img class="displayed" id="delebtn" src="tool/img/icons/Delete.png"/></a>
+        <a class="option_container"><img class="displayed" id="editbtn" src="tool/img/icons/Edit.png"/></a>
+        <a class="option_container"><img class="displayed" id="dissbtn" src="tool/img/icons/Diselect.png"/></a>
+        <a class="option_container"><img class="displayed" id="copybtn" src="tool/img/icons/copyy.png"/></a>
+        <a class="option_container"><img class="displayed" id="pastbtn" src="tool/img/icons/pastee.png"/></a>
     </div>
     <div id="Add-panel" class="bubble_left container">
         <div id="Addmark"><p>Add New Element</p></div>
         <div id="Addmenu">
             <div class="col-xs-6 element" id="Title"><div class="item"><h1>Input Title</h1></div></div>
             <div class="col-xs-6 element" id="Text"><div class="item"><p>Input Text</p></div></div>
-            <div class="col-xs-6 element" id="Container1" style="background: url('img/icons/container1.png')
+            <div class="col-xs-6 element" id="Container1" style="background: url('tool/img/icons/container1.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item container">
                     <div class="col-md-12"></div>
                 </div>
             </div>
-            <div class="col-xs-6 element" id="Container2" style="background: url('img/icons/container2.png')
+            <div class="col-xs-6 element" id="Container2" style="background: url('tool/img/icons/container2.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item container">
                     <div class="col-md-6"></div>
                     <div class="col-md-6"></div>
                 </div>
             </div>
-            <div class="col-xs-6 element" id="Container3" style="background: url('img/icons/container3.png')
+            <div class="col-xs-6 element" id="Container3" style="background: url('tool/img/icons/container3.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item container">
                     <div class="col-md-4"></div>
@@ -158,7 +163,7 @@
                     <div class="col-md-4"></div>
                 </div>
             </div>
-            <div class="col-xs-6 element" id="Container4" style="background: url('img/icons/container4.png')
+            <div class="col-xs-6 element" id="Container4" style="background: url('tool/img/icons/container4.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item container">
                     <div class="col-md-3"></div>
@@ -167,7 +172,7 @@
                     <div class="col-md-3"></div>
                 </div>
             </div>
-            <div class="col-xs-6 element" id="Container6" style="background: url('img/icons/container6.png')
+            <div class="col-xs-6 element" id="Container6" style="background: url('tool/img/icons/container6.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item container">
                     <div class="col-md-2"></div>
@@ -177,22 +182,22 @@
                     <div class="col-md-2"></div>
                 </div>
             </div>
-            <div class="col-xs-6 element" id="Picture" style="background: url('img/icons/picture.png')
+            <div class="col-xs-6 element" id="Picture" style="background: url('tool/img/icons/picture.png')
                                                               no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item">
                     <img/>
                 </div>
             </div>
-            <div class="col-xs-6 element" id="HyperLink" style="background: url('img/icons/link.png')
+            <div class="col-xs-6 element" id="HyperLink" style="background: url('tool/img/icons/link.png')
                                                                 no-repeat center center transparent; background-size: 100% auto;">
                 <div class="item">
                     <a />
                 </div>
             </div>
-            <div class="col-xs-6 element" id="Icon" style="background: url('img/icons/icon.png')
+            <div class="col-xs-6 element" id="Icon" style="background: url('tool/img/icons/icon.png')
                                                            no-repeat center center transparent; background-size: 100% auto;"></div>
 
-            <div class="col-xs-6 element" id="InputBox" style="background: url('img/icons/inputbox.png')
+            <div class="col-xs-6 element" id="InputBox" style="background: url('tool/img/icons/inputbox.png')
                                                                no-repeat center center transparent; background-size: 100% auto;"></div>
             <div class="col-xs-6 element" id="NavBar"></div>
             <div class="col-xs-6 element" id="Footer">
@@ -212,19 +217,120 @@
 
         </div>
     </div>
+    <div id="galleryPanel">
+        <div class="content">
+        <div id="galleria">
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Biandintz_eta_zaldiak_-_modified2.jpg/800px-Biandintz_eta_zaldiak_-_modified2.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Biandintz_eta_zaldiak_-_modified2.jpg/100px-Biandintz_eta_zaldiak_-_modified2.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Biandintz_eta_zaldiak_-_modified2.jpg/1280px-Biandintz_eta_zaldiak_-_modified2.jpg"
+                    data-title="Biandintz eta zaldiak"
+                    data-description="Horses on Bianditz mountain, in Navarre, Spain."
+                >
+            </a>
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Athabasca_Rail_at_Brule_Lake.jpg/800px-Athabasca_Rail_at_Brule_Lake.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Athabasca_Rail_at_Brule_Lake.jpg/100px-Athabasca_Rail_at_Brule_Lake.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Athabasca_Rail_at_Brule_Lake.jpg/1280px-Athabasca_Rail_at_Brule_Lake.jpg"
+                    data-title="Athabasca Rail"
+                    data-description="The Athabasca River railroad track at the mouth of Brulé Lake in Alberta, Canada."
+                >
+            </a>
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Back-scattering_crepuscular_rays_panorama_1.jpg/1280px-Back-scattering_crepuscular_rays_panorama_1.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Back-scattering_crepuscular_rays_panorama_1.jpg/100px-Back-scattering_crepuscular_rays_panorama_1.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Back-scattering_crepuscular_rays_panorama_1.jpg/1400px-Back-scattering_crepuscular_rays_panorama_1.jpg"
+                    data-title="Back-scattering crepuscular rays"
+                    data-description="Picture of the day on Wikimedia Commons 26 September 2010."
+                >
+            </a>
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Interior_convento_3.jpg/800px-Interior_convento_3.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Interior_convento_3.jpg/120px-Interior_convento_3.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Interior_convento_3.jpg/1400px-Interior_convento_3.jpg"
+                    data-title="Interior convento"
+                    data-description="Interior view of Yuriria Convent, founded in 1550."
+                >
+            </a>
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Oxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg/800px-Oxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Oxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg/100px-Oxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Oxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg/1280px-Oxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg"
+                    data-title="Oxbow Bend outlook"
+                    data-description="View over the Snake River to the Mount Moran with the Skillet Glacier."
+                >
+            </a>
+        
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/2909_vallon_moy_res.jpg/800px-2909_vallon_moy_res.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/2909_vallon_moy_res.jpg/100px-2909_vallon_moy_res.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/2909_vallon_moy_res.jpg/1280px-2909_vallon_moy_res.jpg"
+                    data-title="Haute Severaisse valley"
+                    data-description="View of Haute Severaisse valley and surrounding summits from the slopes of Les Vernets."
+                >
+            </a>
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bohinjsko_jezero_2.jpg/800px-Bohinjsko_jezero_2.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bohinjsko_jezero_2.jpg/100px-Bohinjsko_jezero_2.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bohinjsko_jezero_2.jpg/1280px-Bohinjsko_jezero_2.jpg"
+                    data-title="Bohinj lake"
+                    data-description="Bohinj lake (Triglav National Park, Slovenia) in the morning."
+                >
+            </a>
+            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Bowling_Balls_Beach_2_edit.jpg/800px-Bowling_Balls_Beach_2_edit.jpg">
+                <img 
+                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Bowling_Balls_Beach_2_edit.jpg/100px-Bowling_Balls_Beach_2_edit.jpg",
+                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Bowling_Balls_Beach_2_edit.jpg/1280px-Bowling_Balls_Beach_2_edit.jpg"
+                    data-title="Bowling Balls"
+                    data-description="Mendocino county, California, USA."
+                >
+            </a>
+        </div>
+    </div>
+
+    <script>
+
+    // Load the classic theme
+    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
+
+    // Initialize Galleria
+    Galleria.run('#galleria');
+
+    </script>
+    </div>
     <div id="setting-panel" class="bubble_top">
+    </div>
+    <div id="propertyPanel" class="draggable">
+        <div id="Addmark"></div>
+        <div class="CSSTableGenerator container" >
+                <table>
+                    <tr><td>Property</td><td>Content</td></tr>
+                    <tr><td>Category</td><td id="properHeight"></td></tr>
+                    <tr><td>Content</td><td id="properContent"></td></tr>
+                    <tr><td>Rect - Height</td><td id="properHeight"></td></tr>
+                    <tr><td>Rect - Width</td><td id="properWidth"></td></tr>
+                    <tr><td>Text - Color</td><td id="properColor"></td></tr>
+                    <tr><td>Background</td><td id="properBackgound"></td></tr>
+                    <tr><td>Opacity</td><td id="properOpacity"></td></tr>
+                    <tr><td>Padding</td><td id="properPadding"></td></tr>
+                </table>
+        </div>      
     </div>
     <div id="preview-panel">
     </div>
-    <div id="preview-control" style="background: url('img/icons/cancel.png')
+    <div id="preview-control" style="background: url('tool/img/icons/cancel.png')
                                      no-repeat center center transparent; background-size: 100% auto;">
     </div>
-    <script src="js/underscore-min.js"></script>
-    <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/index.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.transit.min.js"></script>
-    <script src="js/github.js"></script>
-    <script src="js/main.js"></script>
+    <script src="tool/js/underscore-min.js"></script>
+    <script src="tool/js/jquery-1.11.1.min.js"></script>
+    
+    <script src="tool/js/index.js"></script>
+    <script src="tool/js/bootstrap.min.js"></script>
+    <script src="tool/js/jquery.transit.min.js"></script>
+    <script src="tool/js/github.js"></script>
+    <script src="tool/js/main.js"></script>
+    <script src="tool/js/gesture.js"></script>
+    <script src="tool/js/motions.js"></script>
+    
 </body>
 </html>
