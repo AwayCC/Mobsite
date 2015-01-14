@@ -583,8 +583,16 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public String[] getGalleryPaths(){
-        String[] test = {"mosite", "rocks"};
-        return test;
+    public String getGalleryPaths(){
+        JSONArray result = new JSONArray();
+        try{
+            JSONObject project = new JSONObject();
+            project.put("path", "mobsite");
+            result.put(project);
+            project.put("path", "rocks");
+            result.put(project);
+            //String[] test = {"mosite", "rocks"};
+        }catch (JSONException e) { e.printStackTrace(); }
+        return result.toString();
     }
 }
