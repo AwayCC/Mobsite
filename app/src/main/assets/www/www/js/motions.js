@@ -107,45 +107,14 @@ manager.deselect = function(){
    manager.selectedObject = undefined;
    manager.state = manager.canvasState.unselected;
 };
-manager.assignSelection = function(o){
-   console.log("assignSelection:");
-   console.log(o);
-   if(o == manager.selectedObject){
-      return;
-   } // Speed up the process.
-   if(manager.selectedObject){
-      manager.deselect();
-   }
-   manager.selectedObject = o;
-   Android.setSelectedHTML(o.htmlText);
-   manager.addClass(o, "selected");
-   manager.state = manager.canvasState.selected;
-};
-manager.updateAccessible = function(x, y, o){
-};
-manager.updateCursorPosition = function(x, y){
 
-};
 
 /*
  * Below are several default event function hook
  * They represent how others may use the manager object
  */
 manager.click = function(x, y){
-   var t = document.elementFromPoint(x, y);
-   if(!t){
-      console.log("Click: can't get object " + x + "," + y);
-      manager.deselect();
-      return;
-   }
-   var rect = t.getBoundingClientRect();
-   console.log(rect.top, rect.bottom, rect.left, rect.right, rect.height, rect.width);
-   t = manager.getParentSelectable(t, true);
-   if(t){
-      manager.assignSelection(t);
-   }else{
-      manager.deselect();
-   }
+
 };
 manager.doubleClick = function(x, y){
 
@@ -174,37 +143,7 @@ manager.dualSwipe = function(direction){
 };
 
 
-// Configuration for gestureListener
-manager.config = {
-   listener : document.getElementById("innercontent"),
-   longPressThreshold   : 600,
-   doubleTapThreshold   : 125,
-   gestureCountThreshold: 10,
-   onSingleTap          : manager.click,
-   onDoubleTap          : manager.doubleClick,
-   onLongPressStart     : function(){
-   },
-   onLongPressMove      : function(){
-   },
-   onLongPressEnd       : function(){
-   },
-   on2FingerMoveUp      : function(){
-      manager.dualSwipe(1);
-   },
-   on2FingerMoveDown    : function(){
-      manager.dualSwipe(2);
-   },
-   on2FingerMoveLeft    : function(){
-      manager.dualSwipe(3);
-   },
-   on2FingerMoveRight   : function(){
-      manager.dualSwipe(4);
-   },
-   onPinchIn            : function(){
-   },
-   onPinchOut           : function(){
-   }
-};
+
 
 
 manager.initDrag = function(){
