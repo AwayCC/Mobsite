@@ -589,8 +589,9 @@ public class MainActivity extends Activity
             JSONObject project = new JSONObject();
             project.put("path", "mobsite");
             result.put(project);
-            project.put("path", "rocks");
-            result.put(project);
+            JSONObject project2 = new JSONObject();
+            project2.put("path", "rocks");
+            result.put(project2);
             //String[] test = {"mosite", "rocks"};
         }catch (JSONException e) { e.printStackTrace(); }
         return result.toString();

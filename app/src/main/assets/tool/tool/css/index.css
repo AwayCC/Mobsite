@@ -100,7 +100,7 @@ top: 8%;
 #Addmark
 {
     height: 8%;
-    min-height: 30px;
+    min-height: 50px;
     width: 100%;
     background-color: #242525;  
     border-top-left-radius: 0.75em;
@@ -109,6 +109,24 @@ top: 8%;
     color: white;
     vertical-align: middle;
     text-align: center;
+}
+#galleryMark
+{
+    height: 30px;
+    width: 100%;
+    background-color: #242525;  
+    border-top-left-radius: 0.75em;
+    border-top-right-radius: 0.75em;
+    display: table;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+}
+#galleryMark p
+{
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
 }
 #Addmark p
 {
@@ -131,15 +149,43 @@ top: 8%;
 #galleria{height:320px}
 #galleryPanel
 {
+    border-radius: 8px;
     position: fixed;
     height: auto;
     width: 50%;
     top: 50%;
     left: 10%;
-   background-color: blue;
+   background-color: #404040;
 }
 #Add-panel::before {
     color: #000;
+}
+.galleria-theme-classic .galleria-stage 
+{
+    top: 0;
+    bottom: 5px;
+    padding-left: 1%;
+    padding-right: 1%;
+    
+    background-color: #191919;
+}
+.galleria-thumbnails-list
+{
+    padding-top: 2px;
+    border:0;
+    border-top: 2px;
+    border-color: white;
+    border-style: solid;
+    padding-bottom: 2px;
+    top:0;
+    background-color: #202020;
+}
+.galleria-theme-classic
+{
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+   
+    background-color: transparent;
 }
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
@@ -303,13 +349,13 @@ h1 {
 }
 #propertyPanel
 {
-    position: fixed;
+   position: fixed;
     height:40%;
-    width: 20%;
-    left: 0;
-    top: -40%;
-    z-index: 300;
-    background-color: green;
+    width: 30%;
+    right: 0%;
+    top:50%;
+    z-index: 10;
+    background-color: #464342;
     border-radius: 8px;
 }
 @keyframes fade {

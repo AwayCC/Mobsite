@@ -12,7 +12,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 
         <!-- load Galleria -->
-        <script src="tool/gallery/galleria-1.4.2.min.js"></script>
+        
 </head>
 <body id="test1">
     <div id="header" >
@@ -218,12 +218,13 @@
         </div>
     </div>
     <div id="galleryPanel">
+        <div id="galleryMark"><p>Gallery</p></div>
         <div class="content">
         <div id="galleria">
-            <a href="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Biandintz_eta_zaldiak_-_modified2.jpg/800px-Biandintz_eta_zaldiak_-_modified2.jpg">
+            <a href="image.jpg">
                 <img 
-                    src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Biandintz_eta_zaldiak_-_modified2.jpg/100px-Biandintz_eta_zaldiak_-_modified2.jpg",
-                    data-big="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Biandintz_eta_zaldiak_-_modified2.jpg/1280px-Biandintz_eta_zaldiak_-_modified2.jpg"
+                    src="image.jpg",
+                    data-big="image.jpg"
                     data-title="Biandintz eta zaldiak"
                     data-description="Horses on Bianditz mountain, in Navarre, Spain."
                 >
@@ -234,17 +235,14 @@
     <script>
 
     // Load the classic theme
-    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
-
-    // Initialize Galleria
-    Galleria.run('#galleria');
+   
 
     </script>
     </div>
     <div id="setting-panel" class="bubble_top">
     </div>
     <div id="propertyPanel" class="draggable">
-        <div id="Addmark"></div>
+        <div id="galleryMark"></div>
         <div class="CSSTableGenerator container" >
                 <table>
                     <tr><td>Property</td><td>Content</td></tr>
@@ -266,7 +264,7 @@
     </div>
     <script src="tool/js/underscore-min.js"></script>
     <script src="tool/js/jquery-1.11.1.min.js"></script>
-    
+    <script src="tool/gallery/galleria-1.4.2.min.js"></script>
     <script src="tool/js/index.js"></script>
     <script src="tool/js/bootstrap.min.js"></script>
     <script src="tool/js/jquery.transit.min.js"></script>
