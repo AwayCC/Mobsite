@@ -99,6 +99,9 @@ manager.initSelect = function(){
 
          manager.selectedObject = o;
          Android.setSelectedHTML(o.htmlText);
+         if(showProperty){
+            showProperty(o);
+         }
 
       };
       var deselect = function(){
@@ -122,32 +125,32 @@ manager.initSelect = function(){
       };
       var swipeDown = function(){
          if(!manager.selectedObject)return;
-         var g= getFirstChildSelectable(manager.selectedObject);
+         var g = getFirstChildSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       var swipeUp = function(){
          if(!manager.selectedObject)return;
-         var g= getParentSelectable(manager.selectedObject);
+         var g = getParentSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       var swipeLeft = function(){
          if(!manager.selectedObject)return;
-         var g= getPreviousSelectable(manager.selectedObject);
+         var g = getPreviousSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       var swipeRight = function(){
          if(!manager.selectedObject)return;
-         var g= getNextSelectable(manager.selectedObject);
+         var g = getNextSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       return {
-         onSingleTap    : select,
-         onDoubleTap    : deselect,
-         assignSelection : assignSelection,
+         onSingleTap       : select,
+         onDoubleTap       : deselect,
+         assignSelection   : assignSelection,
          on2FingerMoveDown : swipeDown,
          on2FingerMoveLeft : swipeLeft,
-         on2FingerMoveUp : swipeUp,
-         on2FingerMoveRight : swipeRight
+         on2FingerMoveUp   : swipeUp,
+         on2FingerMoveRight: swipeRight
       }
    })();
    manager.selectedObject = undefined;
