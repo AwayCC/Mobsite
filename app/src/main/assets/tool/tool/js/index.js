@@ -36,7 +36,8 @@ jQuery(document).ready(function($){
 });
 function galleryInitialize( member)
 {
-    alert(member.length);
+    console.log(member+"Here~");
+    //alert(member.length);
     /*for (var i = 0; i < member.length; i++) 
     {
         
@@ -81,6 +82,7 @@ function AddPanelToggle()
 };
 function SettingPanelToggle()
 {
+     galleryInitialize(galleryMember);
     if(!settingshow)
         SettingPanelShow();
     else
