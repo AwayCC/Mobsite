@@ -15,13 +15,24 @@ var settingshow = false;
 var controlpanelshow = false;
 var githubpanelshow=false;
 var isFullScreen=false;
+var sWidth;
 jQuery(document).ready(function($){
     var freeBounds = document.getElementById('propertypanel');
     
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
-    $("#innercontent").first().load("./www/index.html");
+   // $("#innercontent").first().load("./gallery/classic-demo.html");
+    //$("#galleryPanel").first().load("./gallery/classic-demo.html");
+    $("#innercontent").on("touchstart click",function(startEvent){
+    var computedStyle = getComputedStyle(event.target, null);
+    alert(computedStyle.backgroundColor);
+    $("#propertyPanel").draggable();
+    Galleria.loadTheme('galleria.classic.min.js');
+
+    // Initialize Galleria
+    Galleria.run('#galleria');
+});
 });
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
