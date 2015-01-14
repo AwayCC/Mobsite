@@ -24,20 +24,21 @@ jQuery(document).ready(function($){
     EnvironmentInit();
 
     // set title.
-    document.getElementById("projecttitle").innerHTML = Android.getProjectName();
-    console.log(Android.getProjectPath());
+    //document.getElementById("projecttitle").innerHTML = Android.getProjectName();
+    //console.log(Android.getProjectPath());
 
-    $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     //$("#innercontent").first().load("index.html");
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
     var tester=[{'path':'tree.jpg'}];
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
     // Initialize Galleria
-    Galleria.run('#galleria');
+    
     //Galleria.ready(function(event){alert(abc);});
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
+    Galleria.run('#galleria');
     Android.hideSplashView();
 });
 function galleryImport(member)
