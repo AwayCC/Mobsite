@@ -99,8 +99,7 @@ top: 8%;
 }
 #Addmark
 {
-    height: 8%;
-    min-height: 50px;
+    height: 30px;
     width: 100%;
     background-color: #242525;  
     border-top-left-radius: 0.75em;

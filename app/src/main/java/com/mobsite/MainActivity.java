@@ -126,13 +126,7 @@ public class MainActivity extends Activity
         saveProject();
     }
 
-        cwv = (CordovaWebView) findViewById(R.id.main_webview);
-        Config.init(this);
-        //cwv.loadUrl(Config.getStartUrl());
-        //cwv.loadUrl("file:///android_asset/project/tool.html");
-        //cwv.loadUrl("file://"+projectPath+"/tool.html");
-        cwv.addJavascriptInterface(this, "Android");
-        setCordovaWebViewGestures(cwv);
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -276,7 +270,6 @@ public class MainActivity extends Activity
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
-        Config.init(this);
         cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures();
