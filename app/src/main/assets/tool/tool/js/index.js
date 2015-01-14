@@ -24,10 +24,10 @@ jQuery(document).ready(function($){
     EnvironmentInit();
 
     // set title.
-    //document.getElementById("projecttitle").innerHTML = Android.getProjectName();
-    //console.log(Android.getProjectPath());
+   // document.getElementById("projecttitle").innerHTML = Android.getProjectName();
+   // console.log(Android.getProjectPath());
 
-    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+   // $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     //$("#innercontent").first().load("index.html");
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
@@ -39,7 +39,7 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-    Android.hideSplashView();
+  //  Android.hideSplashView();
 });
 function galleryImport(member)
 {
