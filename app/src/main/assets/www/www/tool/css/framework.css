@@ -6,7 +6,7 @@ body {} div {} .selectable {} .column {
     margin: 10px 0;
 }
 .selectionMask {
-    background-color: rgba(0, 96, 230, 0.32);
+    background-color: rgba(0, 96, 230, 0.4);
     border-width: 0;
     z-index: 100;
     margin: 0;
@@ -15,7 +15,7 @@ body {} div {} .selectable {} .column {
     display: none;
 }
 .selectionMaskDragging{
-    background-color: rgba(0, 96, 230, 0.11);
+    background-color: rgba(0, 96, 230, 0.2);
     border-width: 0;
     z-index: 100;
     margin: 0;

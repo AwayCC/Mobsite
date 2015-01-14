@@ -9,19 +9,21 @@ if(!manager.config){
 manager.initDrag = function(){
    var initObj = (function(){
       var isDragging = false;
-      var dragStart = function(x,y){
-         var t = document.elementFromPoint(x,y);
-         if(t == manager.selectionMask){
-            isDragging = true;
-         }else{
+      var dragStart = function(x, y){
+         var t = document.elementFromPoint(x, y);
+         if(t != manager.selectionMask){
             return;
          }
-
+         isDragging = true;
+         manager.selectionMask.style.display = "none";
+         manager.selectedObject.style.opacity = "0.4";
       };
-      var dragMove = function(x,y){
+      var dragMove = function(x, y){
+
       };
       var dragEnd = function(){
-
+         manager.assignSelection(manager.selectedObject);
+         manager.selectedObject.style.opacity = "1";
       };
       return {
          onLongPressStart: dragStart,

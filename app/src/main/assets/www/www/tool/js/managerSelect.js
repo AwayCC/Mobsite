@@ -84,9 +84,6 @@ manager.initSelect = function(){
       var assignSelection = function(o){
          console.log("assignSelection:");
          console.log(o);
-         if(o == manager.selectedObject){
-            return;
-         } // Speed up the process.
          if(manager.selectedObject){
             deselect();
          }
