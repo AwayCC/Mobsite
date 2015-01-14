@@ -53,6 +53,10 @@ manager.preLoad = function(){
             if(!e.hasAttribute("data-not-selectable")){
                e.selectable = true;
             }
+            if(e.hasAttribute("data-placeholder")){
+               e.placeholder = true;
+            }
+
       }
    }
 };
