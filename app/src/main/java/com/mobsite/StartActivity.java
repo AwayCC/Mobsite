@@ -1,12 +1,21 @@
 package com.mobsite;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -14,24 +23,32 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+import android.widget.VideoView;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Vector;
 
 
@@ -54,8 +71,12 @@ public class StartActivity extends Activity {
     Choose_Listener choose_listener;
     View selected;
     private List<Map<String, String>> planetsList = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> oldProjectsList = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> templateList = new ArrayList<Map<String, String>>();
     SimpleAdapter OpenAdapter, NewAdapter;
-    ;
+    private VideoView splashVid;
+    private RelativeLayout splashView;
+    private boolean splash = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +84,28 @@ public class StartActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.start_activity);
+
+        splashVid = (VideoView) findViewById(R.id.splash_vid);
+        splashView = (RelativeLayout) findViewById(R.id.splash_view);
+        splashVid.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if (splash) {
+                    splashVid.seekTo(0);
+                    splashVid.start();
+                } else {
+                    splashView.setVisibility(View.GONE);
+                }
+            }
+        });
+        splashVid.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash));
+        splashVid.start();
+
+        FrameLayout startFrame = (FrameLayout) findViewById(R.id.startFrame);
+        LayoutTransition splashTrans = new LayoutTransition();
+        splashTrans.enableTransitionType(LayoutTransition.DISAPPEARING);
+        startFrame.setLayoutTransition(splashTrans);
+
         layoutregist();
         testbtn.setOnClickListener(new Testbtn_Listener(this));
         newbtn.setOnClickListener(newbtn_listener);
@@ -74,12 +117,13 @@ public class StartActivity extends Activity {
         int height = size.y;
         iniList();
 
-        OpenAdapter = new SimpleAdapter(this, planetsList, R.layout.listtext, new String[]{"Open"}, new int[]{android.R.id.text1});
-        NewAdapter = new SimpleAdapter(this, planetsList, R.layout.listtext, new String[]{"New"}, new int[]{android.R.id.text1});
+        OpenAdapter = new SimpleAdapter(this, oldProjectsList, R.layout.listtext, new String[]{"Open"}, new int[]{android.R.id.text1});
+        NewAdapter = new SimpleAdapter(this, templateList, R.layout.listtext, new String[]{"New"}, new int[]{android.R.id.text1});
         openmenu.setAdapter(OpenAdapter);
         openmenu.setSelected(true);
         newmenu.setAdapter(NewAdapter);
         newmenu.setSelected(true);
+        splash = false;
     }
 
     private void layoutregist() {
@@ -101,7 +145,17 @@ public class StartActivity extends Activity {
     }
 
     private void iniList() {
-        planetsList.add(createPlanet("Open", "Mercury"));
+        Vector<String> projectNames = getProjectNames();
+        for(String s : projectNames){
+            oldProjectsList.add(addProjectName("Open", s));
+        }
+
+        templateList.add(addProjectName("New","template_1"));
+        templateList.add(addProjectName("New","template_2"));
+        templateList.add(addProjectName("New","template_3"));
+        templateList.add(addProjectName("New","default"));
+        /*
+        planetsList.add(addProjectName("Open", "Mercury"));
         planetsList.add(createPlanet("Open", "Venus"));
         planetsList.add(createPlanet("Open", "Mars"));
         planetsList.add(createPlanet("Open", "Jupiter"));
@@ -109,20 +163,95 @@ public class StartActivity extends Activity {
         planetsList.add(createPlanet("New", "Uranus"));
         planetsList.add(createPlanet("New", "Neptune"));
         planetsList.add(createPlanet("New", "GG"));
-
+        */
     }
 
+    private HashMap<String, String> addProjectName(String key, String name) {
+        HashMap<String, String> project = new HashMap<String, String>();
+        project.put(key, name);
+        return project;
+    }
+
+    /*
     private HashMap<String, String> createPlanet(String key, String name) {
         HashMap<String, String> planet = new HashMap<String, String>();
         planet.put(key, name);
         return planet;
-    }
+    }*/
 
     class Choose_Listener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             if (view == selected) {
-                Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_LONG).show();
+
+                HashMap<String, String> data = (HashMap<String, String>) adapterView.getItemAtPosition(i);
+
+                if(data.containsKey("Open")/* && oldProjectsList.size() > 0*/){
+                    // from open list.
+                    String selectedProject = data.get("Open");
+                    Intent edit = new Intent();
+                    edit.setClass(StartActivity.this, MainActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectName", selectedProject);
+                    edit.putExtras(bundle);
+                    startActivity(edit);
+                } else {
+                    // from new list.
+                    final String templateName = data.get("New");
+
+                    LayoutInflater inflater = StartActivity.this.getLayoutInflater();
+                    final View v = inflater.inflate(R.layout.new_project_dialog, null);
+
+
+
+                    final AlertDialog dialog = new AlertDialog.Builder(StartActivity.this)
+                            .setView(v)
+                            .setTitle("New project name")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //do nothing !
+                                    ProgressDialog pDialog = new ProgressDialog(v.getContext());
+                                    pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                    pDialog.setTitle("Initiating project...");
+                                    pDialog.show();
+                                    EditText editText = (EditText) v.findViewById(R.id.newProjectName);
+                                    String newName = editText.getText().toString();
+
+                                    if (newName.equals("")) {
+                                        Toast toast = Toast.makeText(StartActivity.this, "Input is empty", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
+                                        toast.show();
+                                        return;
+                                    }
+
+                                    InputMethodManager imm = (InputMethodManager)getSystemService(
+                                            Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(editText.getWindowToken(),
+                                                                InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                                    if (newProject(newName, templateName)) {
+                                        Intent edit = new Intent();
+                                        edit.setClass(StartActivity.this, MainActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("projectName", newName);
+                                        edit.putExtras(bundle);
+                                        startActivity(edit);
+                                        pDialog.dismiss();
+                                    } else {
+                                        Toast toast = Toast.makeText(StartActivity.this, "This name is already in use. Use another.", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
+                                        toast.show();
+                                    }
+                                }
+                            })
+                            .show();
+
+                    //pDialog.show();
+                }
+
                 return;
             }
 
@@ -363,6 +492,7 @@ public class StartActivity extends Activity {
 
         @Override
         public void onClick(View view) {
+
             Intent edit = new Intent();
             edit.setClass(StartActivity.this, MainActivity.class);
 
@@ -374,7 +504,6 @@ public class StartActivity extends Activity {
             bundle.putString("projectName", name);
             edit.putExtras(bundle);
 
-            getProjectNames();
             startActivity(edit);
         }
 
@@ -399,7 +528,7 @@ public class StartActivity extends Activity {
         return projectNames;
     }
 
-    private boolean newProject(String name) {
+    private boolean newProject(String name, String template) {
         File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
         Log.v("new folder", newProject.getPath());
         /*try{
@@ -414,33 +543,69 @@ public class StartActivity extends Activity {
         else {
             // initialize the project with files.
             newProject.mkdirs();
+            String assetPath = "init/"+template;
+            String[] list;
+            try{
+                // copy template files
+                list = getAssets().list(assetPath);
+                for (String subPath : list){
+                    copyRecursively(assetPath+"/"+subPath, newProject);
+                }
 
-            // html files.
-            copyInitFile("init/index.html", new File(newProject, "index.html"));
-
-            // css files.
-            File css = new File(newProject, "css");
-            css.mkdirs();
-            copyInitFile("init/css/bootstrap.css", new File(css, "bootstrap.css"));
-            // see if there is more files...
-
+                // copy mobsite tool files
+                assetPath = "tool";
+                list = getAssets().list(assetPath);
+                for (String subPath : list){
+                    copyRecursively(assetPath+"/"+subPath, newProject);
+                }
+            }catch (IOException e){ e.printStackTrace(); }
         }
         return true;
+    }
+
+    private void copyRecursively(String assetPath, File toFolder){
+        //Log.v("file debug", assetPath);
+        String[] list;
+        try{
+            list = getAssets().list(assetPath);
+            String fileName = assetPath.substring(assetPath.lastIndexOf("/"));
+            if(list.length > 0){ // A folder
+                Log.v("file debug", assetPath+" is folder...");
+                File newFolder = new File(toFolder, fileName);
+                Log.v("file debug", "NEW folder : "+newFolder.getPath());
+                newFolder.mkdirs();
+                for (String subPath : list){
+
+                    copyRecursively(assetPath + "/" + subPath, newFolder);
+                }
+            }
+            else{ // A file.
+                Log.v("file debug", assetPath+" is file...");
+
+                File newFile = new File(toFolder, fileName);
+                newFile.createNewFile();
+
+                Log.v("file debug", "copy from * "+assetPath+" * to * "+newFile.getPath());
+                copyInitFile(assetPath, newFile);
+            }
+        }catch (IOException e){ e.printStackTrace(); }
     }
 
     private void copyInitFile(String from, File to){
         try {
             to.createNewFile();
-            InputStream in  = this.getAssets().open(from);
+            InputStream in  = new BufferedInputStream(this.getAssets().open(from));
             FileOutputStream fout = new FileOutputStream(to);
-            BufferedReader reader = new BufferedReader(
-                                        new InputStreamReader(in, "UTF-8"));
-            String mLine = reader.readLine();
-            while (mLine != null) {
-                fout.write(mLine.getBytes("utf-8"));
-                mLine = reader.readLine();
+
+            int c;
+            byte[] buffer = new byte[10*1024];
+            while ((c = in.read(buffer)) != -1){
+                //fout.write(c);
+                fout.write(buffer, 0, c);
             }
+            fout.flush();
             fout.close();
+            Log.v("file debug", to.getPath()+" saved size "+to.length());
         } catch (IOException e){ e.printStackTrace(); }
     }
 }
