@@ -77,6 +77,13 @@
 <!-- Include manager and its package-->
 <script type="text/javascript" src="tool/js/manager.js"></script>
 <script type="text/javascript" src="tool/js/managerSelect.js"></script>
+<script>
+    var selectableObjects = document.querySelectorAll(".selectable");
+    for(var i = 0; i<selectableObjects.length;++i){
+        selectableObjects[i].selectable = true;
+    }
 
+    manager.init();
+</script>
 </body>
 </html>

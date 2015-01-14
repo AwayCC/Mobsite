@@ -7,6 +7,24 @@
  *          Record
  */
 var manager = {};
+// Configuration for gestureListener
+manager.config = {
+   listener             : document.getElementById("innerContent"),
+   longPressThreshold   : 600,
+   doubleTapThreshold   : 125,
+   gestureCountThreshold: 7,
+   onSingleTap          : function(){},
+   onDoubleTap          : function(){},
+   onLongPressStart     : function(){},
+   onLongPressMove      : function(){},
+   onLongPressEnd       : function(){},
+   on2FingerMoveUp      : function(){},
+   on2FingerMoveDown    : function(){},
+   on2FingerMoveLeft    : function(){},
+   on2FingerMoveRight   : function(){},
+   onPinchIn            : function(){},
+   onPinchOut           : function(){}
+};
 manager.preLoad = function(){
    // TODO : Do something that should be done before any initiation.
 };
@@ -26,23 +44,6 @@ manager.init = function(){
    if(manager.initRecord){
       manager.initRecord();
    }
+   setGestureListener(manager.config);
 };
 
-// Configuration for gestureListener
-manager.config = {
-   listener             : document.getElementById("innerContent"),
-   longPressThreshold   : 600,
-   doubleTapThreshold   : 125,
-   gestureCountThreshold: 10,
-   onSingleTap          : function(){},
-   onDoubleTap          : function(){},
-   onLongPressStart     : function(){},
-   onLongPressMove      : function(){},
-   onLongPressEnd       : function(){},
-   on2FingerMoveUp      : function(){},
-   on2FingerMoveDown    : function(){},
-   on2FingerMoveLeft    : function(){},
-   on2FingerMoveRight   : function(){},
-   onPinchIn            : function(){},
-   onPinchOut           : function(){}
-};

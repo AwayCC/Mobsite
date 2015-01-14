@@ -120,22 +120,22 @@ manager.initSelect = function(){
       };
       var swipeDown = function(){
          if(!manager.selectedObject)return;
-         var g= manager.getFirstChildSelectable(manager.selectedObject);
+         var g= getFirstChildSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       var swipeUp = function(){
          if(!manager.selectedObject)return;
-         var g= manager.getParentSelectable(manager.selectedObject);
+         var g= getParentSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       var swipeLeft = function(){
          if(!manager.selectedObject)return;
-         var g= manager.getPreviousSelectable(manager.selectedObject);
+         var g= getPreviousSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       var swipeRight = function(){
          if(!manager.selectedObject)return;
-         var g= manager.getNextSelectable(manager.selectedObject);
+         var g= getNextSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
       return {
