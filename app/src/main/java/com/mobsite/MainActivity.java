@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,20 +68,20 @@ import java.util.concurrent.Executors;
 
 
 public class MainActivity extends Activity
-                         implements CordovaInterface {
+        implements CordovaInterface {
 
     private static final String _logTag = "MainActivity";
     private static String projectName = "";
     private String projectPath;
+    private ProgressDialog pDialog;
+    protected Vibrator vibrator;
 
     protected CordovaWebView cwv = null;
-    protected FrameLayout mainll, shadowP;
+    protected FrameLayout shadowP;
     protected String selectedHTML;
     protected CordovaWebView shadow;
     private boolean enableShadow = false,
-                    selectedShadow = false;
-    private ProgressDialog pDialog;
-    protected Vibrator vibrator;
+            selectedShadow = false;
 
     // Variables for importing photos.
     private static final int REQUEST_GALLERY = 11;
@@ -96,36 +97,55 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_activity);
 
+        // show progress dilaog.
         pDialog = new ProgressDialog(MainActivity.this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setTitle("Opening project...");
         pDialog.setCanceledOnTouchOutside(false);
         pDialog.show();
 
+        //if(savedInstanceState == null){
         // Get project name from intent.
         if (getIntent().getExtras() != null){
             projectName = getIntent().getExtras().getString("projectName");
             projectPath = getFilesDir() +File.separator+ getResources().getString(R.string.user_projects_path) +File.separator+ projectName;
         }
         Log.v(_logTag, projectName);
+        //} else {
 
-        Log.v(_logTag, "onCreate(): find views & preparation.");
-        shadow = (CordovaWebView) findViewById(R.id.shadow);
-        shadow.setVisibility(View.INVISIBLE);
+        //}
 
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        mainll = (FrameLayout) findViewById(R.id.mainLL);
-
-        shadowP = (FrameLayout) findViewById(R.id.shadow_parent);
-
-        cwv = (CordovaWebView) findViewById(R.id.main_webview);
-        Config.init(this);
-        //cwv.loadUrl(Config.getStartUrl());
-        //cwv.loadUrl("file:///android_asset/www/cloud.html");
-        cwv.loadUrl("file://"+projectPath+"/tool.html");
-        cwv.addJavascriptInterface(this, "Android");
-        setCordovaWebViewGestures(cwv);
+        setViews();
     }
+
+    // set the life cycle of the app.
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v(_logTag, "onStop & saveProject()");
+        saveProject();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putString("projectName", projectName);
+        savedInstanceState.putString("projectPath", projectPath);
+        savedInstanceState.putString("selectedHTML", selectedHTML);
+        savedInstanceState.putInt("imgCount", imgCount);
+    }
+
+    /*
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        projectName = savedInstanceState.getString("projectName");
+        projectPath = savedInstanceState.getString("projectPath");
+        selectedHTML = savedInstanceState.getString("selectedHTML");
+        imgCount = savedInstanceState.getInt("imgCount");
+    }*/
 
     /*
     * The following are the function must be declared since MainActivity
@@ -152,6 +172,7 @@ public class MainActivity extends Activity
         if (cwv.pluginManager != null) {
             cwv.pluginManager.onDestroy();
         }
+        cwv.handleDestroy();
     }
 
     @Override
@@ -181,62 +202,47 @@ public class MainActivity extends Activity
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        // the following code is for using camera.
+        // the following code is for importing photo to the project.
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_GALLERY:
-                    Log.v(_logTag, "gallery");
+                    Log.v("import photo", "gallery");
                     if (intent != null) {
-                        Log.v("intent", "NOT NULL!");
+                        Log.v("import photo", "intent NOT NULL!");
                         newPhoto = intent.getData();
                     }
                     break;
                 case REQUEST_CAMERA:
-                    Log.v(_logTag, "camera");
-                    try {
-                        //if(intent == null){ Log.v("intent", "IS NULL!"); Log.v("size", ""+photo.length()); break; }
-
-                        File internalStorage = new File(projectPath, "img");
-                        if (!internalStorage.exists())
-                            internalStorage.mkdirs();
-
-                        File savedImage = new File(internalStorage, "img" + imgCount + ".jpg");
-                        while (savedImage.exists()){
-                            imgCount++;
-                            savedImage = new File(internalStorage, "img" + imgCount + ".jpg");
-                        }
-                        Log.v("pix", savedImage.getPath());
-                        savedImage.createNewFile();
-
-                        OutputStream fout = new BufferedOutputStream(new FileOutputStream(savedImage));
-                        InputStream in = new BufferedInputStream(getContentResolver().openInputStream(newPhoto));
-                        /*String mLine = reader.readLine();
-                        while (mLine != null) {
-                            fout.write(mLine.getBytes("utf-8"));
-                            mLine = reader.readLine();
-                        }
-                        */
-                        int c;
-                        while ((c = in.read()) != -1){
-                            fout.write(c);
-                        }
-                        fout.flush();
-                        //byte[] buffer = new byte[5 * 1024];
-                        //while (in.read(buffer) > -1)
-                        //    fout.write(buffer);
-                        fout.close();
-
-                        Log.v("FIle size", "File is this big : "+savedImage.length());
-
-                    } catch (FileNotFoundException fne) {
-                        Log.e(_logTag, "no file.");
-                        fne.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    Log.v("import photo", "camera");
                     break;
             }
+
+            try{
+                File internalStorage = new File(projectPath, "img");
+                if (!internalStorage.exists())
+                    internalStorage.mkdirs();
+
+                File savedImage = new File(internalStorage, "img" + imgCount + ".jpg");
+                while (savedImage.exists()){
+                    imgCount++;
+                    savedImage = new File(internalStorage, "img" + imgCount + ".jpg");
+                }
+                Log.v("pix", savedImage.getPath());
+                savedImage.createNewFile();
+
+                OutputStream fout = new BufferedOutputStream(new FileOutputStream(savedImage));
+                InputStream in = new BufferedInputStream(getContentResolver().openInputStream(newPhoto));
+
+                int c;
+                byte[] buffer = new byte[10*1024];
+                while ((c = in.read(buffer)) != -1){
+                    fout.write(buffer, 0, c);
+                }
+                fout.flush();
+                fout.close();
+
+                Log.v("FIle size", "File is this big : "+savedImage.length());
+            } catch (IOException e){ e.printStackTrace(); }
         }// end
 
         CordovaPlugin callback = this.activityResultCallback;
@@ -250,28 +256,31 @@ public class MainActivity extends Activity
         return this;
     }
 
+
     /*
     * The following are the member functions of MainActivity.
     */
-    /*
-    * The following function is called in onCreate() to set up gestures of CordovaWebView.
-    */
-    private void setCordovaWebViewGestures(final CordovaWebView cordovaWV) {
-        /*
-        * @params CordovaWebView cwv : The embedded CordovaWebView of the activity.
-        * @return void               : No return needed.
-        *
-        * The following codes are for setting drag listeners.
-        * "drag start", "drag end" callback functions are executed here.
-        */
-        cordovaWV.setOnTouchListener(new View.OnTouchListener() {
+    private void setViews(){
+        Log.v(_logTag, "onCreate(): find views & preparation.");
+        shadow = (CordovaWebView) findViewById(R.id.shadow);
+        shadow.setVisibility(View.INVISIBLE);
+        shadowP = (FrameLayout) findViewById(R.id.shadow_parent);
 
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        cwv = (CordovaWebView) findViewById(R.id.main_webview);
+        Config.init(this);
+        cwv.loadUrl("file://"+projectPath+"/tool.html");
+        cwv.addJavascriptInterface(this, "Android");
+        setCordovaWebViewGestures();
+    }
+
+    private void setCordovaWebViewGestures() {
+        cwv.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                //Log.v("spy on drag events", event.toString());
                 final int action = event.getAction();
                 switch(action){
                     case MotionEvent.ACTION_DOWN:
-
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if(enableShadow){
@@ -279,8 +288,8 @@ public class MainActivity extends Activity
                             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
                                     FrameLayout.LayoutParams.WRAP_CONTENT);
                             lp.setMargins((int)event.getRawX()-shadow.getWidth()/2,
-                                          (int)event.getRawY()-shadow.getContentHeight()/3,
-                                           0, 0);
+                                    (int)event.getRawY()-shadow.getContentHeight()/3,
+                                    0, 0);
                             shadow.setLayoutParams(lp);
                         }
                         break;
@@ -288,16 +297,14 @@ public class MainActivity extends Activity
                         enableShadow = false;
                         shadow.setVisibility(View.INVISIBLE);
                 }
-                //Log.v("spy on touch events", event.toString());
+
                 return false;
             }
         });
 
-
-        cordovaWV.setOnDragListener(new View.OnDragListener() {
+        cwv.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
-
                 return false;
             }
         });
@@ -308,7 +315,6 @@ public class MainActivity extends Activity
     /**
      * JavascriptInterface functions
      */
-
     @JavascriptInterface
     public void showToast(String msg) { Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(); }
 
@@ -342,15 +348,12 @@ public class MainActivity extends Activity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //shadow.setVisibility(View.INVISIBLE);
-                //mainll.removeView(shadow);
                 shadowP.removeView(shadow);
                 shadow = new CordovaWebView(MainActivity.this);
 
                 shadow.setLayoutParams(new ViewGroup.LayoutParams(cwv.getWidth()*2/3,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                //mainll.addView(shadow);
                 shadowP.addView(shadow);
                 shadowP.setAlpha(0);
                 shadowP.invalidate();
@@ -583,15 +586,33 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
+    public void deleteProject() {
+        File root = new File(projectPath);
+        ArrayDeque<File> folders = new ArrayDeque<File>();
+        folders.addLast(root);
+
+        while(!folders.isEmpty()) {
+            File f = folders.getFirst();
+            if(f.isDirectory()){
+                for (File file : f.listFiles())
+                    folders.addLast(file);
+            } else {
+                f.delete();
+            }
+
+            folders.removeFirst();
+        }
+    }
+
+    @JavascriptInterface
     public String getGalleryPaths(){
         JSONArray result = new JSONArray();
         try{
             JSONObject project = new JSONObject();
             project.put("path", "mobsite");
             result.put(project);
-            JSONObject project2 = new JSONObject();
-            project2.put("path", "rocks");
-            result.put(project2);
+            project.put("path", "rocks");
+            result.put(project);
             //String[] test = {"mosite", "rocks"};
         }catch (JSONException e) { e.printStackTrace(); }
         return result.toString();

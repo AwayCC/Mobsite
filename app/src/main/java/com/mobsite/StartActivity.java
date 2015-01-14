@@ -55,7 +55,6 @@ import java.util.Vector;
 
 public class StartActivity extends Activity {
     int width;
-    Button testbtn;
     ImageView openbtn;
     ImageView newbtn;
     ImageView newreturn;
@@ -71,13 +70,14 @@ public class StartActivity extends Activity {
     TranslateAnimation aniright;
     Choose_Listener choose_listener;
     View selected;
-    private List<Map<String, String>> planetsList = new ArrayList<Map<String, String>>();
     private List<Map<String, String>> oldProjectsList = new ArrayList<Map<String, String>>();
     private List<Map<String, String>> templateList = new ArrayList<Map<String, String>>();
     SimpleAdapter OpenAdapter, NewAdapter;
     private VideoView splashVid;
     private RelativeLayout splashView;
     private boolean splash = true;
+    private int newListIndex, openListIndex;
+    private Button newListBtn, openListBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,6 @@ public class StartActivity extends Activity {
         startFrame.setLayoutTransition(splashTrans);
 
         layoutregist();
-        testbtn.setOnClickListener(new Testbtn_Listener(this));
         newbtn.setOnClickListener(newbtn_listener);
         openbtn.setOnClickListener(openbtn_listener);
         Display display = getWindowManager().getDefaultDisplay();
@@ -130,7 +129,6 @@ public class StartActivity extends Activity {
     private void layoutregist() {
         openbtn = (ImageView) findViewById(R.id.openbtn);
         newbtn = (ImageView) findViewById(R.id.newbtn);
-        testbtn = (Button) findViewById(R.id.testbtn);
         newreturn = (ImageView) findViewById(R.id.newreturn);
         opreturn = (ImageView) findViewById(R.id.opreturn);
         openbtn_listener = new Openbtn_Listener(this);
@@ -143,6 +141,67 @@ public class StartActivity extends Activity {
         newmenu = (ListView) findViewById(R.id.newmenu);
         openmenu.setOnItemClickListener(new Choose_Listener());
         newmenu.setOnItemClickListener(new Choose_Listener());
+        newListBtn = (Button) findViewById(R.id.newListBtn);
+        newListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // from new list.
+                final String templateName = templateList.get(newListIndex).get("New");
+
+                LayoutInflater inflater = StartActivity.this.getLayoutInflater();
+                final View v = inflater.inflate(R.layout.new_project_dialog, null);
+
+                new AlertDialog.Builder(StartActivity.this)
+                        .setView(v)
+                        .setTitle("New project name")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                EditText editText = (EditText) v.findViewById(R.id.newProjectName);
+                                String newName = editText.getText().toString();
+
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                                if (newName.equals("")) {
+                                    Toast toast = Toast.makeText(StartActivity.this, "Input is empty", Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
+                                    toast.show();
+                                    return;
+                                }
+
+                                if (!newProjectValid(newName)) {
+                                    Toast toast = Toast.makeText(StartActivity.this, "This name is already in use. Use another.", Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
+                                    toast.show();
+                                    return;
+                                }
+
+                                InitTask task = new InitTask();
+                                task.setProjectStrs(newName, templateName);
+                                task.execute();
+                            }
+                        })
+                        .show();
+            }
+
+        });
+
+        openListBtn = (Button) findViewById(R.id.openListOpenBtn);
+        openListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // from open list.
+                String selectedProject = oldProjectsList.get(openListIndex).get("Open");
+                Intent edit = new Intent();
+                edit.setClass(StartActivity.this, MainActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("projectName", selectedProject);
+                edit.putExtras(bundle);
+                startActivity(edit);
+            }
+        });
     }
 
     private void iniList() {
@@ -155,16 +214,6 @@ public class StartActivity extends Activity {
         templateList.add(addProjectName("New","template_2"));
         templateList.add(addProjectName("New","template_3"));
         templateList.add(addProjectName("New","default"));
-        /*
-        planetsList.add(addProjectName("Open", "Mercury"));
-        planetsList.add(createPlanet("Open", "Venus"));
-        planetsList.add(createPlanet("Open", "Mars"));
-        planetsList.add(createPlanet("Open", "Jupiter"));
-        planetsList.add(createPlanet("New", "Saturn"));
-        planetsList.add(createPlanet("New", "Uranus"));
-        planetsList.add(createPlanet("New", "Neptune"));
-        planetsList.add(createPlanet("New", "GG"));
-        */
     }
 
     private HashMap<String, String> addProjectName(String key, String name) {
@@ -173,84 +222,16 @@ public class StartActivity extends Activity {
         return project;
     }
 
-    /*
-    private HashMap<String, String> createPlanet(String key, String name) {
-        HashMap<String, String> planet = new HashMap<String, String>();
-        planet.put(key, name);
-        return planet;
-    }*/
-
     class Choose_Listener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            if (view == selected) {
-                //Toast.makeText(getApplicationContext(), adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_LONG).show();
-
-                HashMap<String, String> data = (HashMap<String, String>) adapterView.getItemAtPosition(i);
-
-                if(data.containsKey("Open")/* && oldProjectsList.size() > 0*/){
-                    // from open list.
-                    String selectedProject = data.get("Open");
-                    Intent edit = new Intent();
-                    edit.setClass(StartActivity.this, MainActivity.class);
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("projectName", selectedProject);
-                    edit.putExtras(bundle);
-                    startActivity(edit);
-                } else {
-                    // from new list.
-                    final String templateName = data.get("New");
-
-                    LayoutInflater inflater = StartActivity.this.getLayoutInflater();
-                    final View v = inflater.inflate(R.layout.new_project_dialog, null);
-
-                    final AlertDialog dialog = new AlertDialog.Builder(StartActivity.this)
-                            .setView(v)
-                            .setTitle("New project name")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    EditText editText = (EditText) v.findViewById(R.id.newProjectName);
-                                    String newName = editText.getText().toString();
-
-                                    InputMethodManager imm = (InputMethodManager) getSystemService(
-                                            Context.INPUT_METHOD_SERVICE);
-                                    imm.hideSoftInputFromWindow(editText.getWindowToken(),
-                                            InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-                                    if (newName.equals("")) {
-                                        Toast toast = Toast.makeText(StartActivity.this, "Input is empty", Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
-                                        toast.show();
-                                        return;
-                                    }
-
-                                    if (!newProjectValid(newName)) {
-                                        Toast toast = Toast.makeText(StartActivity.this, "This name is already in use. Use another.", Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 50);
-                                        toast.show();
-                                        return;
-                                    }
-
-                                    InitTask task = new InitTask();
-                                    task.setProjectStrs(newName, templateName);
-                                    task.execute();
-                                }
-                            })
-                            .show();
-
-                    //pDialog.show();
-                }
-
-                return;
-            }
+            openListIndex = newListIndex = i;
 
             for (int j = 0; j < adapterView.getChildCount(); j++) {
                 adapterView.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
             }
             view.setBackgroundColor(Color.parseColor("#494949"));
-            selected = view;
+            //selected = view;
         }
 
         public View getSelected() {
@@ -474,32 +455,6 @@ public class StartActivity extends Activity {
         }
     }
 
-    class Testbtn_Listener implements View.OnClickListener {
-        private StartActivity activity;
-
-        public Testbtn_Listener(StartActivity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public void onClick(View view) {
-
-            Intent edit = new Intent();
-            edit.setClass(StartActivity.this, MainActivity.class);
-
-            // create bundle in order to pass data to object Activity.
-            String name = "test1";
-            Bundle bundle = new Bundle();
-            //bundle.putString("projectName", "PutTheNameItHere, AwayCC!");
-            //newProject(name);
-            bundle.putString("projectName", name);
-            edit.putExtras(bundle);
-
-            startActivity(edit);
-        }
-
-    }
-
     private Vector<String> getProjectNames() {
         Vector<String> projectNames = new Vector<String>();
         File projectsStorage = new File(getFilesDir(), getResources().getString(R.string.user_projects_path));
@@ -530,13 +485,7 @@ public class StartActivity extends Activity {
     private boolean newProject(String name, String template) {
         File newProject = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path), name);
         Log.v("new folder", newProject.getPath());
-        /*try{
-            AssetManager assetManager = getAssets();
-            String[] files = assetManager.list("");
-            for (String s : files)
-                Log.v("files", s);
-        }catch (IOException e){e.printStackTrace();}
-        */
+
         if(newProject.exists())
             return false;
         else {
@@ -641,6 +590,7 @@ public class StartActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             pDialog.dismiss();
+            oldProjectsList.add(addProjectName("Open", newName));
             Intent edit = new Intent();
             edit.setClass(StartActivity.this, MainActivity.class);
             Bundle bundle = new Bundle();
