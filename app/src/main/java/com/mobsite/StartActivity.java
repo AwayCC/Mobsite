@@ -37,6 +37,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import org.apache.cordova.api.LOG;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -78,6 +80,7 @@ public class StartActivity extends Activity {
     private boolean splash = true;
     private int newListIndex, openListIndex;
     private Button newListBtn, openListOpenBtn, openListDeleteBtn;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,7 +218,9 @@ public class StartActivity extends Activity {
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                deleteProject(selectedProject);
+                                DeleteTask task = new DeleteTask();
+                                task.setProjectStr(selectedProject);
+                                task.execute();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -555,9 +560,14 @@ public class StartActivity extends Activity {
             else{ // A file.
                 Log.v("file debug", assetPath+" is file...");
 
-                File newFile = new File(toFolder, fileName);
+                final File newFile = new File(toFolder, fileName);
                 newFile.createNewFile();
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pDialog.setMessage("Copy "+newFile.getName()+"...");
+                    }
+                });
                 Log.v("file debug", "copy from * "+assetPath+" * to * "+newFile.getPath());
                 copyInitFile(assetPath, newFile);
             }
@@ -583,26 +593,39 @@ public class StartActivity extends Activity {
     }
 
     private void deleteProject(String projectPath) {
-        File root = new File(projectPath);
+        File root = new File(getFilesDir() + File.separator + getResources().getString(R.string.user_projects_path)
+                             + File.separator +projectPath);
         ArrayDeque<File> files = new ArrayDeque<File>();
         files.addLast(root);
 
         while(!files.isEmpty()) {
-            File f = files.getFirst();
+            final File f = files.getFirst();
             if(f.isDirectory()){
-                for (File file : f.listFiles())
-                    files.addLast(file);
-            } else {
-                f.delete();
-            }
+                if(f.list().length == 0){
+                    Log.v("delete folder", "delete "+f.getPath());
+                    f.delete();
+                    files.removeFirst();
+                } else
+                    for (File file : f.listFiles())
+                        files.addFirst(file);
 
-            files.removeFirst();
+            } else {
+                Log.v("delete files", "delete "+f.getPath());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pDialog.setMessage("Delete " + f.getName() + "...");
+                    }
+                });
+                f.delete();
+                files.removeFirst();
+            }
         }
     }
 
-    // Async task for entering MainActivity.
+    // Async task for initiating project.
     private class InitTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog pDialog;
+        //private ProgressDialog pDialog;
         private String newName, templateName;
 
         public void setProjectStrs(String n, String t){
@@ -641,6 +664,44 @@ public class StartActivity extends Activity {
             bundle.putString("projectName", newName);
             edit.putExtras(bundle);
             startActivity(edit);
+        }
+    }
+
+    // Async task for deleting project.
+    private class DeleteTask extends AsyncTask<Void, Void, Void> {
+        //private ProgressDialog pDialog;
+        private String projectName;
+
+        public void setProjectStr(String n){
+            projectName = n;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pDialog = new ProgressDialog(StartActivity.this);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.setTitle("Deleting project...");
+            pDialog.setCanceledOnTouchOutside(false);
+            StartActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pDialog.show();
+                }
+            });
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            deleteProject(projectName);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            pDialog.dismiss();
+            oldProjectsList.remove(openListIndex);
+            OpenAdapter.notifyDataSetChanged();
         }
 
     }
