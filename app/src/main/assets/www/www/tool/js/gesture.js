@@ -31,9 +31,9 @@ function setGestureListener(responses){
    var touch_2fingerUpCount = 0,
       touch_2fingerDownCount = 0,
       touch_2fingerLeftCount = 0,
-      touch_2fingerRightCount = 0,
-      touch_pinchInCount = 0,
-      touch_pinchOutCount = 0;
+      touch_2fingerRightCount = 0;
+   var touch_pinch = false;
+   var touch_pinchCount = 0;
 
    var onTouchStart = function(event){
       if(touch_longPress)
@@ -84,22 +84,27 @@ function setGestureListener(responses){
             if(secondTouch == null)
                return;
 
-            var delta_x1 = touch.clientX - touch_x;
-            var delta_y1 = touch.clientY - touch_y;
-            var delta_x2 = secondTouch.clientX - touch_x2;
-            var delta_y2 = secondTouch.clientY - touch_y2;
-            //console.log("2 finger: (dx1, dy1, dx2, dy2) = \("+delta_x1+", "+delta_y1+", "+delta_x2+", "+delta_y2+"\).");
-
+            var delta_x1 = touch.pageX - touch_x;
+            var delta_y1 = touch.pageY - touch_y
+            var delta_x2 = secondTouch.pageX - touch_x2;
+            var delta_y2 = secondTouch.pageY - touch_y2;
             var innerProduct = delta_x1*delta_x2 + delta_y1*delta_y2;
+            var diastance1 = Math.sqrt(delta_x1*delta_x1 + delta_y1*delta_y1);
+            var diastance2 = Math.sqrt(delta_x2*delta_x2 + delta_y2*delta_y2);
 
-            if(innerProduct > 0){ // swipe
+            if(innerProduct == 0)
+               return;
+
+            //console.log("inner product = "+innerProduct);
+
+            if(innerProduct > 50 && !touch_pinch) { // swipe
+               console.log("swipe");
                if( Math.abs(delta_x1) > Math.abs(delta_y1) ){
                   if( (delta_x1) > 0){
                      touch_2fingerRightCount++;
                      touch_2fingerUpCount = touch_2fingerDownCount = touch_2fingerLeftCount = 0;
                      if(touch_2fingerRightCount == responses.gestureCountThreshold){
                         responses.on2FingerMoveRight();
-                        myLog("on2FingerMoveRight");
                         touch_2FingerMoved = true;
                      }
                   } else {
@@ -107,7 +112,6 @@ function setGestureListener(responses){
                      touch_2fingerUpCount = touch_2fingerDownCount = touch_2fingerRightCount = 0;
                      if(touch_2fingerLeftCount == responses.gestureCountThreshold){
                         responses.on2FingerMoveLeft();
-                        myLog("on2FingerMoveLeft");
                         touch_2FingerMoved = true;
                      }
                   }
@@ -117,7 +121,6 @@ function setGestureListener(responses){
                      touch_2fingerUpCount = touch_2fingerLeftCount = touch_2fingerRightCount = 0;
                      if(touch_2fingerDownCount == responses.gestureCountThreshold){
                         responses.on2FingerMoveDown();
-                        myLog("on2FingerMoveDown");
                         touch_2FingerMoved = true;
                      }
                   } else {
@@ -125,31 +128,22 @@ function setGestureListener(responses){
                      touch_2fingerDownCount = touch_2fingerLeftCount = touch_2fingerRightCount = 0;
                      if(touch_2fingerUpCount == responses.gestureCountThreshold){
                         responses.on2FingerMoveUp();
-                        myLog("on2FingerMoveUp");
                         touch_2FingerMoved = true;
                      }
                   }
                }
-            } else { // pinch
-               var prevXDist = Math.abs(touch_x - touch_x2);
-               var XDist = Math.abs(touch.pageX - secondTouch.pageX);
-               if(Math.abs(prevXDist - XDist) > 0){
-                  if(prevXDist > XDist){
-                     touch_pinchOutCount = 0;
-                     touch_pinchInCount++;
-                     if(touch_pinchInCount >= responses.gestureCountThreshold){
-                        responses.onPinchIn();
-                        touch_pinchInCount = 0;
-                        myLog("onPinchIn");
-                     }
-                  } else {
-                     touch_pinchInCount = 0;
-                     touch_pinchOutCount++;
-                     if(touch_pinchOutCount >= responses.gestureCountThreshold){
-                        responses.onPinchOut();
-                        touch_pinchOutCount = 0;
-                        myLog("onPinchOut");
-                     }
+            } else if(innerProduct < -50) { // pinch
+               touch_pinch = true;
+
+               if(distance1 > distance2){
+                  touch_pinchCount++;
+                  if(touch_pinchCount == 3){
+                     responses.onPinchIn(); touch_pinchCount = 0;
+                  }
+               } else {
+                  touch_pinchCount++;
+                  if(touch_pinchCount = 3){
+                     responses.onPinchOut(); touch_pinchCount = 0;
                   }
                }
             }
@@ -162,6 +156,8 @@ function setGestureListener(responses){
 
    var onTouchEnd = function(event){
       touch_up = true;
+      touch_pinch = false;
+      touch_pinchCount = 0;
       if(event.touches.length == 0) {
          if(touch_longPress){
              responses.onLongPressEnd();

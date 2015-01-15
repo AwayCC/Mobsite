@@ -77,7 +77,7 @@ public class StartActivity extends Activity {
     private RelativeLayout splashView;
     private boolean splash = true;
     private int newListIndex, openListIndex;
-    private Button newListBtn, openListBtn;
+    private Button newListBtn, openListOpenBtn, openListDeleteBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,8 +187,8 @@ public class StartActivity extends Activity {
 
         });
 
-        openListBtn = (Button) findViewById(R.id.openListOpenBtn);
-        openListBtn.setOnClickListener(new View.OnClickListener() {
+        openListOpenBtn = (Button) findViewById(R.id.openListOpenBtn);
+        openListOpenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // from open list.
@@ -200,6 +200,31 @@ public class StartActivity extends Activity {
                 bundle.putString("projectName", selectedProject);
                 edit.putExtras(bundle);
                 startActivity(edit);
+            }
+        });
+
+        openListDeleteBtn = (Button) findViewById(R.id.openListDeleteBtn);
+        openListDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // from delete list.
+                final String selectedProject = oldProjectsList.get(openListIndex).get("Open");
+                new AlertDialog.Builder(StartActivity.this)
+                        .setTitle("Delete project \""+selectedProject+"\"")
+                        .setMessage("This action cannot be undone. Please make sure you want to delete it.")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteProject(selectedProject);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .show();
             }
         });
     }
@@ -557,6 +582,25 @@ public class StartActivity extends Activity {
         } catch (IOException e){ e.printStackTrace(); }
     }
 
+    private void deleteProject(String projectPath) {
+        File root = new File(projectPath);
+        ArrayDeque<File> files = new ArrayDeque<File>();
+        files.addLast(root);
+
+        while(!files.isEmpty()) {
+            File f = files.getFirst();
+            if(f.isDirectory()){
+                for (File file : f.listFiles())
+                    files.addLast(file);
+            } else {
+                f.delete();
+            }
+
+            files.removeFirst();
+        }
+    }
+
+    // Async task for entering MainActivity.
     private class InitTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog pDialog;
         private String newName, templateName;

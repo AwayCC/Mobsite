@@ -586,25 +586,6 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public void deleteProject() {
-        File root = new File(projectPath);
-        ArrayDeque<File> folders = new ArrayDeque<File>();
-        folders.addLast(root);
-
-        while(!folders.isEmpty()) {
-            File f = folders.getFirst();
-            if(f.isDirectory()){
-                for (File file : f.listFiles())
-                    folders.addLast(file);
-            } else {
-                f.delete();
-            }
-
-            folders.removeFirst();
-        }
-    }
-
-    @JavascriptInterface
     public String getGalleryPaths(){
         JSONArray result = new JSONArray();
         try{
