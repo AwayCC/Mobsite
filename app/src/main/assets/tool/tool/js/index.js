@@ -17,6 +17,8 @@ var gallerypanelshow = false;
 var githubpanelshow=false;
 var isFullScreen=false;
 var galleryMember;
+var trapScroll;
+
 jQuery(document).ready(function($){
     $('#picker').farbtastic('#color');
     console.log("helloworld!!!:D");
@@ -25,7 +27,12 @@ jQuery(document).ready(function($){
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
-
+    $('#properTable > tbody').scroll(function() {
+    var pos = $('#properTable > tbody').scrollTop();
+    if (pos == 0) {
+        alert('top of the div');
+    }
+});
     // set title.
     document.getElementById("projecttitle").innerHTML = Android.getProjectName();
     console.log(Android.getProjectPath());
@@ -38,6 +45,7 @@ jQuery(document).ready(function($){
     showProperty(event.target);
     });
     var tester=[{'path':'tree.jpg'}];
+    
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
     // Initialize Galleria
     
@@ -358,3 +366,76 @@ function sleep(milliseconds) {
     }
   }
 }
+(function($){  
+  
+  trapScroll = function(opt){
+    
+    var trapElement;
+    var scrollableDist;
+    var trapClassName = 'trapScroll-enabled';
+    var trapSelector = '.trapScroll';
+    
+    var trapWheel = function(e){
+      
+      if (!$('body').hasClass(trapClassName)) {
+        
+        return;
+        
+      } else {  
+        
+        var curScrollPos = trapElement.scrollTop();
+        var wheelEvent = e.originalEvent;
+        var dY = wheelEvent.deltaY;
+
+        // only trap events once we've scrolled to the end
+        // or beginning
+        if ((dY>0 && curScrollPos >= scrollableDist) ||
+            (dY<0 && curScrollPos <= 0)) {
+
+          opt.onScrollEnd();
+          return false;
+          
+        }
+        
+      }
+      
+    }
+    
+    $(document)
+      .on('wheel', trapWheel)
+      .on('mouseleave', trapSelector, function(){
+        
+        $('body').removeClass(trapClassName);
+      
+      })
+      .on('mouseenter', trapSelector, function(){   
+      
+        trapElement = $(this);
+        var containerHeight = trapElement.outerHeight();
+        var contentHeight = trapElement[0].scrollHeight; // height of scrollable content
+        scrollableDist = contentHeight - containerHeight;
+        
+        if (contentHeight>containerHeight)
+          $('body').addClass(trapClassName); 
+      
+      });       
+  } 
+  
+})($);
+
+var preventedCount = 0;
+var showEventPreventedMsg = function(){  
+  $('#mousewheel-prevented').stop().animate({opacity: 1}, 'fast');
+}
+var hideEventPreventedMsg = function(){
+  $('#mousewheel-prevented').stop().animate({opacity: 0}, 'fast');
+}
+var addPreventedCount = function(){
+  $('#prevented-count').html('prevented <small>x</small>' + preventedCount++);
+}
+
+trapScroll({ onScrollEnd: addPreventedCount });
+$('.trapScroll')
+  .on('mouseenter', showEventPreventedMsg)
+  .on('mouseleave', hideEventPreventedMsg);      
+$('[id*="parent"]').scrollTop(100);
