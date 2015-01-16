@@ -551,38 +551,29 @@ public class MainActivity extends Activity
         while(!paths.isEmpty()) {
             JSONObject project = new JSONObject();
             File f = paths.getFirst();
-            //Log.v("file", f.getPath());
-            if(f.isDirectory() && f.getName().equals("tool")) {
+            Log.v("project Storage", "file name : "+f.getName());
+            if(f.isDirectory() && !f.getName().equals("tool")) {
                 File[] files = f.listFiles();
                 for (File file : files)
                     paths.addLast(file);
 
             } else {
-                if(f.getName().equals("tool.html")) continue;
-                try{
-                    //String fileName = f.getPath().substring(projectPath.length()+1);
-                    String fileName = f.getName();
-                    Log.v("project Storage", fileName);
-                    project.put("path", fileName);
-                    projects.put(project);
+                if(!f.getName().equals("tool.html")){
+                    try{
+                        //String fileName = f.getPath().substring(projectPath.length()+1);
+                        String fileName = f.getPath();
+                        Log.v("project Storage", fileName);
+                        project.put("path", fileName);
+                        projects.put(project);
+                    }
+                    catch (JSONException jsonE){ jsonE.printStackTrace();}
                 }
-                catch (JSONException jsonE){ jsonE.printStackTrace();}
+
             }
 
             paths.removeFirst();
         }
         return projects.toString();
-    }
-
-    @JavascriptInterface
-    public void saveProject() {
-        File root = new File(projectPath);
-        Log.v("peek","what's inside : ");
-        for (String s : root.list()){
-            Log.v("",s);
-        }
-
-
     }
 
     @JavascriptInterface
@@ -598,4 +589,17 @@ public class MainActivity extends Activity
         }catch (JSONException e) { e.printStackTrace(); }
         return result.toString();
     }
+
+    @JavascriptInterface
+    public void saveProject() {
+        File root = new File(projectPath);
+        Log.v("peek","what's inside : ");
+        for (String s : root.list()){
+            Log.v("",s);
+        }
+
+
+    }
+
+
 }

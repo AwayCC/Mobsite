@@ -202,7 +202,11 @@ function EnvironmentInit()
         try{
             //deselect();
 
-            Android.getProjectsPathJSON();
+            var files = JSON.parse(Android.getProjectsPathJSON());
+                        console.log("print json");
+                                    for(var i=0;i<files.length;++i){
+                                        console.log(files[i].path);
+                                    }
 
             /*
             var request = new XMLHttpRequest();

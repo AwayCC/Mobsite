@@ -114,7 +114,6 @@ function openDeployDialog(){
         // validate user.
         GHUser.show(usernameString, function(err, user) {
             console.log("GH login 2.");
-            console.log(err);
             if(user == null){
                 // login fail.
                 GHErr.innerHTML = "* Login Fail. Please check username/password<br>or internet.";
@@ -155,7 +154,15 @@ function openDeployDialog(){
         var branchName = "master";
         myUser.createRepo({"name": repoName}, function(err, res) {
             // Get all the files through Android Javascript Interface.
+            var files = JSON.parse(Android.getProjectsPathJSON());
 
+            for(var i in files){
+                console.log(files[i].path);
+            }
+
+            var request = new XMLHttpRequest();
+
+            /*
             myRepo.write(branchName,
                          'README.md', // file path + name.
                          btoa(unescape(encodeURIComponent('YOUR_NEW_CONTENTS2'))), // file content.
@@ -164,10 +171,9 @@ function openDeployDialog(){
                             // completed deploy task!
                             dismissDialogs();
                          });
-            console.log("****  :");
+
             var request = new XMLHttpRequest();
             request.open("GET", "img/img1.jpg", true);
-            //request.open("GET", "../../"+Android.getProjectPath()+"/index.html", true);
             request.responseType = 'arraybuffer';
             request.onload = function(e){
                 console.log("**** Get file content :");
@@ -191,6 +197,7 @@ function openDeployDialog(){
                              });
             };
             request.send();
+            */
         });
     }
     
