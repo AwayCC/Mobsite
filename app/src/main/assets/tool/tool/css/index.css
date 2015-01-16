@@ -174,6 +174,42 @@ output
     vertical-align: middle;
     display: table-cell;
 }
+.panelMark
+{
+    height: 30px;
+    width: 100%;
+    background-color: #242525;  
+    border-top-left-radius: 0.75em;
+    border-top-right-radius: 0.75em;
+    display: table;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+}
+.panelMark p
+{
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+#propertyMark
+{
+    height: 30px;
+    width: 100%;
+    background-color: #242525;  
+    border-top-left-radius: 0.75em;
+    border-top-right-radius: 0.75em;
+    display: table;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+}
+#propertyMark p
+{
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
 #Addmark p
 {
     text-align: center;
