@@ -10,33 +10,45 @@ manager.initDrag = function(){
    var initObj = (function(){
       // Add CSS rule
       (function(){
-         var style = document.createElement("style");
+         var managedStyle = document.createElement("style");
          // WebKit hack :(
-         style.appendChild(document.createTextNode(""));
-         document.head.appendChild(style);
+         managedStyle.appendChild(document.createTextNode(""));
+         document.head.appendChild(managedStyle);
 
-         style.sheet.insertRule(".dragPlaceholder{display:none;}");
+         managedStyle.sheet = (managedStyle.sheet) ? managedStyle.sheet : {};
+
+         manager.managedStylesheet = managedStyle.sheet;
+         manager.managedStylesheet.insertRule(".dragPlaceholder{display:none;}", 0);
+         manager.placeholderStyle = manager.managedStylesheet.cssRules[0];
 
       })();
-
+      var isDraggingSlide = false;
       var isDragging = false;
-      var dragMoveCount = 10;
+      manager.config.dragMoveTimeout = 100;
+      var dragMoveCount = manager.config.dragMoveTimeout;
       var dragInterval = 1000;
       var dragSetTimeout;
+      var cursorX, cursorY;
       var resetTimeout = function(){
          dragSetTimeout = undefined;
-         dragMoveCount = 10;
+         dragMoveCount = manager.config.dragMoveTimeout;
+         if(isDragging){
+            updateCursor(cursorX, cursorY);
+         }
       };
       var showPlaceholder = function(){
-
+         manager.placeholderStyle.style.display = "block";
       };
       var hidePlaceholder = function(){
-
+         manager.placeholderStyle.style.display = "none";
       };
       var updateCursor = function(x, y){
          var t = document.elementFromPoint(x, y);
+         if(t.slide == true){
+            return;
+         }
          if(t.placeholder == true){
-            t.appendChild(manager.cursor);
+            t.appendChild(manager.Cursor);
             return;
          }
          t = manager.getParentSelectable(t, true);
@@ -44,8 +56,10 @@ manager.initDrag = function(){
          var b = t.getBoundingClientRect();
          if(y > b.top + b.height / 2){
             // Insert after t
+            t.parentNode.insertBefore(manager.Cursor, t.nextSibling);
          }else{
             // Insert Before t
+            t.parentNode.insertBefore(manager.Cursor, t);
          }
       };
 
@@ -57,9 +71,16 @@ manager.initDrag = function(){
          isDragging = true;
          manager.selectionMask.style.display = "none";
          manager.selectedObject.style.opacity = "0.4";
+         var x = document.elementFromPoint(x, y);
+         x = manager.getParentSelectable(x);
+         if(x && x.slide == true){
+            isDraggingSlide = true;
+         }
          showPlaceholder();
       };
       var dragMove = function(x, y){
+         cursorX = x;
+         cursorY = y;
          if(!isDragging){
             return;
          }
@@ -68,10 +89,12 @@ manager.initDrag = function(){
             return;
          }
          if(!dragSetTimeout){
+            console.log("rest setTimeOut");
             dragSetTimeout = setTimeout(resetTimeout, dragInterval);
          }
          if(dragMoveCount == 0){
-            dragMoveCount = 10;
+            console.log("reset Count");
+            dragMoveCount = manager.config.dragMoveTimeout;
             clearTimeout(dragSetTimeout);
             dragSetTimeout = undefined;
          }
@@ -80,8 +103,12 @@ manager.initDrag = function(){
       var dragEnd = function(){
          isDragging = false;
          hidePlaceholder();
-         if(manager.cursor.parentNode){
-            manager.cursor.parentNode.removeChild(manager.cursor);
+         if(cursorX == undefined){
+            return;
+         }
+         if(manager.Cursor.parentNode){
+            manager.Cursor.parentNode.insertBefore(manager.selectedObject, manager.Cursor);
+            manager.Cursor.parentNode.removeChild(manager.Cursor);
          }
          manager.assignSelection(manager.selectedObject);
          manager.selectedObject.style.opacity = "1";
@@ -94,7 +121,7 @@ manager.initDrag = function(){
       };
    })();
 
-   // Define cursor
+   // Define Cursor
    (function(){
       var para = document.createElement("div");
       var para_br = document.createElement("br");
@@ -106,6 +133,8 @@ manager.initDrag = function(){
       manager.Cursor = para;
    })();
 
+   // NOTICE: manager.managedStyle is also defined in this file
+   // NOTICE: manager.placeholderStyle is also defined in this file
    manager.config.onLongPressStart = initObj.onLongPressStart;
    manager.config.onLongPressMove = initObj.onLongPressMove;
    manager.config.onLongPressEnd = initObj.onLongPressEnd;
