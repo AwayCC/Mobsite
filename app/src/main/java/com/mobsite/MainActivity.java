@@ -270,7 +270,8 @@ public class MainActivity extends Activity
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
-        cwv.loadUrl("file://"+projectPath+"/tool.html");
+        //cwv.loadUrl("file://"+projectPath+"/tool.html");
+        cwv.loadUrl("file:///android_asset/www/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures();
     }
