@@ -48,11 +48,20 @@ manager.preLoad = function(){
          case "script":
          case undefined:
          case null:
-            continue;
+            break;
          default :
             if(!e.hasAttribute("data-not-selectable")){
                e.selectable = true;
+               break;
             }
+            if(e.hasAttribute("data-placeholder")){
+               e.placeholder = true;
+               break;
+            }
+
+      }
+      if(e.id.substr(0, 5) == "slide"){
+         e.slide = true;
       }
    }
 };

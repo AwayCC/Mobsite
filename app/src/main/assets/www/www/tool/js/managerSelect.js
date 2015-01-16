@@ -84,9 +84,6 @@ manager.initSelect = function(){
       var assignSelection = function(o){
          console.log("assignSelection:");
          console.log(o);
-         if(o == manager.selectedObject){
-            return;
-         } // Speed up the process.
          if(manager.selectedObject){
             deselect();
          }
@@ -146,18 +143,20 @@ manager.initSelect = function(){
          if(g)assignSelection(g);
       };
       return {
-         selectionMask: selectionMask,
-         onSingleTap       : select,
-         onDoubleTap       : deselect,
-         assignSelection   : assignSelection,
-         on2FingerMoveDown : swipeDown,
-         on2FingerMoveLeft : swipeLeft,
-         on2FingerMoveUp   : swipeUp,
-         on2FingerMoveRight: swipeRight
+         selectionMask      : selectionMask,
+         onSingleTap        : select,
+         onDoubleTap        : deselect,
+         assignSelection    : assignSelection,
+         on2FingerMoveDown  : swipeDown,
+         on2FingerMoveLeft  : swipeLeft,
+         on2FingerMoveUp    : swipeUp,
+         on2FingerMoveRight : swipeRight,
+         getParentSelectable: getParentSelectable
       }
    })();
    manager.selectedObject = undefined;
    manager.selectionMask = initObj.selectionMask;
+   manager.getParentSelectable = initObj.getParentSelectable;
    manager.assignSelection = initObj.assignSelection;
    manager.config.onSingleTap = initObj.onSingleTap;
    manager.config.onDoubleTap = initObj.onDoubleTap;
