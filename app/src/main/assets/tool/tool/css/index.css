@@ -109,6 +109,53 @@ top: 8%;
     vertical-align: middle;
     text-align: center;
 }
+
+.slider {
+  width: 100%;
+}
+
+input[type="range"] {
+  -webkit-appearance: none !important;
+  width: 100%;
+  height: 15px;
+  background-color: #808080;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  margin: auto;
+  transition: all 0.3s ease;
+}
+input[type="range"]:hover {
+  background-color: #e0e0e0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 20px;
+  height: 20px;
+  background-color: #707070;
+  border-radius: 30px;
+  box-shadow: 0px 0px 3px #202020;
+  transition: all 0.5s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background-color: #808080;
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  box-shadow: 0px 0px 1px #3c6d59;
+}
+output
+{
+    padding: 0px;
+}
+#rangevalue {
+  text-align: center;
+  font-family: "Quantico", sans-serif;
+  font-size: 18px;
+  display: block;
+  margin: auto;
+  width: 100%;
+  color: white;
+}
 #galleryMark
 {
     height: 30px;
@@ -155,6 +202,16 @@ top: 8%;
     top: 50%;
     left: 10%;
    background-color: #404040;
+}
+#colorPickerPanel
+{
+    border-radius: 8px;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 10%;
+    left: 10%;
+    background-color: #404040;
 }
 #Add-panel::before {
     color: #000;
