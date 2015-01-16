@@ -36,7 +36,7 @@ border-radius: 10px;
 #setting-panel
 {
     opacity: 0;
-    height: 80%;
+    height: 60%;
     width: 20%;
     position: fixed;
     left: 75.2%;
@@ -97,18 +97,6 @@ top: 8%;
     -webkit-transform: translateZ(0);
     z-index: 2;
 }
-#Addmark
-{
-    height: 30px;
-    width: 100%;
-    background-color: #242525;  
-    border-top-left-radius: 0.75em;
-    border-top-right-radius: 0.75em;
-    display: table;
-    color: white;
-    vertical-align: middle;
-    text-align: center;
-}
 
 .slider {
   width: 100%;
@@ -156,24 +144,7 @@ output
   width: 100%;
   color: white;
 }
-#galleryMark
-{
-    height: 30px;
-    width: 100%;
-    background-color: #242525;  
-    border-top-left-radius: 0.75em;
-    border-top-right-radius: 0.75em;
-    display: table;
-    color: white;
-    vertical-align: middle;
-    text-align: center;
-}
-#galleryMark p
-{
-    text-align: center;
-    vertical-align: middle;
-    display: table-cell;
-}
+
 .panelMark
 {
     height: 30px;
@@ -192,29 +163,21 @@ output
     vertical-align: middle;
     display: table-cell;
 }
-#propertyMark
+#color
 {
-    height: 30px;
-    width: 100%;
-    background-color: #242525;  
-    border-top-left-radius: 0.75em;
-    border-top-right-radius: 0.75em;
-    display: table;
-    color: white;
-    vertical-align: middle;
-    text-align: center;
+    position: relative;
+    padding-top: 10px;
+    width: 80%;
+    left: 10%;
+    height: 20px;
 }
-#propertyMark p
+#previouscolor
 {
-    text-align: center;
-    vertical-align: middle;
-    display: table-cell;
-}
-#Addmark p
-{
-    text-align: center;
-    vertical-align: middle;
-    display: table-cell;
+    position: relative;
+    padding-top: 10px;
+    width: 80%;
+    left: 10%;
+    height: 20px;
 }
 #Addmenu
 {
@@ -228,22 +191,26 @@ output
     width: 90%;
     background-color: transparent;
 }
-#galleria{height:320px}
+#galleria{
+    opacity: 0; height:320px}
 #galleryPanel
 {
+    opacity: 0;
     border-radius: 8px;
     position: fixed;
     height: auto;
     width: 50%;
-    top: 50%;
-    left: 10%;
+    top: -50%;
+    right: 0%;
    background-color: #404040;
 }
 #colorPickerPanel
 {
+    opacity: 0.5;
     border-radius: 8px;
     position: fixed;
     height: auto;
+    padding-bottom: 10px;
     width: auto;
     top: 10%;
     left: 10%;
@@ -271,6 +238,12 @@ output
     padding-bottom: 2px;
     top:0;
     background-color: #202020;
+}
+#picker
+{
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
 }
 .galleria-theme-classic
 {
@@ -509,6 +482,14 @@ h1 {
     width: 86%;
     height: 100%;
     background-image: url(../img/icons/setting.png);
+    background-repeat: no-repeat;
+    background-size: contain; 
+}
+#headericon .title #gallery
+{
+    width: 86%;
+    height: 100%;
+    background-image: url(../img/icons/gallery.png);
     background-repeat: no-repeat;
     background-size: contain; 
 }

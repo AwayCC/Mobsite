@@ -116,64 +116,39 @@ jQuery._farbtastic = function (container, callback) {
    * Retrieve the coordinates of the given event relative to the center
    * of the widget.
    */
-  fb.widgetCoords = function (event) {
+   fb.widgetCoords = function (event) {
     var x, y;
     var el = event.target || event.srcElement;
     var reference = fb.wheel;
-
-    if (typeof event.offsetX != 'undefined') {
-      // Use offset coordinates and find common offsetParent
-      var pos = { x: event.offsetX, y: event.offsetY };
-
-      // Send the coordinates upwards through the offsetParent chain.
-      var e = el;
-      while (e) {
-        e.mouseX = pos.x;
-        e.mouseY = pos.y;
-        pos.x += e.offsetLeft;
-        pos.y += e.offsetTop;
-        e = e.offsetParent;
-      }
-
-      // Look for the coordinates starting from the wheel widget.
-      var e = reference;
-      var offset = { x: 0, y: 0 }
-      while (e) {
-        if (typeof e.mouseX != 'undefined') {
-          x = e.mouseX - offset.x;
-          y = e.mouseY - offset.y;
-          break;
-        }
-        offset.x += e.offsetLeft;
-        offset.y += e.offsetTop;
-        e = e.offsetParent;
-      }
-
-      // Reset stored coordinates
-      e = el;
-      while (e) {
-        e.mouseX = undefined;
-        e.mouseY = undefined;
-        e = e.offsetParent;
-      }
-    }
-    else {
-      // Use absolute coordinates
       var pos = fb.absolutePosition(reference);
-      x = (event.pageX || 0*(event.clientX + $('html').get(0).scrollLeft)) - pos.x;
-      y = (event.pageY || 0*(event.clientY + $('html').get(0).scrollTop)) - pos.y;
-    }
+      x = (pointerEventToXY(event).x || 0*(event.clientX + $('html').get(0).scrollLeft)) - pos.x;
+      y = (pointerEventToXY(event).y || 0*(event.clientY + $('html').get(0).scrollTop)) - pos.y;
     // Subtract distance to middle
     return { x: x - fb.width / 2, y: y - fb.width / 2 };
   }
-
+   var pointerEventToXY = function(e){
+      var out = {x:0, y:0};
+      if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+        var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        out.x = touch.pageX;
+        out.y = touch.pageY;
+      } else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+        out.x = e.pageX;
+        out.y = e.pageY;
+      }
+      return out;
+    };
   /**
    * Mousedown handler
    */
-  fb.mousedown = function (event) {
+
+  /**
+   * Mouseup handler
+   */
+  fb.ontouchstart = function (event) {
     // Capture mouse
     if (!document.dragging) {
-      $(document).bind('mousemove', fb.mousemove).bind('mouseup', fb.mouseup);
+      $(document).bind('touchmove', fb.ontouchmove).bind('touchend', fb.ontouchend);
       document.dragging = true;
     }
 
@@ -182,14 +157,14 @@ jQuery._farbtastic = function (container, callback) {
     fb.circleDrag = Math.max(Math.abs(pos.x), Math.abs(pos.y)) * 2 > fb.square;
 
     // Process
-    fb.mousemove(event);
+    fb.ontouchmove(event);
     return false;
   }
 
   /**
    * Mousemove handler
    */
-  fb.mousemove = function (event) {
+  fb.ontouchmove = function (event) {
     // Get coordinates relative to color picker center
     var pos = fb.widgetCoords(event);
 
@@ -210,10 +185,10 @@ jQuery._farbtastic = function (container, callback) {
   /**
    * Mouseup handler
    */
-  fb.mouseup = function () {
+  fb.ontouchend = function () {
     // Uncapture mouse
-    $(document).unbind('mousemove', fb.mousemove);
-    $(document).unbind('mouseup', fb.mouseup);
+    $(document).unbind('touchmove', fb.ontouchmove);
+    $(document).unbind('touchend', fb.ontouchend);
     document.dragging = false;
   }
 
@@ -332,8 +307,8 @@ jQuery._farbtastic = function (container, callback) {
     return [h, s, l];
   }
 
-  // Install mousedown handler (the others are set on the document on-demand)
-  $('*', e).mousedown(fb.mousedown);
+    $("*",e).on("touchstart click ",fb.ontouchstart);
+ // $('*', e).mousedown(fb.ontouchstart);
 
     // Init color
   fb.setColor('#000000');

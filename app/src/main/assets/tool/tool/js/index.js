@@ -13,6 +13,7 @@ var addpanelshow = false;
 var onanimate = false;
 var settingshow = false;
 var controlpanelshow = false;
+var gallerypanelshow = false;
 var githubpanelshow=false;
 var isFullScreen=false;
 var galleryMember;
@@ -67,6 +68,53 @@ function galleryImport(member)
 {
     
 }
+function propertyPanelShow( pos)
+{
+    if(!onanimate)
+    {
+    onanimate = true;
+    var panel=document.getElementById("propertyPanel");
+    panel.css("top",pos.y);
+    panel.css("left",pos.x);
+    panel.transition({ opacity: 1 },function(){onanimate=false;});
+    }
+}
+function propertyPanelShow(pos)
+{
+    if(!onanimate)
+    {
+    onanimate = true;
+    var panel=document.getElementById("propertyPanel");
+    panel.transition({ opacity: 0 },function(){panel.css("top",pos.y); panel.css("left",pos.x);onanimate=false;});
+    }
+}
+function galleryPanelShow()
+{
+    if(!onanimate)
+    {
+        onanimate = true;
+        $( "#galleryPanel" ).css("top","10%");
+        $( "#galleria").transition({opacity:1},function(){$( "#galleryPanel" ).transition({ opacity: 1 },function(){onanimate=false;});});
+        
+        gallerypanelshow=!gallerypanelshow;
+    }
+}
+function galleryPanelHide()
+{
+    if(!onanimate)
+    {
+        onanimate = true;
+        $( "#galleryPanel" ).transition({ opacity: 0},function(){$( "#galleryPanel" ).css("top","-50%");onanimate=false;});      
+        gallerypanelshow=!gallerypanelshow;
+    }
+}
+function galleryPanelToggle()
+{
+    if(!gallerypanelshow)
+        galleryPanelShow();
+    else
+        galleryPanelHide();
+};
 function galleryInitialize( member)
 {
     var gallery=$(galleria);
@@ -117,7 +165,6 @@ function AddPanelToggle()
 };
 function SettingPanelToggle()
 {
-     galleryInitialize(galleryMember);
     if(!settingshow)
         SettingPanelShow();
     else
@@ -125,16 +172,24 @@ function SettingPanelToggle()
 };
 function SettingPanelShow()
 {
+    if(!onanimate)
+    {
+    onanimate=true;
     $( "#setting-panel" ).css("top","11%");
     $('#setting').transition({ rotate: '180deg' });
-        $( "#setting-panel" ).transition({ opacity: 1 });
+        $( "#setting-panel" ).transition({ opacity: 1 },function(){onanimate=false;});
     settingshow=!settingshow;
+    }    
 };
 function SettingPanelHide()
 {
+    if(!onanimate)
+    {
+    onanimate=true;
     $('#setting').transition({ rotate: '0deg' });
-        $( "#setting-panel" ).transition({ opacity: 0 },function(){$( "#setting-panel" ).css("top","-80%");});
+    $( "#setting-panel" ).transition({ opacity: 0 },function(){$( "#setting-panel" ).css("top","-80%");onanimate=false;});
     settingshow=!settingshow;
+    }
 };
 function ControlPanelToggle()
 {
@@ -251,15 +306,33 @@ function EnvironmentInit()
     $("#fullscreen").on("touchstart ",function(startEvent){FullScreenPreview();});
     $("#setting")   .on("touchstart ",function(startEvent){SettingPanelToggle();});
     $("#github")    .on("touchstart ",function(startEvent){githubPanelShow();});
+    $("#gallery")    .on("touchstart click ",function(startEvent){galleryPanelToggle();});
     $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
+    $("#properBackgound").on("touchstart click",function(startEvent){colorSelector($("#properBackgound"));});
+    $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
+
+}
+function colorSelector(col)
+{
+    if(!onanimate)
+    {
+        onanimate=true;
+        $("#previouscolor").css("background-color",col.innerHTML);
+        $("#colorPickerPanel").transition({opacity: 1 });
+    }
+    
 }
 function githubPanelShow()
 {
+    if(!onanimate)
+    {
+    onanimate=true;
     githubpanelshow=true;
     ShadowCover();
     $("#githubPanel").css("opacity","0");
     $("#githubPanel").css("left","15%");
-    setTimeout("$('#githubPanel').transition({opacity: 1 })",500);
+    setTimeout("$('#githubPanel').transition({opacity: 1 });onanimate=false;",500);
+    }
 }
 function githubPanelHide()
 {
@@ -268,9 +341,12 @@ function githubPanelHide()
 }
 function ShadowFade()
 {
+    if(!onanimate)
+    {
     if(githubpanelshow)
      githubPanelHide();
-    setTimeout("$('#shadow').transition({ x:0});",500);
+    setTimeout("$('#shadow').transition({ x:0});onanimate=false;",500);
+    }
     
 };
 window.addEventListener('orientationchange', OrientationChanged);

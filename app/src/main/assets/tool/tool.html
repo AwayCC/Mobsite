@@ -10,25 +10,24 @@
     <link rel="stylesheet" type="text/css" href="tool/css/github.css"/>
     <link rel="stylesheet" type="text/css" href="tool/css/farbtastic.css"/>
     
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 
-        <!-- load Galleria -->
         
 </head>
 <body id="test1">
     <div id="header" >
         <div id="headericon">
-            <div class="col-sm-2 title">
+            <div class="col-sm-3 title">
                 <div id="tool"></div>
             </div>
-            <div class="col-sm-8 title">
+            <div class="col-sm-6 title">
                 <h1 id="projecttitle">HelloWorld</h1>
             </div>
-            <div class="col-sm-2 title">
+            <div class="col-sm-3 title">
                 <div class="row title" id="lefticon">
-                    <div class="col-sm-4 title icon"><div id="setting"></div></div>
-                    <div class="col-sm-4 title icon"><div id="github"></div></div>
-                    <div class="col-sm-4 title icon"><div id="fullscreen"></div></div>
+                    <div class="col-sm-3 title icon"><div id="gallery"></div></div>
+                    <div class="col-sm-3 title icon"><div id="setting"></div></div>
+                    <div class="col-sm-3 title icon"><div id="github"></div></div>
+                    <div class="col-sm-3 title icon"><div id="fullscreen"></div></div>
                 </div>
             </div>
         </div>
@@ -139,7 +138,7 @@
         <a class="option_container"><img class="displayed" id="pastbtn" src="tool/img/icons/pastee.png"/></a>
     </div>
     <div id="Add-panel" class="bubble_left container">
-        <div id="Addmark"><p>Add New Element</p></div>
+        <div class="panelMark"><p>Add New Element</p></div>
         <div id="Addmenu">
             <div class="col-xs-6 element" id="Title"><div class="item"><h1>Input Title</h1></div></div>
             <div class="col-xs-6 element" id="Text"><div class="item"><p>Input Text</p></div></div>
@@ -219,7 +218,7 @@
         </div>
     </div>
     <div id="galleryPanel">
-        <div id="galleryMark"><p>Gallery</p></div>
+        <div class="panelMark"><p>Gallery</p></div>
         <div class="content">
         <div id="galleria">
             <a href="image.jpg">
@@ -234,18 +233,22 @@
     </div>
     </div>
     <div id="colorPickerPanel">
-        <form><input type="text" id="color" name="color" value="#123456"/></form>
-            <div id="picker">
-                    <div class="farbtastic">
-                        <div class="color" style="background-color: rgb(0, 127, 255);"></div>
-                        <div class="wheel"></div><div class="overlay"></div>
-                        <div class="h-marker marker" style="left: 55px; top: 170px;"></div>
-                        <div class="sl-marker marker" style="left: 91px; top: 73px;"></div></div></div>
+        <div class="panelMark"><p>Color</p> </div>    
+        <div id="picker">
+            <div class="farbtastic">
+                <div class="color" style="background-color: rgb(0, 127, 255);"></div>
+                <div class="wheel"></div><div class="overlay"></div>
+                <div class="h-marker marker" style="left: 55px; top: 170px;"></div>
+                <div class="sl-marker marker" style="left: 91px; top: 73px;"></div>
+            </div>
+        </div>
+        <div type="text" id="color" name="color" value="#123456"></div>
+        <div type="text" id="previouscolor" name="prevcolor" value="#000000"></div>
     </div>
     <div id="setting-panel" class="bubble_top">
     </div>
     <div id="propertyPanel" class="draggable">
-        <div id="propertyMark"><p>Property</p></div>
+        <div class="panelMark"><p>Property</p></div>
         <div class="CSSTableGenerator container" >
                 <table>
                     
