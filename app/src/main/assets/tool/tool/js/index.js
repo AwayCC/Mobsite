@@ -17,6 +17,7 @@ var githubpanelshow=false;
 var isFullScreen=false;
 var galleryMember;
 jQuery(document).ready(function($){
+    $('#picker').farbtastic('#color');
     console.log("helloworld!!!:D");
     var freeBounds = document.getElementById('propertypanel');
     
@@ -44,6 +45,7 @@ jQuery(document).ready(function($){
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
     Android.hideSplashView();
+    
 });
 function showProperty(tar)
 {
@@ -165,7 +167,7 @@ function FullScreenPreview()
 {   
     isFullScreen=true;
      ShadowCover();
-    $('#preview-panel').first().load('./www/index.html');
+    $('#preview-panel').first().load('index.html');
     $('#preview-panel').css('top','0');  
     setTimeout("$('#preview-panel').transition({ opacity: 1 });",500);
     setTimeout("$('#innercontent').css('top','0'); ",800);

@@ -126,13 +126,7 @@ public class MainActivity extends Activity
         saveProject();
     }
 
-        cwv = (CordovaWebView) findViewById(R.id.main_webview);
-        Config.init(this);
-        //cwv.loadUrl(Config.getStartUrl());
-        //cwv.loadUrl("file:///android_asset/project/tool.html");
-        //cwv.loadUrl("file://"+projectPath+"/tool.html");
-        cwv.addJavascriptInterface(this, "Android");
-        setCordovaWebViewGestures(cwv);
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -276,7 +270,6 @@ public class MainActivity extends Activity
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
-        Config.init(this);
         cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures();
@@ -590,25 +583,6 @@ public class MainActivity extends Activity
         }
 
 
-    }
-
-    @JavascriptInterface
-    public void deleteProject() {
-        File root = new File(projectPath);
-        ArrayDeque<File> folders = new ArrayDeque<File>();
-        folders.addLast(root);
-
-        while(!folders.isEmpty()) {
-            File f = folders.getFirst();
-            if(f.isDirectory()){
-                for (File file : f.listFiles())
-                    folders.addLast(file);
-            } else {
-                f.delete();
-            }
-
-            folders.removeFirst();
-        }
     }
 
     @JavascriptInterface

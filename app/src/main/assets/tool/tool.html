@@ -7,7 +7,8 @@
     <link rel="stylesheet" type="text/css" href="tool/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="tool/css/typicons.min.css"/>
     <link rel="stylesheet" type="text/css" href="tool/css/index.css" />
-    <link rel="stylesheet" type="text/css" href="tool/css/github.css">
+    <link rel="stylesheet" type="text/css" href="tool/css/github.css"/>
+    <link rel="stylesheet" type="text/css" href="tool/css/farbtastic.css"/>
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 
@@ -223,7 +224,7 @@
         <div id="galleria">
             <a href="image.jpg">
                 <img 
-                    src="image.jpg",
+                    src="image.jpg"
                     data-big="image.jpg"
                     data-title="Biandintz eta zaldiak"
                     data-description="Horses on Bianditz mountain, in Navarre, Spain."
@@ -231,28 +232,38 @@
             </a>
         </div>
     </div>
-
-    <script>
-
-    // Load the classic theme
-   
-
-    </script>
+    </div>
+    <div id="colorPickerPanel">
+        <form><input type="text" id="color" name="color" value="#123456"/></form>
+            <div id="picker">
+                    <div class="farbtastic">
+                        <div class="color" style="background-color: rgb(0, 127, 255);"></div>
+                        <div class="wheel"></div><div class="overlay"></div>
+                        <div class="h-marker marker" style="left: 55px; top: 170px;"></div>
+                        <div class="sl-marker marker" style="left: 91px; top: 73px;"></div></div></div>
     </div>
     <div id="setting-panel" class="bubble_top">
     </div>
     <div id="propertyPanel" class="draggable">
-        <div id="galleryMark"></div>
+        <div id="propertyMark"><p>Property</p></div>
         <div class="CSSTableGenerator container" >
                 <table>
-                    <tr><td>Property</td><td>Content</td></tr>
+                    
                     <tr><td>Category</td><td id="properCategory"></td></tr>
                     <tr><td>Content</td><td id="properContent"></td></tr>
                     <tr><td>Rect - Height</td><td id="properHeight"></td></tr>
                     <tr><td>Rect - Width</td><td id="properWidth"></td></tr>
                     <tr><td>Text - Color</td><td id="properColor"></td></tr>
                     <tr><td>Background</td><td id="properBackgound"></td></tr>
-                    <tr><td>Opacity</td><td id="properOpacity"></td></tr>
+                    <tr><td>Opacity</td><td id="properOpacity"> 
+                        <div class="slider">
+                            <output id="rangevalue">50</output>
+                            <input type = "range" min="0" max="100" onchange="rangevalue.value=value"/>
+	                        
+                        </div>
+                    </td></tr>
+                   
+
                     <tr><td>Padding</td><td id="properPadding"></td></tr>
                     <tr><td>Source</td><td id="properSource"></td></tr>
                 </table>
@@ -266,6 +277,7 @@
     <script src="tool/js/underscore-min.js"></script>
     <script src="tool/js/jquery-1.11.1.min.js"></script>
     <script src="tool/gallery/galleria-1.4.2.min.js"></script>
+    <script src="tool/js/farbtastic.js"></script>
     <script src="tool/js/index.js"></script>
     <script src="tool/js/bootstrap.min.js"></script>
     <script src="tool/js/jquery.transit.min.js"></script>
