@@ -95,6 +95,7 @@ function showProperty(tar)
     document.getElementById("properColor").innerHTML=computedStyle.color;
     document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
+    alert(computedStyle.margin);
     //document.getElementById("properPaddings").innerHTML=computedStyle.padding;
     document.getElementById("properSource").innerHTML=tar.src;
     if(c.hasAttribute("style"))
