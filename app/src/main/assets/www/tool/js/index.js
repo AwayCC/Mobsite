@@ -27,17 +27,12 @@ jQuery(document).ready(function($){
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
-    $('#properTable > tbody').scroll(function() {
-    var pos = $('#properTable > tbody').scrollTop();
-    if (pos == 0) {
-        alert('top of the div');
-    }
-});
-    // set title.
-    document.getElementById("projecttitle").innerHTML = Android.getProjectName();
-    console.log(Android.getProjectPath());
 
-    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+    // set title.
+    //document.getElementById("projecttitle").innerHTML = Android.getProjectName();
+    //console.log(Android.getProjectPath());
+
+  // $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     $("#innercontent").first().load("index.html");
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
@@ -53,7 +48,7 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-    Android.hideSplashView();
+  //  Android.hideSplashView();
     
 });
 function showProperty(tar)
@@ -109,7 +104,7 @@ function galleryPanelShow()
 }
 function galleryPanelHide()
 {
-    if(!onanimate)
+    if(!onanimate) 
     {
         onanimate = true;
         $( "#galleryPanel" ).transition({ opacity: 0},function(){$( "#galleryPanel" ).css("top","-50%");onanimate=false;});      
@@ -318,7 +313,19 @@ function EnvironmentInit()
     $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
     $("#properBackgound").on("touchstart click",function(startEvent){colorSelector($("#properBackgound"));});
     $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
-
+    var forceWindowScroll=-1;
+    var upper;
+    $("#scroller").scroll(function(event){
+            $(window).scrollTop(upper);
+        //alert($("#scroller").scrollTop());
+    });
+    upper=document.body.scrollTop;
+    $("#propertyPanel").on("touchstart click",function(startEvent){startEvent.preventDefault();});
+  }
+}, function() {
+  forceWindowScroll = -1;
+});
+    var selScrollable ='.scrollable';
 }
 function colorSelector(col)
 {
@@ -365,77 +372,4 @@ function sleep(milliseconds) {
       break;
     }
   }
-}
-(function($){  
-  
-  trapScroll = function(opt){
-    
-    var trapElement;
-    var scrollableDist;
-    var trapClassName = 'trapScroll-enabled';
-    var trapSelector = '.trapScroll';
-    
-    var trapWheel = function(e){
-      
-      if (!$('body').hasClass(trapClassName)) {
-        
-        return;
-        
-      } else {  
-        
-        var curScrollPos = trapElement.scrollTop();
-        var wheelEvent = e.originalEvent;
-        var dY = wheelEvent.deltaY;
-
-        // only trap events once we've scrolled to the end
-        // or beginning
-        if ((dY>0 && curScrollPos >= scrollableDist) ||
-            (dY<0 && curScrollPos <= 0)) {
-
-          opt.onScrollEnd();
-          return false;
-          
-        }
-        
-      }
-      
-    }
-    
-    $(document)
-      .on('wheel', trapWheel)
-      .on('mouseleave', trapSelector, function(){
-        
-        $('body').removeClass(trapClassName);
-      
-      })
-      .on('mouseenter', trapSelector, function(){   
-      
-        trapElement = $(this);
-        var containerHeight = trapElement.outerHeight();
-        var contentHeight = trapElement[0].scrollHeight; // height of scrollable content
-        scrollableDist = contentHeight - containerHeight;
-        
-        if (contentHeight>containerHeight)
-          $('body').addClass(trapClassName); 
-      
-      });       
-  } 
-  
-})($);
-
-var preventedCount = 0;
-var showEventPreventedMsg = function(){  
-  $('#mousewheel-prevented').stop().animate({opacity: 1}, 'fast');
-}
-var hideEventPreventedMsg = function(){
-  $('#mousewheel-prevented').stop().animate({opacity: 0}, 'fast');
-}
-var addPreventedCount = function(){
-  $('#prevented-count').html('prevented <small>x</small>' + preventedCount++);
-}
-
-trapScroll({ onScrollEnd: addPreventedCount });
-$('.trapScroll')
-  .on('mouseenter', showEventPreventedMsg)
-  .on('mouseleave', hideEventPreventedMsg);      
-$('[id*="parent"]').scrollTop(100);
+};

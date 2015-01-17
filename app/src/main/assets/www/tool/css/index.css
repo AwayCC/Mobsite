@@ -256,12 +256,12 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    
-    background-image:none;
+    overflow-y: scroll;1    background-image:none;
     background-attachment:fixed;
     font-family:'Helvetica Neue', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
     height:100%;
+    overflow: auto;
     margin:0px;
     padding:0px;
     width:100%;
@@ -415,10 +415,10 @@ h1 {
 #propertyPanel
 {
    position: fixed;
-    height:40%;
+    height:430px;
     width: 30%;
     right: 0%;
-    top:50%;
+    top:20%;
     z-index: 10;
     background-color: #464342;
     border-radius: 8px;

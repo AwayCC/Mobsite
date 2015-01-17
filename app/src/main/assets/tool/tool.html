@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    <div id="innercontent" >
+    <div id="innercontent">
     </div>
     <div id="shadow">
     </div>
@@ -137,7 +137,7 @@
         <a class="option_container"><img class="displayed" id="copybtn" src="tool/img/icons/copyy.png"/></a>
         <a class="option_container"><img class="displayed" id="pastbtn" src="tool/img/icons/pastee.png"/></a>
     </div>
-    <div id="Add-panel" class="bubble_left container">
+    <div id="Add-panel" class="bubble_left container" onmouseover="document.body.style.overflow='hidden';" onmouseout="document.body.style.overflow='auto';">
         <div class="panelMark"><p>Add New Element</p></div>
         <div id="Addmenu" class="trapScroll">
             <div class="col-xs-6 element" id="Title"><div class="item"><h1>Input Title</h1></div></div>
@@ -251,24 +251,22 @@
         <div class="panelMark"><p>Property</p></div>
         <div class="CSSTableGenerator container" >
                 <table id="properTable" class="trapScroll child">
-                    
-                    <tr><td>Category</td><td id="properCategory"></td></tr>
-                    <tr><td>Content</td><td id="properContent"></td></tr>
-                    <tr><td>Rect - Height</td><td id="properHeight"></td></tr>
-                    <tr><td>Rect - Width</td><td id="properWidth"></td></tr>
-                    <tr><td>Text - Color</td><td id="properColor"></td></tr>
-                    <tr><td>Background</td><td id="properBackgound"></td></tr>
-                    <tr><td>Opacity</td><td id="properOpacity"> 
+                    <tbody id="scroller">
+                        <tr><td>Category</td><td id="properCategory"></td></tr>
+                        <tr><td>Content</td><td id="properContent"></td></tr>
+                        <tr><td>Rect - Height</td><td id="properHeight"></td></tr>
+                        <tr><td>Rect - Width</td><td id="properWidth"></td></tr>
+                        <tr><td>Text - Color</td><td id="properColor"></td></tr>
+                        <tr><td>Background</td><td id="properBackgound"></td></tr>
+                        <tr><td>Opacity</td><td id="properOpacity"> 
                         <div class="slider">
                             <output id="rangevalue">50</output>
                             <input type = "range" min="0" max="100" onchange="rangevalue.value=value"/>
-	                        
                         </div>
-                    </td></tr>
-                   
-
-                    <tr><td>Padding</td><td id="properPadding"></td></tr>
-                    <tr><td>Source</td><td id="properSource"></td></tr>
+                        </td></tr>
+                        <tr><td>Padding</td><td id="properPadding"></td></tr>
+                        <tr><td>Source</td><td id="properSource"></td></tr>
+                    </tbody>
                 </table>
         </div>      
     </div>
