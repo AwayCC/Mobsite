@@ -97,7 +97,7 @@ manager.initDrag = function(){
             if(!manager.selectedObject){
                return;
             }
-            //
+            Android.startDrag();
             if(x < manager.selectedObjectRect.left ||
                x > manager.selectedObjectRect.left + manager.selectedObjectRect.width ||
                y < manager.selectedObjectRect.top ||

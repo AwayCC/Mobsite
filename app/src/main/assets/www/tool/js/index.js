@@ -25,7 +25,10 @@ var Android = (Android) ? Android : {
    setSelectedHTML: function(s){},
    hideSplashView: function(){},
    getProjectName: function(){},
-   getProjectPath: function(){}
+   getProjectPath: function(){},
+   openTextInputDialog: function(){},
+   openBrowserDialog: function(){},
+   openPhotoDialog: function(){}
 };
 
 jQuery(document).ready(function($){
@@ -356,7 +359,7 @@ function deselect(){
 function EnvironmentInit()
 {
     $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
-    $("#editbtn")    .on("touchstart ",function(startEvent){ Android.openPhotoDialog();/*Android.openBrowserDialog();Android.openTextInputDialog();*/ });
+    $("#editbtn")    .on("touchstart ",function(startEvent){ setContent() });
     $("#dissbtn")    .on("touchstart ",function(startEvent){propertyPanelHide();});
 
     $("#test")      .on("touchstart click",function(startEvent){ShadowCover();});
@@ -551,7 +554,8 @@ function createElement(index){
 function setContent(){
     if(!manager.selectedObject){
         console.log("selected obj null");return;
-        }
+    }
+    console.log(manager.selectedObject.tagName);
     switch(manager.selectedObject.tagName){
         case "IMG":
             Android.openPhotoDialog();
