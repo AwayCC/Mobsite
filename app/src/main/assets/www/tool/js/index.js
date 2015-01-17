@@ -19,6 +19,14 @@ var isFullScreen=false;
 var galleryMember;
 var trapScroll;
 
+var Android = (Android) ? Android : {
+   startDrag: function(){},
+   setSelectedHTML: function(s){},
+   hideSplashView: function(){},
+   getProjectName: function(){},
+   getProjectPath: function(){}
+};
+
 jQuery(document).ready(function($){
     $('#picker').farbtastic('#color');
     console.log("helloworld!!!:D");
@@ -38,7 +46,9 @@ jQuery(document).ready(function($){
     console.log(Android.getProjectPath());
 
     //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    $("#innercontent").first().load("index.html");
+    $("#innercontent").first().load("index.html", postLoadProject);
+
+
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
     $("#innercontent").on("touchstart click",function(startEvent){
@@ -53,9 +63,13 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-    Android.hideSplashView();
+
     
 });
+function postLoadProject(){
+    manager.init();
+    Android.hideSplashView();
+}
 function showProperty(tar)
 {
     var computedStyle = getComputedStyle(event.target, null);

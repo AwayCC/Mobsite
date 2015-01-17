@@ -19,6 +19,14 @@ var isFullScreen=false;
 var galleryMember;
 var trapScroll;
 
+var Android = (Android) ? Android : {
+   startDrag: function(){},
+   setSelectedHTML: function(s){},
+   hideSplashView: function(){},
+   getProjectName: function(){},
+   getProjectPath: function(){}
+};
+
 jQuery(document).ready(function($){
     $('#picker').farbtastic('#color');
     console.log("helloworld!!!:D");
@@ -38,7 +46,9 @@ jQuery(document).ready(function($){
     console.log(Android.getProjectPath());
 
     //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    $("#innercontent").first().load("index.html");
+    $("#innercontent").first().load("index.html",manager.init);
+
+
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
     $("#innercontent").on("touchstart click",function(startEvent){

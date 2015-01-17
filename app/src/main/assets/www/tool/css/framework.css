@@ -5,8 +5,28 @@ body {} div {} .selectable {} .column {
 .slide {
     margin: 10px 0;
 }
-.selected {
-    border: solid 1px #ffff00;
+.cursorStyle {
+    background-color: #23527c;
+    font-size: 3px;
+    margin: 2px;
+    width: 100%;
+}
+.selectionMask {
+    background-color: rgba(0, 96, 230, 0.4);
+    border-width: 0;
+    z-index: 100;
+    margin: 0;
+    padding:0;
+    position: absolute;
+    display: none;
+}
+.selectionMaskDragging{
+    background-color: rgba(0, 96, 230, 0.2);
+    border-width: 0;
+    z-index: 100;
+    margin: 0;
+    padding:0;
+    position: absolute;
 }
 #myGestureListener {
     position: fixed;
@@ -15,4 +35,7 @@ body {} div {} .selectable {} .column {
     top: 0;
     right: 0;
     z-index: 100;
+}
+.cursorEntry{
+    display: none;
 }

@@ -38,7 +38,10 @@ manager.config = {
 };
 manager.preLoad = function(){
    // TODO : Do something that should be done before any initiation.
-   var elements = document.getElementById("innercontent").getElementsByTagName("*");
+   var c = manager.config.listener.getBoundingClientRect();
+   manager.config.offsetX = c.left;
+   manager.config.offsetY = c.top;
+   var elements = manager.config.listener.getElementsByTagName("*");
    for(var i = elements.length - 1; i >= 0; --i){
       var e = elements[i];
       switch(e.tagName.toLowerCase()){
@@ -62,6 +65,11 @@ manager.preLoad = function(){
       }
       if(e.id.substr(0, 5) == "slide"){
          e.slide = true;
+      }
+      var cl = e.classList;
+      if(cl.toString() && cl.toString().indexOf("col-md-") != -1){
+         e.column = true;
+         e.selectable = null;
       }
    }
 };

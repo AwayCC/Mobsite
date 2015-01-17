@@ -57,22 +57,31 @@ manager.initDrag = function(){
       };
       var updateCursor = function(x, y){
          var t = document.elementFromPoint(x, y);
-         if(manager.selectedObject.slide){
-            if(!t.placeholder){
-               return;
-            }
-            if(manager.Cursor.parentNode){
-               manager.Cursor.parentNode.removeChild(manager.Cursor);
-               return;
+         if(t.column){
+            return;
+         }else if(t.slide){
+            var v = manager.selectedObject;
+            if(v.slide){
+               if(v.placeholder){
+                  // placeholder for slide
+               }else{
+                  // slide
+               }
+            }else{
+               // column and others
+               while(t && !t.slide){
+                  t = t.parentNode;
+               }
             }
          }else{
-            if(t.placeholder){
+            if(t.column){
+               t.insertBefore(manager.Cursor,undefined);
+               return;l
+            }else if(t.slide){
                return;
+            }else{
+
             }
-         }
-         if(t.placeholder){
-            t.appendChild(manager.Cursor);
-            return;
          }
          t = manager.getParentSelectable(t, true);
          if(!t) return;
@@ -91,6 +100,8 @@ manager.initDrag = function(){
          if(t != manager.selectionMask){
             return;
          }
+         console.log(Date.now());
+         Android.startDrag();
          isDragging = true;
          manager.selectionMask.style.display = "none";
          manager.selectedObject.style.opacity = "0.4";
@@ -151,10 +162,7 @@ manager.initDrag = function(){
       var para = document.createElement("div");
       var para_br = document.createElement("br");
       para.appendChild(para_br);
-      para.style.backgroundColor = "blue";
-      para.style.fontSize = "3px";
-      para.className = "col-md-12";
-      para.style.margin = "2px";
+      para.className = "cursorStyle";
       manager.Cursor = para;
    })();
 

@@ -84,10 +84,10 @@ function setGestureListener(responses){
             if(secondTouch == null)
                return;
 
-            var delta_x1 = touch.pageX - touch_x;
-            var delta_y1 = touch.pageY - touch_y
-            var delta_x2 = secondTouch.pageX - touch_x2;
-            var delta_y2 = secondTouch.pageY - touch_y2;
+            var delta_x1 = touch.clientX - touch_x;
+            var delta_y1 = touch.clientY - touch_y
+            var delta_x2 = secondTouch.clientX - touch_x2;
+            var delta_y2 = secondTouch.clientY - touch_y2;
             var innerProduct = delta_x1*delta_x2 + delta_y1*delta_y2;
             var diastance1 = Math.sqrt(delta_x1*delta_x1 + delta_y1*delta_y1);
             var diastance2 = Math.sqrt(delta_x2*delta_x2 + delta_y2*delta_y2);
