@@ -51,9 +51,11 @@ jQuery(document).ready(function($){
 
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
+    /*
     $("#innercontent").on("touchstart click",function(startEvent){
-    showProperty(event.target);
+        showProperty(event.target);
     });
+    */
     var tester=[{'path':'tree.jpg'}];
     
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
@@ -72,7 +74,7 @@ function postLoadProject(){
 }
 function showProperty(tar)
 {
-    var computedStyle = getComputedStyle(event.target, null);
+    var computedStyle = getComputedStyle(tar, null);
     document.getElementById("properCategory").innerHTML=tar.tagName;
     if(tar.tagName=="IMG")
     document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');

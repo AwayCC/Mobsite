@@ -117,6 +117,7 @@ manager.initSelect = function(){
          t = getParentSelectable(t, true);
          if(t){
             assignSelection(t);
+            showProperty(t);
             Android.setSelectedHTML(t.innerHTML);
          }else{
             deselect();
