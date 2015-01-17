@@ -270,16 +270,16 @@ function EnvironmentInit()
     $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
 
     // added by ray.
-    $("#editbtn")    .on("touchstart ",function(startEvent){ Android.openPhotoDialog();/*Android.openBrowserDialog();Android.openTextInputDialog();*/ });
+    $("#editbtn")    .on("touchstart ",function(startEvent){ setContent() });
     $("#dissbtn")    .on("touchstart ",function(startEvent){
         try{
             //deselect();
 
             var files = JSON.parse(Android.getProjectsPathJSON());
-                        console.log("print json");
-                                    for(var i=0;i<files.length;++i){
-                                        console.log(files[i].path);
-                                    }
+            console.log("print json");
+                                    //for(var i=0;i<files.length;++i){
+                                    //    console.log(files[i].path);
+                                    //}
 
             /*
             var request = new XMLHttpRequest();
@@ -437,7 +437,104 @@ function setAddPanelDragLister(){
             }
 
             console.log("Add panel : long press start at "+index+".");
-            manager.config.onLongPressStart();
+
+            //var obj = createElement(index);
+            //manager.selectedObject = obj;
+            //manager.config.onLongPressStart();
         }
     };
+}
+
+function createElement(index){
+    var object;
+    switch(index){
+        case 0:
+            // Title
+            object = document.createElement("H1");
+            object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+            return object;
+            break;
+        case 1:
+            // text
+            object = document.createElement("p");
+            object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+            return object;
+            break;
+        case 2:
+            // container 1
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
+            object.appendChild(col);
+            return object;
+            break;
+        case 3:
+            // container 2
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6";
+            object.appendChild(col);
+            return object;
+            break;
+        case 4:
+            // container 3
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-4 col-sm-4 col-md-4 col-lg-4";
+            object.appendChild(col);
+            return object;
+            break;
+        case 5:
+            // container 4
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-3 col-sm-3 col-md-3 col-lg-3";
+            object.appendChild(col);
+            return object;
+            break;
+        case 6:
+            // container 6
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-2 col-sm-2 col-md-2 col-lg-2";
+            object.appendChild(col);
+            return object;
+            break;
+        case 7:
+            // Picture
+            object = document.createElement("img");
+            object.src = "tool/img/default.png";
+            return object;
+            break;
+    }
+}
+
+function setContent(){
+    if(!manager.selectedObject){
+        console.log("selected obj null");return;
+        }
+    switch(manager.selectedObject.tagName){
+        case "IMG":
+            Android.openPhotoDialog();
+            break;
+
+        case "P":
+        case "H1":
+        case "H2":
+        case "H3":
+        case "H4":
+        case "H5":
+        case "H6":
+            Android.openTextInputDialog();
+            break;
+
+        default:
+            Android.openBrowserDialog();
+            break;
+    }
 }

@@ -421,19 +421,29 @@ public class MainActivity extends Activity
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(MainActivity.this, "clcik", Toast.LENGTH_SHORT).show();
+
                         EditText input = (EditText) v.findViewById(R.id.inputText);
                         String inputHTML = input.getText().toString();
-                        String output = "";
-                        Log.v("before sanitize", inputHTML);
+                        //Log.v("before sanitize", inputHTML);
                         inputHTML = inputHTML.replace("&","&amp");
                         inputHTML = inputHTML.replace("<","&lt");
                         inputHTML = inputHTML.replace(">","&gt");
-                        Log.v("after sanitize", inputHTML);
-                        if(output.isEmpty()){
-
+                        // Log.v("after sanitize", inputHTML);
+                        if(inputHTML.isEmpty()){
+                            Toast.makeText(MainActivity.this, "Input is empty...", Toast.LENGTH_SHORT).show();
                         } else {
-                            //dialog.dismiss();
+                            String js = "javascript:";
+                            js += "console.log(\"from set content"+inputHTML+"\");";
+                            //js += "manager.selectedObject.innerHTML = "+inputHTML+";";
+                            final String code = js;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cwv.loadUrl(code);
+                                }
+                            });
+
+                            dialog.dismiss();
                         }
                     }
                 });
