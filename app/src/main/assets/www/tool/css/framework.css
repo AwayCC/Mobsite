@@ -19,6 +19,7 @@ body {} div {} .selectable {} .column {
     padding:0;
     position: absolute;
     display: none;
+    z-index:20;
 }
 .selectionMaskDragging{
     background-color: rgba(0, 96, 230, 0.2);
@@ -27,6 +28,7 @@ body {} div {} .selectable {} .column {
     margin: 0;
     padding:0;
     position: absolute;
+    z-index:20;
 }
 #myGestureListener {
     position: fixed;
@@ -34,7 +36,7 @@ body {} div {} .selectable {} .column {
     background-color: rgba(101, 171, 176, 50);
     top: 0;
     right: 0;
-    z-index: 100;
+    z-index: 20;
 }
 .cursorEntry{
     display: none;

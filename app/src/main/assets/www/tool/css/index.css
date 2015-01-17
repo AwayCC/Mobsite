@@ -42,6 +42,7 @@ border-radius: 10px;
     left: 75.2%;
     top:-80%;
     background-color: #464342;
+    z-index: 40;
 }
 .bubble_top:after 
 {
@@ -52,7 +53,7 @@ border-width: 0 15px 15px;
 border-color: #464342 transparent ;
 display: block;
 width: 0;
-z-index: 1;
+z-index: 40;
 top: -15px;
 left: 110px;
 }
@@ -77,7 +78,7 @@ border-width: 15px 15px 15px 0;
 border-color: transparent #464342;
 display: block;
 width: 0;
-z-index: 3;
+z-index: 40;
 left: -15px;
 top: 8%;
 }
@@ -95,7 +96,7 @@ top: 8%;
     padding:0;
     box-shadow: 7px 7px 15px #161415;
     -webkit-transform: translateZ(0);
-    z-index: 2;
+    z-index: 25;
 }
 
 .slider {
@@ -202,7 +203,8 @@ output
     width: 50%;
     top: -50%;
     right: 0%;
-   background-color: #404040;
+    background-color: #404040;
+    z-index: 40;
 }
 #colorPickerPanel
 {
@@ -215,6 +217,7 @@ output
     top: 10%;
     left: 10%;
     background-color: #404040;
+    z-index: 40;
 }
 #Add-panel::before {
     color: #000;
@@ -326,7 +329,7 @@ body {
     width: 200%;
     background-color: black;
     opacity: 0.5;
-    z-index: 10;
+    z-index: 50;
 }
 #wrapper
 {
@@ -372,14 +375,14 @@ h1 {
     top: -100%;
     left: 0;
     position:  absolute;
-    z-index: 200;
+    z-index: 70;
 }
 #preview-control
 {
     height: 10%;
     width: 5%;
     position: fixed;
-    z-index: 250;
+    z-index: 71;
     right: 0;
     top: -10%;
 }
@@ -419,7 +422,7 @@ h1 {
     width: 30%;
     right: 0%;
     top:20%;
-    z-index: 10;
+    z-index: 40;
     background-color: #464342;
     border-radius: 8px;
 }
@@ -473,7 +476,7 @@ h1 {
     border: 0;
     box-shadow: 0px 10px 20px #161415;
     padding: 0;
-    z-index: 2;
+    z-index: 60;
     vertical-align: middle;
     text-align: center;
 }
@@ -656,7 +659,7 @@ a.option_container img.displayed {
     height: 50%;
     left: 15%;
     top: 25%;
-    z-index: 200;
+    z-index: 60;
 }
 #toolmark img
 {
@@ -678,7 +681,7 @@ a.option_container img.displayed {
     height: 84.5%;
     box-shadow: 7px 7px 15px #161415;
     border-radius: 8px;
-    z-index: 3;
+    z-index: 30;
 }
 #propertypanel
 {
@@ -761,6 +764,7 @@ a.image_container img {
     background-color: transparent;
     position: relative;
     text-align: center;
+    width:50%;
 }
 .element h1
 {

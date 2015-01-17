@@ -38,11 +38,11 @@ jQuery(document).ready(function($){
 
     // set title.
     document.getElementById("projecttitle").innerHTML = Android.getProjectName();
-    //console.log(Android.getProjectPath());
-  // $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    $("#innercontent").first().load("index.html");
-    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+    console.log(Android.getProjectPath());
+    // $("#innercontent").first().load("index.html");
+
     $("#innercontent").first().load("index.html", postLoadProject);
+
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
     /*
@@ -59,11 +59,11 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-    Android.hideSplashView();
-    
+
 });
 function postLoadProject(){
     manager.init();
+    setAddPanelDragLister();
     Android.hideSplashView();
 }
 function showProperty(tar)
@@ -77,7 +77,7 @@ function showProperty(tar)
     document.getElementById("properHeight").innerHTML=computedStyle.height;
     document.getElementById("properWidth").innerHTML=computedStyle.width;
     document.getElementById("properColor").innerHTML=computedStyle.color;
-    document.getElementById("properBackgound").innerHTML=computedStyle.backgroundColor;
+    document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
     document.getElementById("properPadding").innerHTML=computedStyle.padding;
     document.getElementById("properSource").innerHTML=tar.src;
@@ -326,7 +326,7 @@ function EnvironmentInit()
     $("#github")    .on("touchstart ",function(startEvent){githubPanelShow();});
     $("#gallery")    .on("touchstart click ",function(startEvent){galleryPanelToggle();});
     $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
-    $("#properBackgound").on("touchstart click",function(startEvent){colorSelector($("#properBackgound"));});
+    $("#properBackground").on("touchstart click",function(startEvent){colorSelector($("#properBackground"));});
     $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
     $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
 }
@@ -376,3 +376,68 @@ function sleep(milliseconds) {
     }
   }
 };
+
+// Event Listener of Add Panel
+var addPanel_touchLongPress = false,
+    addPanel_touchStill = false,
+    addPanel_touchTarget;
+function setAddPanelDragLister(){
+    var panel = document.getElementById("Addmenu");
+    panel.addEventListener('touchstart', onTouchStart, false);
+    panel.addEventListener('touchmove', onTouchMove, false);
+    panel.addEventListener('touchend', onTouchEnd, false);
+
+    function onTouchStart(){
+        if(addPanel_touchLongPress)
+            return;
+        if(event.touches.length > 1)
+            return;
+
+        // modify gesture flags.
+        addPanel_touchStill = true;
+        addPanel_touchTarget = event.target;
+        setTimeout(longPressChecker, 600);
+
+        // update new position.
+        touch_x = event.touches.item(0).clientX;
+        touch_y = event.touches.item(0).clientY;
+    }
+    function onTouchMove(){
+        if(event.touches.length > 1)
+            return;
+
+        addPanel_touchStill = false;
+        var touch = event.touches.item(0);
+
+        if(addPanel_touchLongPress){
+            event.preventDefault();
+        }
+
+        // update new position.
+        touch_x = event.touches.item(0).clientX;
+        touch_y = event.touches.item(0).clientY;
+    }
+    function onTouchEnd(){
+        if(addPanel_touchLongPress){
+            addPanel_touchLongPress = false;
+            return;
+        }
+    }
+    var longPressChecker = function(event){
+        if(addPanel_touchStill){
+            addPanel_touchLongPress = true;
+            console.log("Add panel : event "+addPanel_touchTarget.id);
+            var index = 0;
+
+            addPanel_touchTarget = addPanel_touchTarget.previousElementSibling;
+            //console.log("Add panel : event "+addPanel_touchTarget.id);
+            while(addPanel_touchTarget){
+                index++;
+                addPanel_touchTarget = addPanel_touchTarget.previousElementSibling;
+            }
+
+            console.log("Add panel : long press start at "+index+".");
+            manager.config.onLongPressStart();
+        }
+    };
+}

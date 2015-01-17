@@ -8,8 +8,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Point;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -97,6 +100,8 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_activity);
 
+
+
         // show progress dilaog.
         pDialog = new ProgressDialog(MainActivity.this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -114,7 +119,6 @@ public class MainActivity extends Activity
         //} else {
 
         //}
-
         setViews();
     }
 
@@ -123,7 +127,7 @@ public class MainActivity extends Activity
     protected void onStop() {
         super.onStop();
         Log.v(_logTag, "onStop & saveProject()");
-        saveProject();
+        //saveProject();
     }
 
 
@@ -502,12 +506,13 @@ public class MainActivity extends Activity
                 pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 pDialog.setTitle("connecting to Google...");
 
-
                 LayoutInflater inflater = getLayoutInflater();
                 View v = inflater.inflate(R.layout.link_input_dialog, null);
                 final EditText input = (EditText) v.findViewById(R.id.currentURL);
+                ImageView prev = (ImageView) v.findViewById(R.id.prevPage);
+                ImageView next = (ImageView) v.findViewById(R.id.nextPage);
 
-                WebView browser = (WebView) v.findViewById(R.id.browser);
+                final WebView browser = (WebView) v.findViewById(R.id.browser);
                 //Config.init(this);
                 browser.setWebViewClient(new WebViewClient() {
                     public void onPageFinished(WebView view, String url) {
@@ -517,6 +522,26 @@ public class MainActivity extends Activity
                     }
                 });
                 browser.loadUrl("https://www.google.com");
+                prev.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(browser.canGoForward()) {
+                            browser.goForward();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Last page. Can't go forward.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(browser.canGoBack()) {
+                            browser.goBack();
+                        } else {
+                            Toast.makeText(MainActivity.this, "First page. Can't go back.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
                 final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
