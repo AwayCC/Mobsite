@@ -19,6 +19,14 @@ var isFullScreen=false;
 var galleryMember;
 var trapScroll;
 
+var Android = (Android) ? Android : {
+   startDrag: function(){},
+   setSelectedHTML: function(s){},
+   hideSplashView: function(){},
+   getProjectName: function(){},
+   getProjectPath: function(){}
+};
+
 jQuery(document).ready(function($){
     $('#picker').farbtastic('#color');
     console.log("helloworld!!!:D");
@@ -32,13 +40,22 @@ jQuery(document).ready(function($){
     //document.getElementById("projecttitle").innerHTML = Android.getProjectName();
     //console.log(Android.getProjectPath());
 
+<<<<<<< HEAD
   // $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     $("#innercontent").first().load("index.html");
+=======
+    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
+    $("#innercontent").first().load("index.html", postLoadProject);
+
+
+>>>>>>> origin/master
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
+    /*
     $("#innercontent").on("touchstart click",function(startEvent){
-    showProperty(event.target);
+        showProperty(event.target);
     });
+    */
     var tester=[{'path':'tree.jpg'}];
     
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
@@ -48,12 +65,20 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
+<<<<<<< HEAD
   //  Android.hideSplashView();
+=======
+
+>>>>>>> origin/master
     
 });
+function postLoadProject(){
+    manager.init();
+    Android.hideSplashView();
+}
 function showProperty(tar)
 {
-    var computedStyle = getComputedStyle(event.target, null);
+    var computedStyle = getComputedStyle(tar, null);
     document.getElementById("properCategory").innerHTML=tar.tagName;
     if(tar.tagName=="IMG")
     document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');

@@ -12,9 +12,8 @@ manager.initSelect = function(){
       var selectionMask = document.createElement("hr");
       selectionMask.className += "selectionMask";
       selectionMask.selectionMask = true;
-      document.body.appendChild(selectionMask);
-      console.log("initSelect: Add selection mask.")
-      console.log(selectionMask);
+      manager.config.listener.appendChild(selectionMask);
+      console.log("initSelect: Add selection mask.");
       // Helper functions
       var getParentSelectable = function(node, canReturnMe){
          if(!node){
@@ -89,8 +88,8 @@ manager.initSelect = function(){
          }
          var t = o.getBoundingClientRect();
          selectionMask.style.display = "none";
-         selectionMask.style.top = (t.top + window.scrollY) + "px";
-         selectionMask.style.left = (t.left + window.scrollX) + "px";
+         selectionMask.style.top = (t.top + window.scrollY - manager.config.offsetY) + "px";
+         selectionMask.style.left = (t.left + window.scrollX - manager.config.offsetX) + "px";
          selectionMask.style.display = "block";
          selectionMask.style.width = t.width + "px";
          selectionMask.style.height = t.height + "px";
@@ -118,6 +117,8 @@ manager.initSelect = function(){
          t = getParentSelectable(t, true);
          if(t){
             assignSelection(t);
+            showProperty(t);
+            Android.setSelectedHTML(t.innerHTML);
          }else{
             deselect();
          }
