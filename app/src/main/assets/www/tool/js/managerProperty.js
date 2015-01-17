@@ -8,32 +8,58 @@ if(!manager.config){
 }
 manager.initProperty = function(){
    var initObj = (function(){
-      var setAttribute = function(attr, value, o){
+      var setProperty = function(attr, value, o){
          var obj = (o) ? o : ((manager.selectedObject) ? manager.selectedObject : undefined);
          if(!obj){
-            console.log("setAttribute: element not specified.");
+            console.log("setProperty: element not specified.");
             return;
          }
+         console.log("setProperty:(" + attr + " : " + value + " on " + o.toString());
          switch(attr){
-            case "text-size":
+            case "font-size":
+               obj.style.fontSize = value;
+               break;
             case "src":
+               obj.setAttribute("src", value);
+               break;
             case "font":
+               obj.style.fontFamily = value;
+               break;
             case "background-color":
+               obj.style.backgroundColor = value;
+               break;
             case "background-image":
+               obj.style.backgroundImage = value;
+               break;
             case "color":
+               obj.style.color = value;
+               break;
             case "text":
+               obj.innerHTML = value;
+               break;
             case "opacity":
+               obj.style.opacity = value;
+               break;
+            case "link":
+               obj.setAttribute("data-link", value);
+               break;
+            case "text-align":
+               obj.style.textAlign = value;
+               break;
+            default :
+               break;
          }
       };
-      var getAttribute = function(attr){
-
+      var getProperty = function(attr, o){
+         var obj = (o) ? o : ((manager.selectedObject) ? manager.selectedObject : undefined);
+         console.log("getAttribute not implemented.");
       };
       return {
-         setAttribute: setAttribute,
-         getAttribute: getAttribute
+         setProperty : setProperty,
+         getProperty: getProperty
       };
    })();
-   manager.setAttribute = initObj.setAttribute;
-   manager.getAttribute = initObj.getAttribute;
+   manager.setProperty = initObj.setProperty;
+   manager.getProperty = initObj.getProperty;
    manager.setContent = initObj.setContent;
 };
