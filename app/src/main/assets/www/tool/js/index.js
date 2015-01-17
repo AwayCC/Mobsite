@@ -37,18 +37,12 @@ jQuery(document).ready(function($){
     EnvironmentInit();
 
     // set title.
-    //document.getElementById("projecttitle").innerHTML = Android.getProjectName();
+    document.getElementById("projecttitle").innerHTML = Android.getProjectName();
     //console.log(Android.getProjectPath());
-
-<<<<<<< HEAD
   // $("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     $("#innercontent").first().load("index.html");
-=======
     //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
     $("#innercontent").first().load("index.html", postLoadProject);
-
-
->>>>>>> origin/master
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
     /*
@@ -65,11 +59,7 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-<<<<<<< HEAD
-  //  Android.hideSplashView();
-=======
-
->>>>>>> origin/master
+    Android.hideSplashView();
     
 });
 function postLoadProject(){
@@ -277,7 +267,7 @@ function deselect(){
 }
 function EnvironmentInit()
 {
-    $("#addbtn")    .on("touchstart ",function(startEvent){AddPanelToggle();});
+    $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
 
     // added by ray.
     $("#editbtn")    .on("touchstart ",function(startEvent){ Android.openPhotoDialog();/*Android.openBrowserDialog();Android.openTextInputDialog();*/ });
@@ -338,19 +328,7 @@ function EnvironmentInit()
     $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
     $("#properBackgound").on("touchstart click",function(startEvent){colorSelector($("#properBackgound"));});
     $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
-    var forceWindowScroll=-1;
-    var upper;
-    $("#scroller").scroll(function(event){
-            $(window).scrollTop(upper);
-        //alert($("#scroller").scrollTop());
-    });
-    upper=document.body.scrollTop;
-    $("#propertyPanel").on("touchstart click",function(startEvent){startEvent.preventDefault();});
-  }
-}, function() {
-  forceWindowScroll = -1;
-});
-    var selScrollable ='.scrollable';
+    $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
 }
 function colorSelector(col)
 {

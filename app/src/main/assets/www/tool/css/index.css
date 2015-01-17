@@ -206,7 +206,7 @@ output
 }
 #colorPickerPanel
 {
-    opacity: 0.5;
+    opacity: 0;
     border-radius: 8px;
     position: fixed;
     height: auto;
