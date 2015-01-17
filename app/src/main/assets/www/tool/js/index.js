@@ -68,7 +68,23 @@ function postLoadProject(){
 }
 function showProperty(tar)
 {
+    
     var computedStyle = getComputedStyle(tar, null);
+   
+    $("#propertyPanel").css("left","0");
+    //if(rect.bottom<scheight/2)
+    //{
+   /*console.log("rect-top:"+rect.top);
+    console.log("rect-bottom"+rect.bottom);
+    console.log("rect-left"+rect.left);
+    console.log("rect-right"+rect.right);
+    console.log("screen-width"+scwidth);
+    console.log("screen-height"+scheight);*/
+   // alert("HH");
+    
+   // }
+    var c=document.getElementById("properTable");
+    c.style.display="none";
     document.getElementById("properCategory").innerHTML=tar.tagName;
     if(tar.tagName=="IMG")
     document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');
@@ -79,31 +95,72 @@ function showProperty(tar)
     document.getElementById("properColor").innerHTML=computedStyle.color;
     document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
-    document.getElementById("properPadding").innerHTML=computedStyle.padding;
+    //document.getElementById("properPaddings").innerHTML=computedStyle.padding;
     document.getElementById("properSource").innerHTML=tar.src;
+    if(c.hasAttribute("style"))
+        c.removeAttribute("style");
+    $("#propertyPanel").css("position","absolute");
+    propertyPanelShow(tar);
 }
 function galleryImport(member)
 {
     
 }
-function propertyPanelShow( pos)
+function propertyPanelHide()
 {
     if(!onanimate)
     {
-    onanimate = true;
-    var panel=document.getElementById("propertyPanel");
-    panel.css("top",pos.y);
-    panel.css("left",pos.x);
-    panel.transition({ opacity: 1 },function(){onanimate=false;});
+        onanimate=true;
+        $("#propertyPanel").transition({ opacity: 0 },function()
+        {
+        //    $("#propertyPanel").css("position","fixed");
+            $("#propertyPanel").css("left","-100%");
+            onanimate=false;
+        });
+        
     }
 }
-function propertyPanelShow(pos)
+function propertyPanelShow( tar)
 {
+  //  alert("YY");
     if(!onanimate)
     {
+       // alert("GG");
+         var rect=tar.getBoundingClientRect();
+    $("#propertyPanel").css("opacity","1");
+    console.log("rect-top:"+rect.top);
+    console.log("rect-bottom"+rect.bottom);
+    console.log("rect-left"+rect.left);
+    console.log("rect-right"+rect.right);
+    console.log("screen-width"+scwidth);
+    console.log("screen-height"+scheight);
     onanimate = true;
-    var panel=document.getElementById("propertyPanel");
-    panel.transition({ opacity: 0 },function(){panel.css("top",pos.y); panel.css("left",pos.x);onanimate=false;});
+    var wid=$('#propertyPanel').width();
+    var hei=$('#propertyPanel').height();
+    if(rect.top<=0.5*scheight)
+        $("#propertyPanel").css("top",window.scrollY+rect.bottom);
+    else 
+        $('#propertyPanel').css("top",window.scrollY+rect.top-hei);
+    if(rect.left<=0.5*scwidth)
+    {
+        if(rect.right+wid<scwidth)
+            $("#propertyPanel").css("left",rect.right);
+        else
+            $("#propertyPanel").css("right",0);
+    }
+    else
+    {
+        if(rect.left-wid>0)
+            $('#propertyPanel').css("left",rect.left-wid);
+        else 
+            $('#propertyPanel').css("left",0);
+    }
+        
+
+    /*$("#propertyPanel").transition({ opacity: 1 },function(){
+        onanimate=false;*/
+    //});
+        onanimate=false;
     }
 }
 function galleryPanelShow()
@@ -146,7 +203,7 @@ function galleryInitialize( member)
 };
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
-    alert(rect.width);
+    //alert(rect.width);
     return true;
 };
 function AddPanelShow()
@@ -271,52 +328,7 @@ function EnvironmentInit()
 
     // added by ray.
     $("#editbtn")    .on("touchstart ",function(startEvent){ Android.openPhotoDialog();/*Android.openBrowserDialog();Android.openTextInputDialog();*/ });
-    $("#dissbtn")    .on("touchstart ",function(startEvent){
-        try{
-            //deselect();
-
-            var files = JSON.parse(Android.getProjectsPathJSON());
-                        console.log("print json");
-                                    for(var i=0;i<files.length;++i){
-                                        console.log(files[i].path);
-                                    }
-
-            /*
-            var request = new XMLHttpRequest();
-            request.open("GET", "img/img1.jpg", true);
-            //request.open("GET", "../../"+Android.getProjectPath()+"/index.html", true);
-            //request.open("GET", "./img/ic_action_add.png", true);
-            //request.open("GET", "file:///android_asset/init/default/image/01.jpg", true);
-            //request.open("GET", "http://www.google.fr/images/srpr/logo3w.png", true);
-            //request.overrideMimeType("text/plain; charset=x-user-defined");
-
-            request.responseType = 'arraybuffer';
-
-
-            request.onload = function(e){
-                console.log("**** Get file content :");
-                //if (this.status == 200) {
-                    var uInt8Array = new Uint8Array(this.response);
-                    var i = uInt8Array.length;
-                    var binaryString = new Array(i);
-                    while (i--)
-                    {
-                      binaryString[i] = String.fromCharCode(uInt8Array[i]);
-                    }
-                    var data = binaryString.join('');
-
-                    var base64 = window.btoa(data);
-                    console.log(base64);
-                    //document.getElementById("myImage").src="data:image/png;base64,"+base64;
-                //}else{ console.log("e04, fail"+this.status); }
-                //console.log(e.currentTarget.response);
-                //console.log(base64ArrayBuffer(e.currentTarget.response));
-            };
-            request.send();
-            */
-        } catch(e) { console.log(e.message); }
-
-    });
+    $("#dissbtn")    .on("touchstart ",function(startEvent){propertyPanelHide();});
 
     $("#test")      .on("touchstart click",function(startEvent){ShadowCover();});
     $("#tool")      .on("touchstart click",function(startEvent){ControlPanelToggle();});

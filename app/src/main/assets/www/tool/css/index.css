@@ -417,12 +417,13 @@ h1 {
 }
 #propertyPanel
 {
-   position: fixed;
+    opacity: 0;
+   position: absolute;
     height:430px;
     width: 30%;
     right: 0%;
     top:20%;
-    z-index: 40;
+    z-index: 80;
     background-color: #464342;
     border-radius: 8px;
 }
@@ -683,16 +684,6 @@ a.option_container img.displayed {
     border-radius: 8px;
     z-index: 30;
 }
-#propertypanel
-{
-    background-color:rgb(60,60,60);
-    opacity: 0.8;
-    width: 15%;
-    height: 50%;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-}
 #navpanel
 {
     width: 8%;
@@ -742,24 +733,14 @@ a.image_container img {
     width: 100%;
     vertical-align: middle;
 }
-
-#propertypanel
-{
-    background-color:rgb(60,60,60);
-    opacity: 0.8;
-    width: 15%;
-    height: 50%;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-}
 .element
 {
-    padding-left: 20px;
-    padding-right: 20px;
-    height: 20%;
-   border: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 80px;
+    border: 0px;
     border-style: dotted;
+    border-top:0px;
     border-color: #242525;
     background-color: transparent;
     position: relative;
@@ -774,17 +755,33 @@ a.image_container img {
     transform: translate(-50%,-50%);
     display: block;
     color: white;
-    text-align: center;
+    text-align:justify;
 }
-.element p
+.addContainer
 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    display: block;
-    color: white;
-    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 2px;
+    border-radius: 8px;
+    border-style: dotted;
+    border-color: white;
+    width: 100%;
+    height: auto;
+}
+.elementCat
+{
+    padding-left: 0px;
+    padding-right: 20px;
+    margin-bottom:  5px;
+    height: 30px;
+    font-size: 25px;
+    border: 0px;
+    border-style: dotted;
+    border-color: #242525;
+    background-color: transparent;
+    position: relative;
+    text-align: left;
+    width:100%;
 }
 #menuimg
 {
