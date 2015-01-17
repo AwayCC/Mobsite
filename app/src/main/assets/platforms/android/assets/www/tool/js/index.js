@@ -35,25 +35,21 @@ jQuery(document).ready(function($){
     scwidth=document.body.clientWidth;
     scheight=document.body.clientHeight;
     EnvironmentInit();
-    $('#properTable > tbody').scroll(function() {
-    var pos = $('#properTable > tbody').scrollTop();
-    if (pos == 0) {
-        alert('top of the div');
-    }
-});
+
     // set title.
     document.getElementById("projecttitle").innerHTML = Android.getProjectName();
     console.log(Android.getProjectPath());
+    // $("#innercontent").first().load("index.html");
 
-    //$("#innercontent").first().load(Android.getProjectPath()+"/index.html");
-    $("#innercontent").first().load("index.html",manager.init);
-
+    $("#innercontent").first().load("index.html", postLoadProject);
 
     //galleryMember=["abc","bcd"];
     //galleryMember=Android.getGalleryPaths();
+    /*
     $("#innercontent").on("touchstart click",function(startEvent){
-    showProperty(event.target);
+        showProperty(event.target);
     });
+    */
     var tester=[{'path':'tree.jpg'}];
     
     Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
@@ -63,12 +59,32 @@ jQuery(document).ready(function($){
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
-    Android.hideSplashView();
-    
+
 });
+function postLoadProject(){
+    manager.init();
+    setAddPanelDragLister();
+    Android.hideSplashView();
+}
 function showProperty(tar)
 {
-    var computedStyle = getComputedStyle(event.target, null);
+    
+    var computedStyle = getComputedStyle(tar, null);
+   
+    $("#propertyPanel").css("left","0");
+    //if(rect.bottom<scheight/2)
+    //{
+   /*console.log("rect-top:"+rect.top);
+    console.log("rect-bottom"+rect.bottom);
+    console.log("rect-left"+rect.left);
+    console.log("rect-right"+rect.right);
+    console.log("screen-width"+scwidth);
+    console.log("screen-height"+scheight);*/
+   // alert("HH");
+    
+   // }
+    var c=document.getElementById("properTable");
+    c.style.display="none";
     document.getElementById("properCategory").innerHTML=tar.tagName;
     if(tar.tagName=="IMG")
     document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');
@@ -77,33 +93,75 @@ function showProperty(tar)
     document.getElementById("properHeight").innerHTML=computedStyle.height;
     document.getElementById("properWidth").innerHTML=computedStyle.width;
     document.getElementById("properColor").innerHTML=computedStyle.color;
-    document.getElementById("properBackgound").innerHTML=computedStyle.backgroundColor;
+    document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
-    document.getElementById("properPadding").innerHTML=computedStyle.padding;
+    alert(computedStyle.margin);
+    //document.getElementById("properPaddings").innerHTML=computedStyle.padding;
     document.getElementById("properSource").innerHTML=tar.src;
+    if(c.hasAttribute("style"))
+        c.removeAttribute("style");
+    $("#propertyPanel").css("position","absolute");
+    propertyPanelShow(tar);
 }
 function galleryImport(member)
 {
     
 }
-function propertyPanelShow( pos)
+function propertyPanelHide()
 {
     if(!onanimate)
     {
-    onanimate = true;
-    var panel=document.getElementById("propertyPanel");
-    panel.css("top",pos.y);
-    panel.css("left",pos.x);
-    panel.transition({ opacity: 1 },function(){onanimate=false;});
+        onanimate=true;
+        $("#propertyPanel").transition({ opacity: 0 },function()
+        {
+        //    $("#propertyPanel").css("position","fixed");
+            $("#propertyPanel").css("left","-100%");
+            onanimate=false;
+        });
+        
     }
 }
-function propertyPanelShow(pos)
+function propertyPanelShow( tar)
 {
+  //  alert("YY");
     if(!onanimate)
     {
+       // alert("GG");
+         var rect=tar.getBoundingClientRect();
+    $("#propertyPanel").css("opacity","1");
+    console.log("rect-top:"+rect.top);
+    console.log("rect-bottom"+rect.bottom);
+    console.log("rect-left"+rect.left);
+    console.log("rect-right"+rect.right);
+    console.log("screen-width"+scwidth);
+    console.log("screen-height"+scheight);
     onanimate = true;
-    var panel=document.getElementById("propertyPanel");
-    panel.transition({ opacity: 0 },function(){panel.css("top",pos.y); panel.css("left",pos.x);onanimate=false;});
+    var wid=$('#propertyPanel').width();
+    var hei=$('#propertyPanel').height();
+    if(rect.top<=0.5*scheight)
+        $("#propertyPanel").css("top",window.scrollY+rect.bottom);
+    else 
+        $('#propertyPanel').css("top",window.scrollY+rect.top-hei);
+    if(rect.left<=0.5*scwidth)
+    {
+        if(rect.right+wid<scwidth)
+            $("#propertyPanel").css("left",rect.right);
+        else
+            $("#propertyPanel").css("right",0);
+    }
+    else
+    {
+        if(rect.left-wid>0)
+            $('#propertyPanel').css("left",rect.left-wid);
+        else 
+            $('#propertyPanel').css("left",0);
+    }
+        
+
+    /*$("#propertyPanel").transition({ opacity: 1 },function(){
+        onanimate=false;*/
+    //});
+        onanimate=false;
     }
 }
 function galleryPanelShow()
@@ -119,7 +177,7 @@ function galleryPanelShow()
 }
 function galleryPanelHide()
 {
-    if(!onanimate)
+    if(!onanimate) 
     {
         onanimate = true;
         $( "#galleryPanel" ).transition({ opacity: 0},function(){$( "#galleryPanel" ).css("top","-50%");onanimate=false;});      
@@ -146,7 +204,7 @@ function galleryInitialize( member)
 };
 function test(){
     var rect = $("#header")[0].getBoundingClientRect();
-    alert(rect.width);
+    //alert(rect.width);
     return true;
 };
 function AddPanelShow()
@@ -267,56 +325,9 @@ function deselect(){
 }
 function EnvironmentInit()
 {
-    $("#addbtn")    .on("touchstart ",function(startEvent){AddPanelToggle();});
-
-    // added by ray.
+    $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
     $("#editbtn")    .on("touchstart ",function(startEvent){ Android.openPhotoDialog();/*Android.openBrowserDialog();Android.openTextInputDialog();*/ });
-    $("#dissbtn")    .on("touchstart ",function(startEvent){
-        try{
-            //deselect();
-
-            var files = JSON.parse(Android.getProjectsPathJSON());
-                        console.log("print json");
-                                    for(var i=0;i<files.length;++i){
-                                        console.log(files[i].path);
-                                    }
-
-            /*
-            var request = new XMLHttpRequest();
-            request.open("GET", "img/img1.jpg", true);
-            //request.open("GET", "../../"+Android.getProjectPath()+"/index.html", true);
-            //request.open("GET", "./img/ic_action_add.png", true);
-            //request.open("GET", "file:///android_asset/init/default/image/01.jpg", true);
-            //request.open("GET", "http://www.google.fr/images/srpr/logo3w.png", true);
-            //request.overrideMimeType("text/plain; charset=x-user-defined");
-
-            request.responseType = 'arraybuffer';
-
-
-            request.onload = function(e){
-                console.log("**** Get file content :");
-                //if (this.status == 200) {
-                    var uInt8Array = new Uint8Array(this.response);
-                    var i = uInt8Array.length;
-                    var binaryString = new Array(i);
-                    while (i--)
-                    {
-                      binaryString[i] = String.fromCharCode(uInt8Array[i]);
-                    }
-                    var data = binaryString.join('');
-
-                    var base64 = window.btoa(data);
-                    console.log(base64);
-                    //document.getElementById("myImage").src="data:image/png;base64,"+base64;
-                //}else{ console.log("e04, fail"+this.status); }
-                //console.log(e.currentTarget.response);
-                //console.log(base64ArrayBuffer(e.currentTarget.response));
-            };
-            request.send();
-            */
-        } catch(e) { console.log(e.message); }
-
-    });
+    $("#dissbtn")    .on("touchstart ",function(startEvent){propertyPanelHide();});
 
     $("#test")      .on("touchstart click",function(startEvent){ShadowCover();});
     $("#tool")      .on("touchstart click",function(startEvent){ControlPanelToggle();});
@@ -326,9 +337,9 @@ function EnvironmentInit()
     $("#github")    .on("touchstart ",function(startEvent){githubPanelShow();});
     $("#gallery")    .on("touchstart click ",function(startEvent){galleryPanelToggle();});
     $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
-    $("#properBackgound").on("touchstart click",function(startEvent){colorSelector($("#properBackgound"));});
+    $("#properBackground").on("touchstart click",function(startEvent){colorSelector($("#properBackground"));});
     $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
-
+    $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
 }
 function colorSelector(col)
 {
@@ -375,77 +386,169 @@ function sleep(milliseconds) {
       break;
     }
   }
-}
-(function($){  
-  
-  trapScroll = function(opt){
-    
-    var trapElement;
-    var scrollableDist;
-    var trapClassName = 'trapScroll-enabled';
-    var trapSelector = '.trapScroll';
-    
-    var trapWheel = function(e){
-      
-      if (!$('body').hasClass(trapClassName)) {
-        
-        return;
-        
-      } else {  
-        
-        var curScrollPos = trapElement.scrollTop();
-        var wheelEvent = e.originalEvent;
-        var dY = wheelEvent.deltaY;
+};
 
-        // only trap events once we've scrolled to the end
-        // or beginning
-        if ((dY>0 && curScrollPos >= scrollableDist) ||
-            (dY<0 && curScrollPos <= 0)) {
+// Event Listener of Add Panel
+var addPanel_touchLongPress = false,
+    addPanel_touchStill = false,
+    addPanel_touchTarget,
+    addPanel_touchX, addPanel_touchY;
+function setAddPanelDragLister(){
+    var panel = document.getElementById("Addmenu");
+    panel.addEventListener('touchstart', onTouchStart, false);
+    panel.addEventListener('touchmove', onTouchMove, false);
+    panel.addEventListener('touchend', onTouchEnd, false);
 
-          opt.onScrollEnd();
-          return false;
-          
-        }
-        
-      }
-      
+    function onTouchStart(){
+        if(addPanel_touchLongPress)
+            return;
+        if(event.touches.length > 1)
+            return;
+
+        // modify gesture flags.
+        addPanel_touchStill = true;
+        addPanel_touchTarget = event.target;
+        setTimeout(longPressChecker, 600);
+
+        // update new position.
+        addPanel_touchX = event.touches.item(0).clientX;
+        addPanel_touchY = event.touches.item(0).clientY;
     }
-    
-    $(document)
-      .on('wheel', trapWheel)
-      .on('mouseleave', trapSelector, function(){
-        
-        $('body').removeClass(trapClassName);
-      
-      })
-      .on('mouseenter', trapSelector, function(){   
-      
-        trapElement = $(this);
-        var containerHeight = trapElement.outerHeight();
-        var contentHeight = trapElement[0].scrollHeight; // height of scrollable content
-        scrollableDist = contentHeight - containerHeight;
-        
-        if (contentHeight>containerHeight)
-          $('body').addClass(trapClassName); 
-      
-      });       
-  } 
-  
-})($);
+    function onTouchMove(){
+        if(event.touches.length > 1)
+            return;
 
-var preventedCount = 0;
-var showEventPreventedMsg = function(){  
-  $('#mousewheel-prevented').stop().animate({opacity: 1}, 'fast');
-}
-var hideEventPreventedMsg = function(){
-  $('#mousewheel-prevented').stop().animate({opacity: 0}, 'fast');
-}
-var addPreventedCount = function(){
-  $('#prevented-count').html('prevented <small>x</small>' + preventedCount++);
+        addPanel_touchStill = false;
+        var touch = event.touches.item(0);
+        //console.log("add panel move");
+        if(addPanel_touchLongPress){
+            var x = event.touches.item(0).clientX;
+            var y = event.touches.item(0).clientY;
+            manager.config.onLongPressMove(x, y);
+            event.preventDefault();
+        }
+
+        // update new position.
+        addPanel_touchX = event.touches.item(0).clientX;
+        addPanel_touchY = event.touches.item(0).clientY;
+    }
+    function onTouchEnd(){
+        if(addPanel_touchLongPress){
+            addPanel_touchLongPress = false;
+            manager.config.onLongPressEnd();
+            return;
+        }
+    }
+    var longPressChecker = function(){
+        if(addPanel_touchStill){
+            addPanel_touchLongPress = true;
+            console.log("Add panel : event "+addPanel_touchTarget.id);
+            var index = 0;
+
+            addPanel_touchTarget = addPanel_touchTarget.previousElementSibling;
+            //console.log("Add panel : event "+addPanel_touchTarget.id);
+            while(addPanel_touchTarget){
+                index++;
+                addPanel_touchTarget = addPanel_touchTarget.previousElementSibling;
+            }
+
+            console.log("Add panel : long press start at "+index+".");
+            AddPanelToggle();
+            manager.config.onLongPressStart(addPanel_touchX, addPanel_touchY, createElement(index));
+        }
+    };
 }
 
-trapScroll({ onScrollEnd: addPreventedCount });
-$('.trapScroll')
-  .on('mouseenter', showEventPreventedMsg)
-  .on('mouseleave', hideEventPreventedMsg);      
-$('[id*="parent"]').scrollTop(100);
+function createElement(index){
+    var object;
+    switch(index){
+        case 0:
+            // Title
+            object = document.createElement("H1");
+            object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+            return object;
+            break;
+        case 1:
+            // text
+            object = document.createElement("p");
+            object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+            return object;
+            break;
+        case 2:
+            // container 1
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
+            object.appendChild(col);
+            return object;
+            break;
+        case 3:
+            // container 2
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6";
+            object.appendChild(col);
+            return object;
+            break;
+        case 4:
+            // container 3
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-4 col-sm-4 col-md-4 col-lg-4";
+            object.appendChild(col);
+            return object;
+            break;
+        case 5:
+            // container 4
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-3 col-sm-3 col-md-3 col-lg-3";
+            object.appendChild(col);
+            return object;
+            break;
+        case 6:
+            // container 6
+            object = document.createElement("div");
+            object.className = "row";
+            col = document.createElement("div");
+            col.className = "col-xs-2 col-sm-2 col-md-2 col-lg-2";
+            object.appendChild(col);
+            return object;
+            break;
+        case 7:
+            // Picture
+            object = document.createElement("img");
+            object.src = "tool/img/default.png";
+            return object;
+            break;
+    }
+}
+
+function setContent(){
+    if(!manager.selectedObject){
+        console.log("selected obj null");return;
+        }
+    switch(manager.selectedObject.tagName){
+        case "IMG":
+            Android.openPhotoDialog();
+            break;
+
+        case "P":
+        case "H1":
+        case "H2":
+        case "H3":
+        case "H4":
+        case "H5":
+        case "H6":
+            Android.openTextInputDialog();
+            break;
+
+        default:
+            Android.openBrowserDialog();
+            break;
+    }
+}

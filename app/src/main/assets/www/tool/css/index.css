@@ -421,7 +421,7 @@ h1 {
    position: absolute;
     height:430px;
     width: 30%;
-    right: 0%;
+    left: -100%;
     top:20%;
     z-index: 40;
     background-color: #464342;
