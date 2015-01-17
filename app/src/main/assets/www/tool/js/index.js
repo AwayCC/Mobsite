@@ -95,7 +95,7 @@ function showProperty(tar)
     document.getElementById("properColor").innerHTML=computedStyle.color;
     document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
-    alert(computedStyle.margin);
+    //alert(computedStyle.margin);
     //document.getElementById("properPaddings").innerHTML=computedStyle.padding;
     document.getElementById("properSource").innerHTML=tar.src;
     if(c.hasAttribute("style"))
@@ -422,6 +422,9 @@ function setAddPanelDragLister(){
         var touch = event.touches.item(0);
         //console.log("add panel move");
         if(addPanel_touchLongPress){
+            var x = event.touches.item(0).clientX;
+            var y = event.touches.item(0).clientY;
+            manager.config.onLongPressMove(x, y);
             event.preventDefault();
         }
 
@@ -432,6 +435,7 @@ function setAddPanelDragLister(){
     function onTouchEnd(){
         if(addPanel_touchLongPress){
             addPanel_touchLongPress = false;
+            manager.config.onLongPressEnd();
             return;
         }
     }
@@ -439,18 +443,20 @@ function setAddPanelDragLister(){
         if(addPanel_touchStill){
             addPanel_touchLongPress = true;
             console.log("Add panel : event "+addPanel_touchTarget.id);
-            var index = 0;
+            var index = addPanel_touchTarget.id;
 
+            /*
             addPanel_touchTarget = addPanel_touchTarget.previousElementSibling;
             //console.log("Add panel : event "+addPanel_touchTarget.id);
             while(addPanel_touchTarget){
                 index++;
                 addPanel_touchTarget = addPanel_touchTarget.previousElementSibling;
             }
+            */
 
             console.log("Add panel : long press start at "+index+".");
             AddPanelToggle();
-
+            manager.config.onLongPressStart(addPanel_touchX, addPanel_touchY, createElement(index));
         }
     };
 }
@@ -458,70 +464,57 @@ function setAddPanelDragLister(){
 function createElement(index){
     var object;
     switch(index){
-        case 0:
-            // Title
+        case "Title":
             object = document.createElement("H1");
             object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
-            return object;
             break;
-        case 1:
-            // text
+        case "Text":
             object = document.createElement("p");
             object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-            return object;
             break;
-        case 2:
-            // container 1
+        case "Container 1":
             object = document.createElement("div");
             object.className = "row";
             col = document.createElement("div");
             col.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
             object.appendChild(col);
-            return object;
             break;
-        case 3:
-            // container 2
+        case "Container 2":
             object = document.createElement("div");
             object.className = "row";
             col = document.createElement("div");
             col.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6";
             object.appendChild(col);
-            return object;
             break;
-        case 4:
-            // container 3
+        case "Container 3":
             object = document.createElement("div");
             object.className = "row";
             col = document.createElement("div");
             col.className = "col-xs-4 col-sm-4 col-md-4 col-lg-4";
             object.appendChild(col);
-            return object;
             break;
-        case 5:
-            // container 4
+        case "Container 4":
             object = document.createElement("div");
             object.className = "row";
             col = document.createElement("div");
             col.className = "col-xs-3 col-sm-3 col-md-3 col-lg-3";
             object.appendChild(col);
-            return object;
             break;
-        case 6:
-            // container 6
+        case "Container 6":
             object = document.createElement("div");
             object.className = "row";
             col = document.createElement("div");
             col.className = "col-xs-2 col-sm-2 col-md-2 col-lg-2";
             object.appendChild(col);
-            return object;
             break;
-        case 7:
-            // Picture
+        case "Picture":
             object = document.createElement("img");
             object.src = "tool/img/default.png";
-            return object;
+            object.style.width = "100%";
             break;
     }
+    object.selectable = true;
+    return object;
 }
 
 function setContent(){

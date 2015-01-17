@@ -140,79 +140,51 @@
     <div id="Add-panel" class="bubble_left container">
         <div class="panelMark"><p>Add New Element</p></div>
         <div id="Addmenu" class="trapScroll">
-            <div class="col-xs-6 element" id="Title"><div class="item"><h1>Input Title</h1></div></div>
-            <div class="col-xs-6 element" id="Text"><div class="item"><p>Input Text</p></div></div>
+            <div class="elementCat" id="cat1"><p>Text</p></div>
+        <div class="addContainer container">
+            <div class="col-xs-6 element" id="Title"      style="background: url('tool/img/icons/title.png')
+                                                                 no-repeat center center transparent; background-size: 100% auto;">                 
+            </div>
+            <div class="col-xs-6 element" id="Text"       style="background: url('tool/img/icons/text.png')
+                                                                 no-repeat center center transparent; background-size: 100% auto;">                 </div>
+        </div>
+            <div class=" elementCat" id="cat1"><p>Container</p></div>
+        <div class="addContainer container">
             <div class="col-xs-6 element" id="Container1" style="background: url('tool/img/icons/container1.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item container">
-                    <div class="col-md-12"></div>
-                </div>
+
             </div>
             <div class="col-xs-6 element" id="Container2" style="background: url('tool/img/icons/container2.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item container">
-                    <div class="col-md-6"></div>
-                    <div class="col-md-6"></div>
-                </div>
+
             </div>
             <div class="col-xs-6 element" id="Container3" style="background: url('tool/img/icons/container3.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item container">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4"></div>
-                </div>
+
             </div>
             <div class="col-xs-6 element" id="Container4" style="background: url('tool/img/icons/container4.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item container">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-3"></div>
-                    <div class="col-md-3"></div>
-                    <div class="col-md-3"></div>
-                </div>
+
             </div>
             <div class="col-xs-6 element" id="Container6" style="background: url('tool/img/icons/container6.png')
                                                                  no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item container">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2"></div>
-                </div>
+
             </div>
+        </div>
+            <div class=" elementCat" id="cat1"><p>Picture</p></div>
+        <div class="addContainer container">
             <div class="col-xs-6 element" id="Picture" style="background: url('tool/img/icons/picture.png')
-                                                              no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item">
-                    <img/>
-                </div>
-            </div>
-            <div class="col-xs-6 element" id="HyperLink" style="background: url('tool/img/icons/link.png')
-                                                                no-repeat center center transparent; background-size: 100% auto;">
-                <div class="item">
-                    <a />
-                </div>
-            </div>
+                                                              no-repeat center center transparent; background-size: 100% auto;"></div>
             <div class="col-xs-6 element" id="Icon" style="background: url('tool/img/icons/icon.png')
                                                            no-repeat center center transparent; background-size: 100% auto;"></div>
-
+        </div>
+            <div class=" elementCat" id="cat1"><p>Others</p></div>
+        <div class="addContainer container">
+            <div class="col-xs-6 element" id="HyperLink" style="background: url('tool/img/icons/link.png')
+                                                                no-repeat center center transparent; background-size: 100% auto;"></div>
             <div class="col-xs-6 element" id="InputBox" style="background: url('tool/img/icons/inputbox.png')
                                                                no-repeat center center transparent; background-size: 100% auto;"></div>
-            <div class="col-xs-6 element" id="NavBar"></div>
-            <div class="col-xs-6 element" id="Footer">
-                <div class="item">
-                    <nav class="navbar navbar-default">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <a class="navbar-brand" href="#">
-                                    <img alt="Brand" >
-                                </a>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
+        </div>
 
 
         </div>
@@ -251,13 +223,13 @@
         <div class="panelMark"><p>Property</p></div>
         <div class="CSSTableGenerator container" >
                 <table id="properTable" class="trapScroll child">
-                    
+                 <tbody id="scroller">
                     <tr><td>Category</td><td id="properCategory"></td></tr>
                     <tr><td>Content</td><td id="properContent"></td></tr>
                     <tr><td>Rect - Height</td><td id="properHeight"></td></tr>
                     <tr><td>Rect - Width</td><td id="properWidth"></td></tr>
                     <tr><td>Text - Color</td><td id="properColor"></td></tr>
-                    <tr><td>Background</td><td id="properBackgound"></td></tr>
+                    <tr><td>Background</td><td id="properBackground"></td></tr>
                     <tr><td>Opacity</td><td id="properOpacity"> 
                         <div class="slider">
                             <output id="rangevalue">50</output>
@@ -269,6 +241,7 @@
 
                     <tr><td>Padding</td><td id="properPadding"></td></tr>
                     <tr><td>Source</td><td id="properSource"></td></tr>
+                  </tbody>
                 </table>
         </div>      
     </div>

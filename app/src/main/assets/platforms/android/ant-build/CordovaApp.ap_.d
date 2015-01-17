@@ -92,6 +92,7 @@
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/gallery/galleria.classic.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/gallery/galleria.classic.min.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/gallery/image.jpg \
+/Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/default.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/gallery.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/ic_action_add.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/ic_action_add.xcf \
@@ -132,6 +133,8 @@
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/pencil-write-512.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/picture.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/setting.png \
+/Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/text.png \
+/Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/title.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/wrench.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/bootstrap.min.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/draggable.min.js \
@@ -145,6 +148,7 @@
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/main.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/manager.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/managerDrag.js \
+/Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/managerProperty.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/managerSelect.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/marker.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/mask.png \
