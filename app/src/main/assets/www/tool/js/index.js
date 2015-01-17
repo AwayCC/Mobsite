@@ -380,7 +380,8 @@ function sleep(milliseconds) {
 // Event Listener of Add Panel
 var addPanel_touchLongPress = false,
     addPanel_touchStill = false,
-    addPanel_touchTarget;
+    addPanel_touchTarget,
+    addPanel_touchX, addPanel_touchY;
 function setAddPanelDragLister(){
     var panel = document.getElementById("Addmenu");
     panel.addEventListener('touchstart', onTouchStart, false);
@@ -399,8 +400,8 @@ function setAddPanelDragLister(){
         setTimeout(longPressChecker, 600);
 
         // update new position.
-        touch_x = event.touches.item(0).clientX;
-        touch_y = event.touches.item(0).clientY;
+        addPanel_touchX = event.touches.item(0).clientX;
+        addPanel_touchY = event.touches.item(0).clientY;
     }
     function onTouchMove(){
         if(event.touches.length > 1)
@@ -408,14 +409,14 @@ function setAddPanelDragLister(){
 
         addPanel_touchStill = false;
         var touch = event.touches.item(0);
-
+        //console.log("add panel move");
         if(addPanel_touchLongPress){
             event.preventDefault();
         }
 
         // update new position.
-        touch_x = event.touches.item(0).clientX;
-        touch_y = event.touches.item(0).clientY;
+        addPanel_touchX = event.touches.item(0).clientX;
+        addPanel_touchY = event.touches.item(0).clientY;
     }
     function onTouchEnd(){
         if(addPanel_touchLongPress){
@@ -423,7 +424,7 @@ function setAddPanelDragLister(){
             return;
         }
     }
-    var longPressChecker = function(event){
+    var longPressChecker = function(){
         if(addPanel_touchStill){
             addPanel_touchLongPress = true;
             console.log("Add panel : event "+addPanel_touchTarget.id);
@@ -437,10 +438,8 @@ function setAddPanelDragLister(){
             }
 
             console.log("Add panel : long press start at "+index+".");
+            AddPanelToggle();
 
-            //var obj = createElement(index);
-            //manager.selectedObject = obj;
-            //manager.config.onLongPressStart();
         }
     };
 }
