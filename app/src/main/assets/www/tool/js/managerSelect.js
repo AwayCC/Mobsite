@@ -87,6 +87,7 @@ manager.initSelect = function(){
             deselect();
          }
          var t = o.getBoundingClientRect();
+         manager.selectedObjectRect = t;
          selectionMask.style.display = "none";
          selectionMask.style.top = (t.top + window.scrollY - manager.config.offsetY) + "px";
          selectionMask.style.left = (t.left + window.scrollX - manager.config.offsetX) + "px";
@@ -155,6 +156,7 @@ manager.initSelect = function(){
          getParentSelectable: getParentSelectable
       }
    })();
+   manager.selectedObjectRect = undefined;
    manager.selectedObject = undefined;
    manager.selectionMask = initObj.selectionMask;
    manager.getParentSelectable = initObj.getParentSelectable;

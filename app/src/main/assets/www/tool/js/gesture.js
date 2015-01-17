@@ -85,7 +85,7 @@ function setGestureListener(responses){
                return;
 
             var delta_x1 = touch.pageX - touch_x;
-            var delta_y1 = touch.pageY - touch_y
+            var delta_y1 = touch.pageY - touch_y;
             var delta_x2 = secondTouch.pageX - touch_x2;
             var delta_y2 = secondTouch.pageY - touch_y2;
             var innerProduct = delta_x1*delta_x2 + delta_y1*delta_y2;
