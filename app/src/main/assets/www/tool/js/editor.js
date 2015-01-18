@@ -241,7 +241,6 @@ editor.initProject=function(wid,hei){
             ShadowCover();
             $('#preview-panel').first().load('index.html');
             $('#preview-panel').css('top','0');  
-            alert(scheight);
             setTimeout("$('#preview-panel').transition({ opacity: 1 });",500);
             setTimeout("$('#innercontent').css('top','0'); ",800);
             $('#preview-control').transition({ y:scheight/10 });

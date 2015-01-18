@@ -85,6 +85,7 @@ public class MainActivity extends Activity
     protected CordovaWebView shadow;
     private boolean enableShadow = false,
             selectedShadow = false;
+    private int shadowWidth, shadowHeight;
 
     // Variables for importing photos.
     private static final int REQUEST_GALLERY = 11;
@@ -299,7 +300,7 @@ public class MainActivity extends Activity
                     case MotionEvent.ACTION_MOVE:
                         if(enableShadow){
                             shadow.setVisibility(View.VISIBLE);
-                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
+                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth,
                                     FrameLayout.LayoutParams.WRAP_CONTENT);
                             lp.setMargins((int)event.getRawX()-shadow.getWidth()/2,
                                     (int)event.getRawY()-shadow.getContentHeight()/3,
@@ -359,13 +360,15 @@ public class MainActivity extends Activity
     @JavascriptInterface
     public void setRenderedShadowDataURL(final String dataURL, final int width, final int height) {
         selectedHTML = dataURL;
+        shadowWidth  = width;
+        shadowHeight = height;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 shadowP.removeView(shadow);
                 shadow = new CordovaWebView(MainActivity.this);
 
-                shadow.setLayoutParams(new ViewGroup.LayoutParams(300/*cwv.getWidth()*2/3*/,
+                shadow.setLayoutParams(new ViewGroup.LayoutParams(shadowWidth,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 shadowP.addView(shadow);
@@ -393,7 +396,7 @@ public class MainActivity extends Activity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(cwv.getWidth()*2/3,
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth,
                         FrameLayout.LayoutParams.WRAP_CONTENT);
                 lp.setMargins(50,100,0,0);
                 shadow.setLayoutParams(lp);
