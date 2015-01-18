@@ -137,7 +137,7 @@ manager.initSelect = function(){
               onrendered: function(canvas) {
                   var h = manager.selectedObject.getBoundingClientRect().height;
                   var w = manager.selectedObject.getBoundingClientRect().width;
-                  var ratio = 1
+                  var ratio = 1;
                   var data = canvas.toDataURL();
 
                   var img = new Image();

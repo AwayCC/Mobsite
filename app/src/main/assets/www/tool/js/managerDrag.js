@@ -113,7 +113,7 @@ manager.initDrag = function(){
          }
       };
 
-      var dragStart = function(x, y, o){
+      var dragStart = function(x, y, o,isExteral){
          if(o == manager.selectionMask){
             // Drag from inner content
             Android.startDrag();
@@ -127,6 +127,9 @@ manager.initDrag = function(){
             o = manager.selectedObject;
          }else{
             // Drag from clipboard or element repo
+            if(!isExteral){
+               return;
+            }
             manager.config.onDoubleTap();
             manager.selectedObject = o;
          }
@@ -174,7 +177,14 @@ manager.initDrag = function(){
          if(cursorX == undefined){
             return;
          }
+         // TODO: place hidden flag
+         if(manager.selectedObject.parentNode){
+            if(manager.selectedObject.parentNode.childNodes.length == 1){
+               manager.selectedObject.parentNode.appendChild(manager.createPlaceholder());
+            }
+         }
          moveElement(manager.selectedObject, manager.Cursor);
+
 
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);

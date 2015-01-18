@@ -1,8 +1,7 @@
 body {
 }
 
-div {
-    text-align: center;
+#innercontent div {
     border: solid 1px #CCC;
 }
 
@@ -27,7 +26,6 @@ div {
 .selectionMask {
     background-color: rgba(0, 96, 230, 0.4);
     border-width: 0;
-    z-index: 100;
     margin: 0;
     padding: 0;
     position: absolute;
@@ -38,7 +36,6 @@ div {
 .selectionMaskDragging {
     background-color: rgba(0, 96, 230, 0.2);
     border-width: 0;
-    z-index: 100;
     margin: 0;
     padding: 0;
     position: absolute;

@@ -20,7 +20,7 @@ manager.initDrag = function(){
       var scroll = function(){
          if(cursorY < 100 && window.scrollY > 10){
             window.scrollTo(window.scrollX, window.scrollY - 10);
-         }else if(cursorY > windowH - 100 && window.scrollY < windowH - 10){
+         }else if(cursorY > windowH - 100){
             window.scrollTo(window.scrollX, window.scrollY + 10);
 
          }
@@ -101,7 +101,7 @@ manager.initDrag = function(){
                return;
             }else{
                var b = t.getBoundingClientRect();
-               if(y > b.top + b.height / 2){
+               if(cursorY > b.top + b.height / 2){
                   // Insert after t
                   t.parentNode.insertBefore(manager.Cursor, t.nextSibling);
                }else{
@@ -174,7 +174,14 @@ manager.initDrag = function(){
          if(cursorX == undefined){
             return;
          }
+         // TODO: place hidden flag
+         if(manager.selectedObject.parentNode){
+            if(manager.selectedObject.parentNode.childNodes.length == 1){
+               manager.selectedObject.parentNode.appendChild(manager.createPlaceholder());
+            }
+         }
          moveElement(manager.selectedObject, manager.Cursor);
+
 
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
