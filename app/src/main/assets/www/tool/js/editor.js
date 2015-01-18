@@ -297,12 +297,6 @@ editor.initProject=function(wid,hei){
                 if ((new Date().getTime() - start) > milliseconds){break;}
             }
         };
-        var postLoadProject=function()
-        {
-            manager.init();
-            setAddPanelDragLister();
-            Android.hideSplashView();
-        };
         var addPanel_touchLongPress = false,
             addPanel_touchStill = false,
             addPanel_touchTarget,
@@ -450,11 +444,13 @@ editor.initProject=function(wid,hei){
         $('#picker').farbtastic('#color');
         document.getElementById("projecttitle").innerHTML = Android.getProjectName();
         console.log(Android.getProjectPath());
-        $("#innercontent").first().load("index.html", postLoadProject);
+        $("#innercontent").first().load("index.html");
         return {
             shadowFade:ShadowFade,
-            shadowCover:ShadowCover
+            shadowCover:ShadowCover,
+            setAddPanelDragListner:setAddPanelDragLister
         }
    })();
     editor.shadowFade=initObj.shadowFade;
+    editor.setAddPanelDragListner=initObj.setAddPanelDragListner;
 }
