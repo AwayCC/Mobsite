@@ -137,25 +137,31 @@ manager.initSelect = function(){
               onrendered: function(canvas) {
                   var h = manager.selectedObject.getBoundingClientRect().height;
                   var w = manager.selectedObject.getBoundingClientRect().width;
+                  var ratio = 1;
                   var data = canvas.toDataURL();
+
                   var img = new Image();
-                  var myCanvas = document.createElement('canvas');
-                  var ctx = myCanvas.getContext('2d');
-                  img.onload = function() {
-                      myCanvas.width = img.width;
-                      myCanvas.height = img.height;
-                      myCanvas.style.margin = 0;
-                      myCanvas.style.padding = 0;
-                      ctx.drawImage(img, 0, 0, w, h);
-                      data = myCanvas.toDataURL();
-                      Android.setRenderedShadowDataURL(data, w, h);
-                  }
+                  img.src = data;
 
                   if(manager.selectedObject.tagName == "IMG"){
+                      //img.src = "image/01.jpg";
                       img.src = manager.selectedObject.src.substring(26);
-                  } else {
-                      img.src = data;
+                      var myCanvas = document.createElement('canvas');
+                      var ctx = myCanvas.getContext('2d');
+
+                      if(w > h && w > 450){
+                          ratio = 450/w;
+                      } else if(h > w && h > 300){
+                          ratio = 300/h;
+                      }
+
+                      ctx.scale(ratio, ratio);
+                      ctx.drawImage(img, 0, 0);
+                      data = myCanvas.toDataURL();
                   }
+
+                  console.log("canvas width = "+w);
+                  Android.setRenderedShadowDataURL(data, w, h);
               }
           });
 

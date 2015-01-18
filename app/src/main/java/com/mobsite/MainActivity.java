@@ -86,7 +86,6 @@ public class MainActivity extends Activity
     private boolean enableShadow = false,
             selectedShadow = false;
     private int shadowWidth, shadowHeight;
-    private int x = 0, y = 0;
 
     // Variables for importing photos.
     private static final int REQUEST_GALLERY = 11;
@@ -295,15 +294,14 @@ public class MainActivity extends Activity
         cwv.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 final int action = event.getAction();
-                x = (int) event.getX();
-                y = (int) event.getY();
                 switch(action){
                     case MotionEvent.ACTION_DOWN:
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if(enableShadow){
                             shadow.setVisibility(View.VISIBLE);
-                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth, shadowHeight);
+                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT);
                             lp.setMargins((int)event.getRawX()-shadow.getWidth()/2,
                                     (int)event.getRawY()-shadow.getContentHeight()/3,
                                     0, 0);
@@ -361,8 +359,7 @@ public class MainActivity extends Activity
 
     @JavascriptInterface
     public void setRenderedShadowDataURL(final String dataURL, final int width, final int height) {
-        //selectedHTML = dataURL;
-        Log.v("Web Console", ""+dataURL.length());
+        selectedHTML = dataURL;
         shadowWidth  = width;
         shadowHeight = height;
         runOnUiThread(new Runnable() {
@@ -371,13 +368,20 @@ public class MainActivity extends Activity
                 shadowP.removeView(shadow);
                 shadow = new CordovaWebView(MainActivity.this);
 
-                shadow.setLayoutParams(new ViewGroup.LayoutParams(shadowWidth, shadowHeight));
+                shadow.setLayoutParams(new ViewGroup.LayoutParams(shadowWidth,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 shadowP.addView(shadow);
                 shadowP.setAlpha(0);
                 shadowP.invalidate();
+                /*
+                if(isImg){
+                    String img = "<img src=\""+dataURL+"\"/>";
+                    shadow.loadData(img, "text/html", "utf-8");
+                    return;
+                }*/
 
-                String canvas = "<img src=\""+dataURL+"\" style=\"margin: 0;padding: 0;\"/>";
+                String canvas = "<img src=\""+dataURL+"\" style=\"width:"+width+";height:"+height+"\"/>";
                 shadow.loadData(canvas, "text/html", "utf-8");
             }
         });
@@ -392,8 +396,9 @@ public class MainActivity extends Activity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth, shadowHeight);
-                lp.setMargins(x-shadowWidth/2,y-shadowHeight/3,0,0);
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth,
+                        FrameLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(50,100,0,0);
                 shadow.setLayoutParams(lp);
                 shadowP.setAlpha(0.4f);
                 shadowP.invalidate();
