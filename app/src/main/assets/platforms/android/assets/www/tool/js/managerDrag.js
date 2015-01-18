@@ -14,7 +14,7 @@ manager.initDrag = function(){
       var windowH = window.innerHeight;
       manager.config.dragMoveTimeout = 100;
       var dragMoveCount = manager.config.dragMoveTimeout;
-      var dragInterval = 1000;
+      var dragInterval = 500;
       var dragSetTimeout, dragSetInterval;
       var cursorX, cursorY;
       var scroll = function(){
@@ -97,7 +97,7 @@ manager.initDrag = function(){
             if(!manager.selectedObject){
                return;
             }
-            //
+            Android.startDrag();
             if(x < manager.selectedObjectRect.left ||
                x > manager.selectedObjectRect.left + manager.selectedObjectRect.width ||
                y < manager.selectedObjectRect.top ||
@@ -136,11 +136,9 @@ manager.initDrag = function(){
             return;
          }
          if(!dragSetTimeout){
-            console.log("rest setTimeOut");
             dragSetTimeout = setTimeout(resetTimeout, dragInterval);
          }
          if(dragMoveCount == 0){
-            console.log("reset Count");
             dragMoveCount = manager.config.dragMoveTimeout;
             clearTimeout(dragSetTimeout);
             dragSetTimeout = undefined;
@@ -169,7 +167,7 @@ manager.initDrag = function(){
             }else{
                manager.selectedObject.style.removeProperty("opacity");
             }
-            manager.selectedObject.dragging = undefined;
+            manager.selectedObject.dragging = null;
          }
       };
       return {

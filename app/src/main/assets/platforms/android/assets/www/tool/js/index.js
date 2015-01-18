@@ -14,6 +14,7 @@ var onanimate = false;
 var settingshow = false;
 var controlpanelshow = false;
 var gallerypanelshow = false;
+var properpaneshow = false;
 var githubpanelshow=false;
 var isFullScreen=false;
 var galleryMember;
@@ -24,7 +25,10 @@ var Android = (Android) ? Android : {
    setSelectedHTML: function(s){},
    hideSplashView: function(){},
    getProjectName: function(){},
-   getProjectPath: function(){}
+   getProjectPath: function(){},
+   openTextInputDialog: function(){},
+   openBrowserDialog: function(){},
+   openPhotoDialog: function(){}
 };
 
 jQuery(document).ready(function($){
@@ -52,13 +56,15 @@ jQuery(document).ready(function($){
     */
     var tester=[{'path':'tree.jpg'}];
     
-    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
+/*    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
     // Initialize Galleria
     
     //Galleria.ready(function(event){alert(abc);});
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
+    var c=document.getElementById("galleryPanel");
+    c.style.display="none";*/
 
 });
 function postLoadProject(){
@@ -95,9 +101,9 @@ function showProperty(tar)
     document.getElementById("properColor").innerHTML=computedStyle.color;
     document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
-    //alert(computedStyle.margin);
-    //document.getElementById("properPaddings").innerHTML=computedStyle.padding;
-    document.getElementById("properSource").innerHTML=tar.src;
+ //   alert("margintop:"+computedStyle.marginTop+'\n marginbottom'+computedStyle.marginBottom+'\n marginleft'+computedStyle.marginLeft+'\n marginright'+computedStyle.marginRight);
+    document.getElementById("properMargin").innerHTML="("+computedStyle.marginTop+','+computedStyle.marginBottom+','+computedStyle.marginLeft+','+computedStyle.marginRight+')';
+    //document.getElementById("properSource").innerHTML=tar.src;
     if(c.hasAttribute("style"))
         c.removeAttribute("style");
     $("#propertyPanel").css("position","absolute");
@@ -117,15 +123,26 @@ function propertyPanelHide()
         //    $("#propertyPanel").css("position","fixed");
             $("#propertyPanel").css("left","-100%");
             onanimate=false;
+            properpaneshow=false;
         });
         
     }
 }
+function hidePanels()
+{
+    if(properpaneshow) propertyPanelHide();
+    if(addpanelshow) AddPanelHide();
+    if(settingshow) SettingPanelHide();
+    if(githubpanelshow) githubPanelHide();
+    if(gallerypanelshow) galleryPanelHide();
+}
 function propertyPanelShow( tar)
 {
   //  alert("YY");
+    hidePanels();
     if(!onanimate)
     {
+    
        // alert("GG");
          var rect=tar.getBoundingClientRect();
     $("#propertyPanel").css("opacity","1");
@@ -161,13 +178,18 @@ function propertyPanelShow( tar)
     /*$("#propertyPanel").transition({ opacity: 1 },function(){
         onanimate=false;*/
     //});
+        properpaneshow=true;
         onanimate=false;
+        
     }
 }
 function galleryPanelShow()
 {
+    hidePanels();
     if(!onanimate)
     {
+        if(c.hasAttribute("style"))
+        c.removeAttribute("style");
         onanimate = true;
         $( "#galleryPanel" ).css("top","10%");
         $( "#galleria").transition({opacity:1},function(){$( "#galleryPanel" ).transition({ opacity: 1 },function(){onanimate=false;});});
@@ -180,8 +202,10 @@ function galleryPanelHide()
     if(!onanimate) 
     {
         onanimate = true;
-        $( "#galleryPanel" ).transition({ opacity: 0},function(){$( "#galleryPanel" ).css("top","-50%");onanimate=false;});      
+        $( "#galleryPanel" ).transition({ opacity: 0},function(){$( "#galleryPanel" ).css("top","-50%");onanimate=false;var c=document.getElementById("galleryPanel");
+        c.style.display="none";});      
         gallerypanelshow=!gallerypanelshow;
+        
     }
 }
 function galleryPanelToggle()
@@ -209,6 +233,7 @@ function test(){
 };
 function AddPanelShow()
 {
+    hidePanels();
     if(!onanimate)
     {
     onanimate = true;
@@ -248,6 +273,7 @@ function SettingPanelToggle()
 };
 function SettingPanelShow()
 {
+    hidePanels();
     if(!onanimate)
     {
     onanimate=true;
@@ -276,6 +302,7 @@ function ControlPanelToggle()
 };
 function ControlPanelShow()
 {
+    hidePanels();
     $('#tool').transition({ rotate: '90deg' });
     controlpanelshow=!controlpanelshow;
 };
@@ -326,7 +353,7 @@ function deselect(){
 function EnvironmentInit()
 {
     $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
-    $("#editbtn")    .on("touchstart ",function(startEvent){ Android.openPhotoDialog();/*Android.openBrowserDialog();Android.openTextInputDialog();*/ });
+    $("#editbtn")    .on("touchstart ",function(startEvent){ setContent() });
     $("#dissbtn")    .on("touchstart ",function(startEvent){propertyPanelHide();});
 
     $("#test")      .on("touchstart click",function(startEvent){ShadowCover();});
@@ -353,6 +380,7 @@ function colorSelector(col)
 }
 function githubPanelShow()
 {
+    hidePanels();
     if(!onanimate)
     {
     onanimate=true;
@@ -520,7 +548,8 @@ function createElement(index){
 function setContent(){
     if(!manager.selectedObject){
         console.log("selected obj null");return;
-        }
+    }
+    console.log(manager.selectedObject.tagName);
     switch(manager.selectedObject.tagName){
         case "IMG":
             Android.openPhotoDialog();

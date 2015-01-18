@@ -34,17 +34,18 @@ function setGestureListener(responses){
       touch_2fingerRightCount = 0;
    var touch_pinch = false;
    var touch_pinchCount = 0;
+   var touchTarget;
 
    var onTouchStart = function(event){
       if(touch_longPress)
          return;
       if(event.touches.length > 2)
          return;
-
+      touchTarget = event.target;
       if(touch_quickDown){
          touch_doubleTap = true;
-         responses.onDoubleTap(event.touches.item(0).clientX, event.touches.item(0).clientY);
-         myLog("double tap.");
+         responses.onDoubleTap(event.touches.item(0).clientX, event.touches.item(0).clientY,touchTarget);
+         //myLog("double tap.");
       }else{
          // modify gesture flags.
          touch_2Finger = false;
@@ -69,13 +70,14 @@ function setGestureListener(responses){
    var onTouchMove = function(event){
       if(event.touches.length > 2)
          return;
+      touchTarget = event.target;
       touch_still = false;
       var touch = event.touches.item(0);
 
       if(touch_longPress){
          event.preventDefault();
-         responses.onLongPressMove(event.touches.item(0).clientX, event.touches.item(0).clientY);
-         myLog("onLongPressMove")
+         responses.onLongPressMove(event.touches.item(0).clientX, event.touches.item(0).clientY,touchTarget);
+         ////myLog("onLongPressMove")
       }else{
          // handles "2 finger scroll"
          if(touch_2Finger && !touch_2FingerMoved){
@@ -175,16 +177,16 @@ function setGestureListener(responses){
    var longPressChecker = function(){
       if(touch_still && !touch_up && !touch_2Finger){
          touch_longPress = true;
-         responses.onLongPressStart(touch_x, touch_y);
-         myLog("onLongPressStart");
+         responses.onLongPressStart(touch_x, touch_y,touchTarget);
+         //myLog("onLongPressStart");
       }
    };
 
    var doubleTapChecker = function(){
       touch_quickDown = false;
       if(!touch_doubleTap && touch_still){
-         responses.onSingleTap(touch_x, touch_y);
-         myLog("single tap.");
+         responses.onSingleTap(touch_x, touch_y,touchTarget);
+         //myLog("single tap.");
       }
    };
 

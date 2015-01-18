@@ -56,7 +56,7 @@ jQuery(document).ready(function($){
     */
     var tester=[{'path':'tree.jpg'}];
     
-    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
+/*    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
     // Initialize Galleria
     
     //Galleria.ready(function(event){alert(abc);});
@@ -64,7 +64,7 @@ jQuery(document).ready(function($){
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
     var c=document.getElementById("galleryPanel");
-    c.style.display="none";
+    c.style.display="none";*/
 
 });
 function postLoadProject(){
@@ -101,15 +101,9 @@ function showProperty(tar)
     document.getElementById("properColor").innerHTML=computedStyle.color;
     document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
     document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
-<<<<<<< HEAD
  //   alert("margintop:"+computedStyle.marginTop+'\n marginbottom'+computedStyle.marginBottom+'\n marginleft'+computedStyle.marginLeft+'\n marginright'+computedStyle.marginRight);
     document.getElementById("properMargin").innerHTML="("+computedStyle.marginTop+','+computedStyle.marginBottom+','+computedStyle.marginLeft+','+computedStyle.marginRight+')';
     //document.getElementById("properSource").innerHTML=tar.src;
-=======
-    //alert(computedStyle.margin);
-    //document.getElementById("properPaddings").innerHTML=computedStyle.padding;
-    document.getElementById("properSource").innerHTML=tar.src;
->>>>>>> origin/master
     if(c.hasAttribute("style"))
         c.removeAttribute("style");
     $("#propertyPanel").css("position","absolute");

@@ -13,7 +13,6 @@ manager.initSelect = function(){
       selectionMask.className += "selectionMask";
       selectionMask.selectionMask = true;
       manager.config.listener.appendChild(selectionMask);
-      console.log("initSelect: Add selection mask.");
       // Helper functions
       var getParentSelectable = function(node, canReturnMe){
          if(!node){
@@ -29,8 +28,6 @@ manager.initSelect = function(){
                return undefined;
             }
          }while(!node.selectable);
-         console.log("getParentSelectable:");
-         console.log(node);
          return node;
       };
       var getFirstChildSelectable = function(node){
@@ -38,8 +35,6 @@ manager.initSelect = function(){
             console.error("getFirstChildSelectable: node is null");
             return undefined;
          }
-         console.log("getFirstChildSelectable:");
-         console.log(node.children[0]);
          return node.children[0];
 
 
@@ -55,11 +50,9 @@ manager.initSelect = function(){
                node = node.previousElementSibling;
                continue;
             }
-            console.log("getPreviousSelectable:");
-            console.log(node.previousElementSibling);
             return node.previousElementSibling;
          }
-         console.log("getPreviousSelectable: no previous selectable");
+         console.warn("getPreviousSelectable: no previous selectable");
          return undefined;
       };
       var getNextSelectable = function(node){
@@ -72,17 +65,13 @@ manager.initSelect = function(){
                node = node.nextElementSibling;
                continue;
             }
-            console.log("getNextSelectable:");
-            console.log(node.nextElementSibling);
             return node.nextElementSibling;
          }
-         console.log("getNextSelectable: no next selectable");
+         console.warn("getNextSelectable: no next selectable");
          return undefined;
       };
 
       var assignSelection = function(o){
-         console.log("assignSelection:");
-         console.log(o);
          if(manager.selectedObject){
             deselect();
          }
@@ -110,7 +99,7 @@ manager.initSelect = function(){
       var select = function(x, y){
          var t = document.elementFromPoint(x, y);
          if(!t){
-            console.log("Click: can't get object " + x + "," + y);
+            console.warn("Click: can't get object " + x + "," + y);
             deselect();
             return;
          }
