@@ -28,7 +28,8 @@ var Android = (Android) ? Android : {
    getProjectPath: function(){},
    openTextInputDialog: function(){},
    openBrowserDialog: function(){},
-   openPhotoDialog: function(){}
+   openPhotoDialog: function(){},
+   setRenderedShadowDataURL: function(){}
 };
 
 jQuery(document).ready(function($){
@@ -55,16 +56,24 @@ jQuery(document).ready(function($){
     });
     */
     var tester=[{'path':'tree.jpg'}];
+<<<<<<< Updated upstream
     
 /*    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
+=======
+
+    /* GALLERIA DISABLED
+    Galleria.loadTheme('tool/gallery/galleria.classic.min.js');
+>>>>>>> Stashed changes
     // Initialize Galleria
     
     //Galleria.ready(function(event){alert(abc);});
     galleryMember=JSON.stringify(tester);
     galleryInitialize(galleryMember);
     Galleria.run('#galleria');
+    */
     var c=document.getElementById("galleryPanel");
     c.style.display="none";*/
+
 
 });
 function postLoadProject(){
@@ -104,6 +113,10 @@ function showProperty(tar)
  //   alert("margintop:"+computedStyle.marginTop+'\n marginbottom'+computedStyle.marginBottom+'\n marginleft'+computedStyle.marginLeft+'\n marginright'+computedStyle.marginRight);
     document.getElementById("properMargin").innerHTML="("+computedStyle.marginTop+','+computedStyle.marginBottom+','+computedStyle.marginLeft+','+computedStyle.marginRight+')';
     //document.getElementById("properSource").innerHTML=tar.src;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     if(c.hasAttribute("style"))
         c.removeAttribute("style");
     $("#propertyPanel").css("position","absolute");

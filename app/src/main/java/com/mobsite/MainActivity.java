@@ -254,7 +254,7 @@ public class MainActivity extends Activity
                 Log.v("FIle size", "File is this big : "+savedImage.length());
                 String js = "javascript:";
                 js += "console.log(\"from set content "+savedImage.getPath()+"\");";
-                js += "manager.setAttribute(\"src\", \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
+                js += "manager.setProperty(\"src\", \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
                 setWebViewURL(js);
             } catch (IOException e){ e.printStackTrace(); }
         }// end
@@ -357,30 +357,32 @@ public class MainActivity extends Activity
     public String getProjectName() { return projectName; }
 
     @JavascriptInterface
-    public void setSelectedHTML(String s) {
-        selectedHTML = s;
+    public void setRenderedShadowDataURL(final String dataURL, final int width, final int height) {
+        selectedHTML = dataURL;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 shadowP.removeView(shadow);
                 shadow = new CordovaWebView(MainActivity.this);
 
-                shadow.setLayoutParams(new ViewGroup.LayoutParams(cwv.getWidth()*2/3,
+                shadow.setLayoutParams(new ViewGroup.LayoutParams(300/*cwv.getWidth()*2/3*/,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 shadowP.addView(shadow);
                 shadowP.setAlpha(0);
                 shadowP.invalidate();
+                /*
+                if(isImg){
+                    String img = "<img src=\""+dataURL+"\"/>";
+                    shadow.loadData(img, "text/html", "utf-8");
+                    return;
+                }*/
 
-
-                String prefix = "<link rel=\"stylesheet\" href=\"android_asset/css/bootstrap.min.css\">\n" +
-                        "<script src=\"android_asset/js/jquery-1.11.1.min.js\"></script>\n" +
-                        "<script src=\"android_asset/js/bootstrap.min.js\"></script>\n";
-                selectedHTML = prefix + selectedHTML;
-                shadow.loadData(selectedHTML, "text/html", "utf-8");
-                selectedShadow = true;
+                String canvas = "<img src=\""+dataURL+"\" style=\"width:"+width+";height:"+height+"\"/>";
+                shadow.loadData(canvas, "text/html", "utf-8");
             }
         });
+        selectedShadow = true;
     }
 
     @JavascriptInterface
@@ -395,7 +397,7 @@ public class MainActivity extends Activity
                         FrameLayout.LayoutParams.WRAP_CONTENT);
                 lp.setMargins(50,100,0,0);
                 shadow.setLayoutParams(lp);
-                shadowP.setAlpha(1f);
+                shadowP.setAlpha(0.4f);
                 shadowP.invalidate();
                 //shadow.setVisibility(View.VISIBLE);
                 // Drag starts.
@@ -443,7 +445,7 @@ public class MainActivity extends Activity
                         } else {
                             String js = "javascript:";
                             js += "console.log(\"from set content "+inputHTML+"\");";
-                            js += "manager.setAttribute(\"text\", \""+inputHTML+"\");";
+                            js += "manager.setProperty(\"text\", \""+inputHTML+"\", manager.selectedObject);";
                             //js += "manager.selectedObject.innerHTML = \""+inputHTML+"\";";
                             MainActivity.this.setWebViewURL(js);
                             dialog.dismiss();
