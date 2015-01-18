@@ -278,7 +278,7 @@ editor.initProject=function(wid,hei){
             //$("#undo")    .on("touchstart click ",function(startEvent){});
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
             $("#properBackground").on("touchstart ",function(startEvent){colorSelector($("#properBackground"));});
-            $("#properColor").on("touchstart ",function(startEvent){colorSelector($("#properColor"));});
+            $("#properColor").on("touchstart ",function(startEvent){var f=$.farbtastic('#picker');f .linkTo($("#properColor"));colorSelector($("#properColor"));});
             $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
         }
         var colorSelector=function (col)
@@ -287,6 +287,7 @@ editor.initProject=function(wid,hei){
             {
                 onanimate=true;
                 $("#previouscolor").css("background-color",col.innerHTML);
+                $("#colorPickerPanel").css("left","20%");
                 $("#colorPickerPanel").transition({opacity: 1 });
             }
         }

@@ -178,14 +178,28 @@ manager.initDrag = function(){
             return;
          }
          // TODO: place hidden flag
-         if(manager.selectedObject.parentNode){
-            if(manager.selectedObject.parentNode.childNodes.length == 1){
-               manager.selectedObject.parentNode.appendChild(manager.createPlaceholder());
+         var startPoint;
+         if(manager.selectedObject.parentNode)
+         {
+            for (u=0; u<manager.selectedObject.parentElement.childNodes.length; u++)
+            {                                               if(manager.selectedObject.parentElement.childNodes[u].dummy!=true&&manager.selectedObject!=manager.selectedObject.parentElement.childNodes[u])
+                    break;
+                if(u==manager.selectedObject.parentElement.childNodes.length)
+                    manager.selectedObject.parentElement.appendChild(manager.createPlaceholder());
             }
+            startPoint=document.createElement("div");
+            startPoint.dummy=true;
+            manager.selectedObject.parentElement.insertBefore(startPoint,manager.selectedObject);
          }
-         moveElement(manager.selectedObject, manager.Cursor);
-
-
+            //moveElement(manager.selectedObject, manager.Cursor);
+            var moveact=
+             {
+                 type       :'move',
+                 target     :manager.selectedObject,
+                 destination:manager.Cursor,
+                 start      :startPoint
+             };
+            manager.pushAction(moveact);
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
          }

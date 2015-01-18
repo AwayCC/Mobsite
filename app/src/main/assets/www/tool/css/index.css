@@ -742,7 +742,9 @@ a.image_container img {
     border-style: dotted;
     border-top:0px;
     border-color: #242525;
-    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:contain;
     position: relative;
     text-align: center;
     width:50%;
