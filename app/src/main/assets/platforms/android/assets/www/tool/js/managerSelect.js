@@ -96,8 +96,7 @@ manager.initSelect = function(){
          manager.selectedObject = undefined;
          selectionMask.style.display = "none";
       };
-      var select = function(x, y){
-         var t = document.elementFromPoint(x, y);
+      var select = function(x, y, t){
          if(!t){
             console.warn("Click: can't get object " + x + "," + y);
             deselect();

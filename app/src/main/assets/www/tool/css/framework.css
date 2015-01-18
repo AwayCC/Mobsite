@@ -1,35 +1,47 @@
-body {} div {} .selectable {} .column {
-    text-align: center;
+body {
+}
+
+#innercontent div {
     border: solid 1px #CCC;
 }
+
+.selectable {
+}
+
+.column {
+
+}
+
 .slide {
     margin: 10px 0;
 }
+
 .cursorStyle {
     background-color: #23527c;
     font-size: 3px;
     margin: 2px;
     width: 100%;
 }
+
 .selectionMask {
     background-color: rgba(0, 96, 230, 0.4);
     border-width: 0;
-    z-index: 100;
     margin: 0;
-    padding:0;
+    padding: 0;
     position: absolute;
     display: none;
-    z-index:20;
+    z-index: 20;
 }
-.selectionMaskDragging{
+
+.selectionMaskDragging {
     background-color: rgba(0, 96, 230, 0.2);
     border-width: 0;
-    z-index: 100;
     margin: 0;
-    padding:0;
+    padding: 0;
     position: absolute;
-    z-index:20;
+    z-index: 20;
 }
+
 #myGestureListener {
     position: fixed;
     height: 20px;
@@ -38,6 +50,7 @@ body {} div {} .selectable {} .column {
     right: 0;
     z-index: 20;
 }
-.cursorEntry{
+
+.cursorEntry {
     display: none;
 }

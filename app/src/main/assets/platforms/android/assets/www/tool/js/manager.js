@@ -37,11 +37,27 @@ manager.config = {
    }
 };
 manager.preLoad = function(){
-   // TODO : Do something that should be done before any initiation.
+   // NOTICE : Do something that should be done before any initiation.
    var c = manager.config.listener.getBoundingClientRect();
    manager.config.offsetX = c.left;
    manager.config.offsetY = c.top;
    var elements = manager.config.listener.getElementsByTagName("*");
+   manager.createSlidePlaceholder = function(){
+      var c = document.createElement("div");
+      c.appendChild(document.createElement("br"));
+      c.slidePlaceholder = true;
+      c.className = "slidePlaceHolder";
+      c.setAttribute("data-slidePlaceholder","true");
+      return c;
+   };
+   manager.createPlaceholder = function(){
+      var c = document.createElement("div");
+      c.appendChild(document.createElement("br"));
+      c.placeholder = true;
+      c.setAttribute("data-placeholder","true");
+      c.className = "placeHolder";
+      return c;
+   };
    for(var i = elements.length - 1; i >= 0; --i){
       var e = elements[i];
       switch(e.tagName.toLowerCase()){
@@ -61,6 +77,10 @@ manager.preLoad = function(){
                e.placeholder = true;
                break;
             }
+            if(e.hasAttribute("data-slidePlaceholder")){
+               e.slidePlaceholder = true;
+               break;
+            }
 
       }
       if(e.id.substr(0, 5) == "slide"){
@@ -69,7 +89,6 @@ manager.preLoad = function(){
       var cl = e.classList;
       if(cl.toString() && cl.toString().indexOf("col-md-") != -1){
          e.column = true;
-         e.selectable = null;
       }
    }
 };

@@ -51,52 +51,71 @@ manager.initDrag = function(){
       var hidePlaceholder = function(){
          //manager.placeholderStyle.style.display = "none";
       };
-      var updateCursor = function(x, y){
-         var t = document.elementFromPoint(x, y);
-         if(t.column){
-            return;
-         }else if(t.slide){
-            var v = manager.selectedObject;
-            if(v.slide){
-               if(v.placeholder){
-                  // placeholder for slide
-               }else{
-                  // slide
-               }
-            }else{
-               // column and others
-               while(t && !t.slide){
-                  t = t.parentNode;
-               }
-            }
-         }else{
-            if(t.column){
-               t.insertBefore(manager.Cursor, undefined);
+      var updateCursor = function(t){
+         if(!t.selectable){
+            t = manager.getParentSelectable(t);
+            if(!t){
                return;
-            }else if(t.slide){
-               return;
-            }else{
-
             }
          }
-         t = manager.getParentSelectable(t, true);
-         if(!t) return;
-         var b = t.getBoundingClientRect();
-         if(y > b.top + b.height / 2){
-            // Insert after t
-            t.parentNode.insertBefore(manager.Cursor, t.nextSibling);
+         var m = manager.selectedObject;
+         if(m.slide){
+            if(t.slidePlaceholder){
+               if(t.parentNode){
+                  t.parentNode.appendChild(manager.Cursor);
+                  return;
+               }
+               return;
+            }
+            while(t.slide != true){
+               if(t){
+                  t = t.parentNode;
+               }else{
+                  return;
+               }
+            }
+            var b = t.getBoundingClientRect();
+            if(cursorY > b.top + b.height / 2){
+               // Insert in the slidePlaceholder after t
+               var s = t.previousElementSibling;
+               if(s.slidePlaceholder){
+                  s.appendChild(manager.Cursor);
+                  return;
+               }
+            }else{
+               // Insert in the slidePlaceholder Before t
+               var s = t.nextElementSibling;
+               if(s.slidePlaceholder){
+                  s.appendChild(manager.Cursor);
+                  return;
+               }
+            }
+         }else if(m.column){
+            // Do nothing
+            return;
          }else{
-            // Insert Before t
-            t.parentNode.insertBefore(manager.Cursor, t);
+            if(t.slide){
+
+            }else if(t.column || t.slidePlaceholder || t.placeholder){
+               t.appendChild(manager.Cursor);
+               return;
+            }else{
+               var b = t.getBoundingClientRect();
+               if(y > b.top + b.height / 2){
+                  // Insert after t
+                  t.parentNode.insertBefore(manager.Cursor, t.nextSibling);
+               }else{
+                  // Insert Before t
+                  t.parentNode.insertBefore(manager.Cursor, t);
+               }
+               return;
+            }
          }
       };
 
       var dragStart = function(x, y, o){
-         if(!o){
-            // Drag from innerContent
-            if(!manager.selectedObject){
-               return;
-            }
+         if(o == manager.selectionMask){
+            // Drag from inner content
             Android.startDrag();
             if(x < manager.selectedObjectRect.left ||
                x > manager.selectedObjectRect.left + manager.selectedObjectRect.width ||
@@ -143,7 +162,7 @@ manager.initDrag = function(){
             clearTimeout(dragSetTimeout);
             dragSetTimeout = undefined;
          }
-         updateCursor(x, y);
+         updateCursor(document.elementFromPoint(x,y));
       };
       var dragEnd = function(){
          if(!isDragging){
