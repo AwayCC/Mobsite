@@ -60,7 +60,6 @@ editor.initProject=function(wid,hei){
         };
         var propertyPanelShow=function ( tar)
         {
-            hidePanels();
             if(!onanimate)
             {
                 var rect=tar.getBoundingClientRect();
@@ -99,12 +98,11 @@ editor.initProject=function(wid,hei){
         };
         var propertyPanelHide=function()
         {
-            if(!onanimate)
+            if(!onanimate&&!properpaneshow)
             {
                 onanimate=true;
                 $("#propertyPanel").transition({ opacity: 0 },function()
                     {
-                      //$("#propertyPanel").css("position","fixed");
                         $("#propertyPanel").css("left","-100%");
                         onanimate=false;
                         properpaneshow=false;
@@ -158,7 +156,7 @@ editor.initProject=function(wid,hei){
         };
         var githubPanelShow=function ()
         {
-            hidePanels();
+
             if(!onanimate)
             {
                 onanimate=true;
@@ -188,8 +186,11 @@ editor.initProject=function(wid,hei){
         };
         var showProperty=function(tar)
         { 
+            hidePanels();
+            //if(properpaneshow)
+           // propertyPanelHide();
             var computedStyle = getComputedStyle(tar);
-            $("#propertyPanel").css("left","0");
+            //$("#propertyPanel").css("left","0");
             var c=document.getElementById("properTable");
             c.style.display="none";
             document.getElementById("properCategory").innerHTML=tar.tagName;
