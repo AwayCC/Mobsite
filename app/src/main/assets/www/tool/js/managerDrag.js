@@ -217,7 +217,6 @@ manager.initDrag = function(){
              };
             manager.pushAction(moveact);
          moveElement(manager.selectedObject, manager.Cursor);
-
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
          }
