@@ -278,7 +278,16 @@ editor.initProject=function(wid,hei){
             //$("#undo")    .on("touchstart click ",function(startEvent){});
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
             $("#properBackground").on("touchstart ",function(startEvent){colorSelector($("#properBackground"));});
-            $("#properColor").on("touchstart ",function(startEvent){var f=$.farbtastic('#picker');f .linkTo($("#properColor"));colorSelector($("#properColor"));});
+            $("#properColor").on("touchstart ",function(startEvent){var f=$.farbtastic('#picker');f.linkTo($('#color'));colorSelector($("#properColor"));});
+            $("#colorCheck").on("touchstart",function(startEvent){var setact=
+                {
+                    style   :setting,
+                    target  :manager.selectedObject,
+                    attr    :"background-color",
+                    value   :$('#color').style.backgroundColor
+                };
+                alert($('#color').style.backgroundColor);
+            });
             $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
         }
         var colorSelector=function (col)
