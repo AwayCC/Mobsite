@@ -51,7 +51,7 @@ function openDeployDialog(){
     
     function onClickCancel(){
         console.log("cancel");
-        ShadowFade();
+        editor.shadowFade();
     }
 
     function onClickLogin(){
