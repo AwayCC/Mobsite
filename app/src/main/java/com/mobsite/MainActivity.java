@@ -157,6 +157,11 @@ public class MainActivity extends Activity
     * implements CordovaInterface.
     */
 
+    private void setWebViewURL(final String url){
+        Log.v("URL", url);
+        cwv.loadUrl(url);
+    }
+
     // Plugin to call when activity result is received
     protected CordovaPlugin activityResultCallback = null;
     protected boolean activityResultKeepRunning;
@@ -247,6 +252,10 @@ public class MainActivity extends Activity
                 fout.close();
 
                 Log.v("FIle size", "File is this big : "+savedImage.length());
+                String js = "javascript:";
+                js += "console.log(\"from set content "+savedImage.getPath()+"\");";
+                js += "manager.setAttribute(\"src\", \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
+                setWebViewURL(js);
             } catch (IOException e){ e.printStackTrace(); }
         }// end
 
@@ -428,21 +437,15 @@ public class MainActivity extends Activity
                         inputHTML = inputHTML.replace("&","&amp");
                         inputHTML = inputHTML.replace("<","&lt");
                         inputHTML = inputHTML.replace(">","&gt");
-                        // Log.v("after sanitize", inputHTML);
+                        Log.v("after sanitize", inputHTML);
                         if(inputHTML.isEmpty()){
                             Toast.makeText(MainActivity.this, "Input is empty...", Toast.LENGTH_SHORT).show();
                         } else {
                             String js = "javascript:";
-                            js += "console.log(\"from set content"+inputHTML+"\");";
-                            //js += "manager.selectedObject.innerHTML = "+inputHTML+";";
-                            final String code = js;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    cwv.loadUrl(code);
-                                }
-                            });
-
+                            js += "console.log(\"from set content "+inputHTML+"\");";
+                            js += "manager.setAttribute(\"text\", \""+inputHTML+"\");";
+                            //js += "manager.selectedObject.innerHTML = \""+inputHTML+"\";";
+                            MainActivity.this.setWebViewURL(js);
                             dialog.dismiss();
                         }
                     }
