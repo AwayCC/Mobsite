@@ -173,7 +173,8 @@ editor.initProject=function(wid,hei){
         {
             
             $('#githubPanel').transition({opacity: 0 });
-            setTimeout("$('#githubPanel').css('left','-1000%');githubpanelshow=false;",500);
+            setTimeout("$('#githubPanel').css('left','-1000%');",500);
+            githubpanelshow=false;
         };
         
         var hidePanels=function()
