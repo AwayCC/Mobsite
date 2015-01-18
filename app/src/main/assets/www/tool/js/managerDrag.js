@@ -36,7 +36,7 @@ manager.initDrag = function(){
 
          manager.managedStylesheet = managedStyle.sheet;
          manager.managedStylesheet.insertRule(".placeholderStyle{display:none;}", 0);
-         manager.managedStylesheet.insertRule(".slidePlaceholderStyle{display:none};",0);
+         manager.managedStylesheet.insertRule(".slidePlaceholderStyle{display:none;}",0);
 
          manager.slidePlaceholderStyle = manager.managedStylesheet.cssRules[0];
          manager.placeholderStyle = manager.managedStylesheet.cssRules[1];

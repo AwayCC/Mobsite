@@ -33,7 +33,8 @@ editor.initProject=function(wid,hei){
         var galleryMember;
         var propertyPanel=document.getElementById("propertyPanel");
         var addPanel=document.getElementById("Add-panel");
-        
+        var f=$.farbtastic('#picker');
+        f.linkTo($('#color'));
         //////////  Controls of Panels //////////////
         var AddPanelShow=function ()
         {
@@ -278,16 +279,19 @@ editor.initProject=function(wid,hei){
             //$("#undo")    .on("touchstart click ",function(startEvent){});
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
             $("#properBackground").on("touchstart ",function(startEvent){colorSelector($("#properBackground"));});
-            $("#properColor").on("touchstart ",function(startEvent){var f=$.farbtastic('#picker');f.linkTo($('#color'));colorSelector($("#properColor"));});
+            $("#properColor").on("touchstart ",function(startEvent){colorSelector($("#properColor"));});
             $("#colorCheck").on("touchstart",function(startEvent){var setact=
                 {
-                    style   :setting,
+                    style   :"setting",
                     target  :manager.selectedObject,
                     attr    :"background-color",
-                    value   :$('#color').style.backgroundColor
+                    orig    :getComputedStyle(manager.selectedObject,null).backgroundColor,
+                    value   :f.color
                 };
-                alert($('#color').style.backgroundColor);
+                //console.log("original-color wa"+setact.orig+"des");
+                //console.log(f.color);
             });
+            $('#')
             $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
         }
         var colorSelector=function (col)
@@ -461,7 +465,7 @@ editor.initProject=function(wid,hei){
         console.log("helloworld!!!:D");
         
         EnvironmentInit();
-        $('#picker').farbtastic('#color');
+        
         document.getElementById("projecttitle").innerHTML = Android.getProjectName();
         console.log(Android.getProjectPath());
         $("#innercontent").first().load("index.html", postLoadProject);
