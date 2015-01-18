@@ -93,20 +93,17 @@ editor.initProject=function(wid,hei){
                 }
                 properpaneshow=true;
                 onanimate=false;
-        
             }
         };
         var propertyPanelHide=function()
         {
-            if(!onanimate&&!properpaneshow)
+            if(!onanimate&&properpaneshow)
             {
                 onanimate=true;
-                $("#propertyPanel").transition({ opacity: 0 },function()
-                    {
+                $("#propertyPanel").transition({ opacity: 0 });
                         $("#propertyPanel").css("left","-100%");
                         onanimate=false;
                         properpaneshow=false;
-                    });
             }
         };
         var galleryPanelShow=function()
@@ -186,7 +183,7 @@ editor.initProject=function(wid,hei){
         };
         var showProperty=function(tar)
         { 
-            hidePanels();
+            //hidePanels();
             //if(properpaneshow)
            // propertyPanelHide();
             var computedStyle = getComputedStyle(tar);
