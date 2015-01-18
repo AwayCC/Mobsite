@@ -17,7 +17,9 @@ manager.initRecord = function(){
          return true;
       };
       var execAction = function(act){
-
+         console.log(actionStack);
+         console.log(currentPointer);
+         console.log(maximumPointer);
       };
       var reverseAction = function(act){
       };
