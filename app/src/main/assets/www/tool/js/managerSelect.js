@@ -85,7 +85,7 @@ manager.initSelect = function(){
          selectionMask.style.height = t.height + "px";
 
          manager.selectedObject = o;
-         Android.setSelectedHTML(o.htmlText);
+         // Android.setSelectedHTML(o.htmlText);
          // TODO: add this to enable showing properties
          //if(showProperty != undefined){
          //   showProperty(o);
@@ -108,7 +108,7 @@ manager.initSelect = function(){
          if(t){
             assignSelection(t);
             showProperty(t);
-            Android.setSelectedHTML(t.innerHTML);
+            renderSelectedObject();
          }else{
             deselect();
          }
@@ -133,6 +133,40 @@ manager.initSelect = function(){
          var g = getNextSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
+      var renderSelectedObject = function(){
+          html2canvas(manager.selectedObject, {
+              onrendered: function(canvas) {
+                  var h = manager.selectedObject.getBoundingClientRect().height;
+                  var w = manager.selectedObject.getBoundingClientRect().width;
+                  var ratio = 1
+                  var data = canvas.toDataURL();
+
+                  var img = new Image();
+                  img.src = data;
+
+                  if(manager.selectedObject.tagName == "IMG"){
+                      //img.src = "image/01.jpg";
+                      img.src = manager.selectedObject.src.substring(26);
+                      var myCanvas = document.createElement('canvas');
+                      var ctx = myCanvas.getContext('2d');
+
+                      if(w > h && w > 450){
+                          ratio = 450/w;
+                      } else if(h > w && h > 300){
+                          ratio = 300/h;
+                      }
+
+                      ctx.scale(ratio, ratio);
+                      ctx.drawImage(img, 0, 0);
+                      data = myCanvas.toDataURL();
+                  }
+
+                  console.log("canvas width = "+w);
+                  Android.setRenderedShadowDataURL(data, w, h);
+              }
+          });
+
+      };
       return {
          selectionMask      : selectionMask,
          onSingleTap        : select,
@@ -142,6 +176,7 @@ manager.initSelect = function(){
          on2FingerMoveLeft  : swipeLeft,
          on2FingerMoveUp    : swipeUp,
          on2FingerMoveRight : swipeRight,
+         renderSelectedObject : renderSelectedObject,
          getParentSelectable: getParentSelectable
       }
    })();
@@ -150,6 +185,7 @@ manager.initSelect = function(){
    manager.selectionMask = initObj.selectionMask;
    manager.getParentSelectable = initObj.getParentSelectable;
    manager.assignSelection = initObj.assignSelection;
+   manager.renderSelectedObject = initObj.renderSelectedObject;
    manager.config.onSingleTap = initObj.onSingleTap;
    manager.config.onDoubleTap = initObj.onDoubleTap;
    manager.config.on2FingerMoveDown = initObj.on2FingerMoveDown;
