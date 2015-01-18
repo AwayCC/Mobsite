@@ -56,6 +56,8 @@ manager.preLoad = function(){
       c.placeholder = true;
       c.setAttribute("data-placeholder","true");
       c.className = "placeHolder";
+      c.selectable = true;
+      c.style.minHeight = "40px";
       return c;
    };
    for(var i = elements.length - 1; i >= 0; --i){

@@ -86,6 +86,7 @@ public class MainActivity extends Activity
     private boolean enableShadow = false,
             selectedShadow = false;
     private int shadowWidth, shadowHeight;
+    private int shadowX = 0, shadowY = 0;
 
     // Variables for importing photos.
     private static final int REQUEST_GALLERY = 11;
@@ -294,6 +295,8 @@ public class MainActivity extends Activity
         cwv.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 final int action = event.getAction();
+                shadowX = (int) event.getRawX();
+                shadowY = (int) event.getRawY();
                 switch(action){
                     case MotionEvent.ACTION_DOWN:
                         break;
@@ -359,7 +362,7 @@ public class MainActivity extends Activity
 
     @JavascriptInterface
     public void setRenderedShadowDataURL(final String dataURL, final int width, final int height) {
-        selectedHTML = dataURL;
+        //selectedHTML = dataURL;
         shadowWidth  = width;
         shadowHeight = height;
         runOnUiThread(new Runnable() {
@@ -398,7 +401,7 @@ public class MainActivity extends Activity
             public void run() {
                 FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(shadowWidth,
                         FrameLayout.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(50,100,0,0);
+                lp.setMargins(shadowX-shadowWidth/2,shadowY-shadowHeight/3,0,0);
                 shadow.setLayoutParams(lp);
                 shadowP.setAlpha(0.4f);
                 shadowP.invalidate();

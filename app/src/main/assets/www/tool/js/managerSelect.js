@@ -107,7 +107,7 @@ manager.initSelect = function(){
          if(t){
             assignSelection(t);
             editor.showProperty(t);
-            renderSelectedObject();
+            renderSelectedObject(manager.selectedObject);
          }else{
             deselect();
          }
@@ -132,36 +132,31 @@ manager.initSelect = function(){
          var g = getNextSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
-      var renderSelectedObject = function(){
-          html2canvas(manager.selectedObject, {
+      var renderSelectedObject = function(obj){
+          html2canvas(obj, {
               onrendered: function(canvas) {
-                  var h = manager.selectedObject.getBoundingClientRect().height;
-                  var w = manager.selectedObject.getBoundingClientRect().width;
-                  var ratio = 1;
+                  var h = obj.getBoundingClientRect().height;
+                  var w = obj.getBoundingClientRect().width;
+                  var myCanvas = document.createElement('canvas');
                   var data = canvas.toDataURL();
-
+                  var ctx = myCanvas.getContext('2d');
                   var img = new Image();
-                  img.src = data;
-
-                  if(manager.selectedObject.tagName == "IMG"){
-                      //img.src = "image/01.jpg";
-                      img.src = manager.selectedObject.src.substring(26);
-                      var myCanvas = document.createElement('canvas');
-                      var ctx = myCanvas.getContext('2d');
-
-                      if(w > h && w > 450){
-                          ratio = 450/w;
-                      } else if(h > w && h > 300){
-                          ratio = 300/h;
-                      }
-
-                      ctx.scale(ratio, ratio);
-                      ctx.drawImage(img, 0, 0);
+                  img.onload = function() {
+                      myCanvas.width = img.width;
+                      myCanvas.height = img.height;
+                      myCanvas.style.margin = 0;
+                      myCanvas.style.padding = 0;
+                      ctx.drawImage(img, 0, 0, w, h);
                       data = myCanvas.toDataURL();
+                      Android.setRenderedShadowDataURL(data, w, h);
                   }
 
-                  console.log("canvas width = "+w);
-                  Android.setRenderedShadowDataURL(data, w, h);
+                  if(manager.selectedObject.tagName == "IMG"){
+                      img.src = obj.src.substring(26);
+                      console.log("src = "+img.src);
+                  }
+                  else
+                      img.src = data;
               }
           });
 

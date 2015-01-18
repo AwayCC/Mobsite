@@ -374,8 +374,8 @@ editor.initProject=function(wid,hei){
                     console.log("Add panel : event "+addPanel_touchTarget.id);
                     var index = addPanel_touchTarget.id;
                     console.log("Add panel : long press start at "+index+".");
-                    AddPanelToggle();
-                    manager.config.onLongPressStart(addPanel_touchX, addPanel_touchY, createElement(index));
+                    AddPanelHide();
+                    manager.config.onLongPressStart(addPanel_touchX, addPanel_touchY, createElement(index), true);
                 }
             };
         }
@@ -397,35 +397,52 @@ editor.initProject=function(wid,hei){
                     object.className = "row";
                     col = document.createElement("div");
                     col.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
+                    col.appendChild(manager.createPlaceholder());
                     object.appendChild(col);
                     break;
                 case "Container 2":
                     object = document.createElement("div");
                     object.className = "row";
-                    col = document.createElement("div");
-                    col.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6";
-                    object.appendChild(col);
+                    for(var i=0;i<2;i++){
+                        col = document.createElement("div");
+                        col.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6";
+                        col.appendChild(manager.createPlaceholder());
+                        object.appendChild(col);
+                    }
                     break;
                 case "Container 3":
                     object = document.createElement("div");
                     object.className = "row";
-                    col = document.createElement("div");
-                    col.className = "col-xs-4 col-sm-4 col-md-4 col-lg-4";
-                    object.appendChild(col);
+                    for(var i=0;i<3;i++){
+                        col = document.createElement("div");
+                        col.className = "col-xs-4 col-sm-4 col-md-4 col-lg-4";
+                        col.appendChild(manager.createPlaceholder());
+                        object.appendChild(col);
+                    }
                     break;
                 case "Container 4":
                     object = document.createElement("div");
                     object.className = "row";
-                    col = document.createElement("div");
-                    col.className = "col-xs-3 col-sm-3 col-md-3 col-lg-3";
-                    object.appendChild(col);
+                    for(var i=0;i<4;i++){
+                        col = document.createElement("div");
+                        col.className = "col-xs-3 col-sm-3 col-md-3 col-lg-3";
+                        col.appendChild(manager.createPlaceholder());
+                        object.appendChild(col);
+                    }
                     break;
                 case "Container 6":
                     object = document.createElement("div");
                     object.className = "row";
-                    col = document.createElement("div");
-                    col.className = "col-xs-2 col-sm-2 col-md-2 col-lg-2";
-                    object.appendChild(col);
+                    for(var i=0;i<6;i++){
+                        col = document.createElement("div");
+                        col.className = "col-xs-2 col-sm-2 col-md-2 col-lg-2";
+                        col.appendChild(manager.createPlaceholder());
+                        object.appendChild(col);
+                    }
+                    break;
+                case "HyperLink":
+                    object = document.createElement("a");
+                    object.src = "#";
                     break;
                 case "Picture":
                     object = document.createElement("img");
