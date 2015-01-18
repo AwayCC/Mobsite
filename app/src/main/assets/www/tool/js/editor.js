@@ -32,7 +32,8 @@ editor.initProject=function(wid,hei){
         var isFullScreen=false;
         var galleryMember;
         var trapScroll;
-        
+        var propertyPanel=document.getElementById("propertyPanel");
+        var addPanel=document.getElementById("Add-panel");
         
         //////////  Controls of Panels //////////////
         var AddPanelShow=function ()
@@ -277,10 +278,12 @@ editor.initProject=function(wid,hei){
             $("#setting")   .on("touchstart ",function(startEvent){SettingPanelToggle();});
             $("#github")    .on("touchstart ",function(startEvent){githubPanelShow();});
             $("#gallery")    .on("touchstart click ",function(startEvent){galleryPanelToggle();});
+            //$("#redo")    .on("touchstart click ",function(startEvent){});
+            //$("#undo")    .on("touchstart click ",function(startEvent){});
             $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
             $("#properBackground").on("touchstart click",function(startEvent){colorSelector($("#properBackground"));});
             $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
-        $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
+            $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
         }
         var colorSelector=function (col)
         {
@@ -291,6 +294,9 @@ editor.initProject=function(wid,hei){
                 $("#colorPickerPanel").transition({opacity: 1 });
             }
         }
+        var undo=function()
+        {
+        }
         var sleep=function (milliseconds) 
         {
             var start = new Date().getTime();
@@ -298,6 +304,12 @@ editor.initProject=function(wid,hei){
             {
                 if ((new Date().getTime() - start) > milliseconds){break;}
             }
+        };
+        var postLoadProject=function()
+        {
+            manager.init();
+            setAddPanelDragLister();
+            Android.hideSplashView();
         };
         var addPanel_touchLongPress = false,
             addPanel_touchStill = false,
@@ -446,7 +458,7 @@ editor.initProject=function(wid,hei){
         $('#picker').farbtastic('#color');
         document.getElementById("projecttitle").innerHTML = Android.getProjectName();
         console.log(Android.getProjectPath());
-        $("#innercontent").first().load("index.html");
+        $("#innercontent").first().load("index.html", postLoadProject);
         return {
             shadowFade:ShadowFade,
             shadowCover:ShadowCover,
