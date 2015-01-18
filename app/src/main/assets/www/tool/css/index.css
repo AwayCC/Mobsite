@@ -192,6 +192,30 @@ output
     width: 90%;
     background-color: transparent;
 }
+.colorBtn
+{color: white;
+    width: 50%;
+    height: auto;
+    padding: 0px;
+    text-align: center;
+    border: 1px;
+    border-style: solid;
+    border-color: white;
+    padding-left: 0;
+    padding-right: 0;
+    display: table;
+    vertical-align: middle;
+    text-align: center;
+    height: 100%;
+}
+.colorBtn p
+{
+    display:table-cell;
+    align-content: center;
+    text-align: center;
+    padding: auto;
+    vertical-align: middle;
+}
 #galleria{
     opacity: 0; height:320px}
 #galleryPanel
@@ -742,7 +766,9 @@ a.image_container img {
     border-style: dotted;
     border-top:0px;
     border-color: #242525;
-    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:contain;
     position: relative;
     text-align: center;
     width:50%;

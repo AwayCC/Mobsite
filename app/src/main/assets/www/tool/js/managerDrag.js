@@ -36,7 +36,7 @@ manager.initDrag = function(){
 
          manager.managedStylesheet = managedStyle.sheet;
          manager.managedStylesheet.insertRule(".placeholderStyle{display:none;}", 0);
-         manager.managedStylesheet.insertRule(".slidePlaceholderStyle{display:none};",0);
+         manager.managedStylesheet.insertRule(".slidePlaceholderStyle{display:none;}",0);
 
          manager.slidePlaceholderStyle = manager.managedStylesheet.cssRules[0];
          manager.placeholderStyle = manager.managedStylesheet.cssRules[1];
@@ -193,8 +193,30 @@ manager.initDrag = function(){
          if(cursorX == undefined){
             return;
          }
+         // TODO: place hidden flag
+         var startPoint;
+         if(manager.selectedObject.parentNode)
+         {
+            for (u=0; u<manager.selectedObject.parentElement.childNodes.length; u++)
+            {                                               if(manager.selectedObject.parentElement.childNodes[u].dummy!=true&&manager.selectedObject!=manager.selectedObject.parentElement.childNodes[u])
+                    break;
+                if(u==manager.selectedObject.parentElement.childNodes.length)
+                    manager.selectedObject.parentElement.appendChild(manager.createPlaceholder());
+            }
+            startPoint=document.createElement("div");
+            startPoint.dummy=true;
+            manager.selectedObject.parentElement.insertBefore(startPoint,manager.selectedObject);
+         }
+            //moveElement(manager.selectedObject, manager.Cursor);
+            var moveact=
+             {
+                 type       :'move',
+                 target     :manager.selectedObject,
+                 destination:manager.Cursor,
+                 start      :startPoint
+             };
+            manager.pushAction(moveact);
          moveElement(manager.selectedObject, manager.Cursor);
-
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
          }

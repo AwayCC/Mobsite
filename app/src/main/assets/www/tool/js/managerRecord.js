@@ -20,8 +20,30 @@ manager.initRecord = function(){
          console.log(actionStack);
          console.log(currentPointer);
          console.log(maximumPointer);
+         switch(act.type){
+            case 'move':
+                 manager.moveElement(act.target,act.destination);
+                 break;
+            case 'delete':
+                 break;
+            case 'add':
+                 break;
+            case 'setting':
+                 break;
+         }
       };
       var reverseAction = function(act){
+         switch(act.type){
+            case 'move':
+                 manager.moveElement(act.target,act.start);
+                 break;
+            case 'delete':
+                 break;
+            case 'add':
+                 break;
+            case 'setting':
+                 break;
+         }
       };
       var undoAction = function(){
          if(currentPointer - 1 == maximumPointer ||
