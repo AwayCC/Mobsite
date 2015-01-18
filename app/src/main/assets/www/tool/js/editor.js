@@ -6,7 +6,8 @@ var Android = (Android) ? Android : {
    getProjectPath: function(){},
    openTextInputDialog: function(){},
    openBrowserDialog: function(){},
-   openPhotoDialog: function(){}
+   openPhotoDialog: function(){},
+   setRenderedShadowDataURL: function(){}
 };
 var editor={};
 editor.initProject=function(wid,hei){
