@@ -31,7 +31,6 @@ editor.initProject=function(wid,hei){
         var githubpanelshow=false;
         var isFullScreen=false;
         var galleryMember;
-        var trapScroll;
         var propertyPanel=document.getElementById("propertyPanel");
         var addPanel=document.getElementById("Add-panel");
         
@@ -187,9 +186,9 @@ editor.initProject=function(wid,hei){
             if(githubpanelshow) githubPanelHide();
             if(gallerypanelshow) galleryPanelHide();
         };
-        var showProperty=function()
+        var showProperty=function(tar)
         { 
-            var computedStyle = getComputedStyle(tar, null);
+            var computedStyle = getComputedStyle(tar);
             $("#propertyPanel").css("left","0");
             var c=document.getElementById("properTable");
             c.style.display="none";
@@ -206,7 +205,6 @@ editor.initProject=function(wid,hei){
             document.getElementById("properMargin").innerHTML="("+computedStyle.marginTop+','+computedStyle.marginBottom+','+computedStyle.marginLeft+','+computedStyle.marginRight+')';
             if(c.hasAttribute("style"))
                 c.removeAttribute("style");
-            $("#propertyPanel").css("position","absolute");
             propertyPanelShow(tar);
         };
         var galleryPanelToggle=function()
@@ -269,20 +267,20 @@ editor.initProject=function(wid,hei){
         };
         var EnvironmentInit=function ()
         {
-            $("#addbtn")    .on("touchstart click",function(startEvent){AddPanelToggle();});
+            $("#addbtn")    .on("touchstart ",function(startEvent){AddPanelToggle();});
             $("#editbtn")    .on("touchstart ",function(startEvent){ setContent() });
             $("#dissbtn")    .on("touchstart ",function(startEvent){propertyPanelHide();});
-            $("#test")      .on("touchstart click",function(startEvent){ShadowCover();});
-            $("#shadow")    .on("touchstart click",function(startEvent){ShadowFade();});
+            $("#test")      .on("touchstart ",function(startEvent){ShadowCover();});
+            $("#shadow")    .on("touchstart ",function(startEvent){ShadowFade();});
             $("#fullscreen").on("touchstart ",function(startEvent){FullScreenPreview();});
             $("#setting")   .on("touchstart ",function(startEvent){SettingPanelToggle();});
             $("#github")    .on("touchstart ",function(startEvent){githubPanelShow();});
-            $("#gallery")    .on("touchstart click ",function(startEvent){galleryPanelToggle();});
-            //$("#redo")    .on("touchstart click ",function(startEvent){});
+            $("#gallery")    .on("touchstart ",function(startEvent){galleryPanelToggle();});
+            $("#redo")    .on("touchstart  ",function(startEvent){manager.redoAction();});
             //$("#undo")    .on("touchstart click ",function(startEvent){});
-            $("#preview-control").on("touchstart click",function(startEvent){FullScreenCancel();});
-            $("#properBackground").on("touchstart click",function(startEvent){colorSelector($("#properBackground"));});
-            $("#properColor").on("touchstart click",function(startEvent){colorSelector($("#properColor"));});
+            $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
+            $("#properBackground").on("touchstart ",function(startEvent){colorSelector($("#properBackground"));});
+            $("#properColor").on("touchstart ",function(startEvent){colorSelector($("#properColor"));});
             $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
         }
         var colorSelector=function (col)
@@ -462,9 +460,11 @@ editor.initProject=function(wid,hei){
         return {
             shadowFade:ShadowFade,
             shadowCover:ShadowCover,
-            setAddPanelDragListner:setAddPanelDragLister
+            setAddPanelDragListner:setAddPanelDragLister,
+            showProperty:showProperty
         }
    })();
+    editor.showProperty=initObj.showProperty;
     editor.shadowFade=initObj.shadowFade;
     editor.setAddPanelDragListner=initObj.setAddPanelDragListner;
 }

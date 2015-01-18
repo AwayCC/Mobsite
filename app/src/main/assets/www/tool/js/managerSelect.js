@@ -106,7 +106,7 @@ manager.initSelect = function(){
          t = getParentSelectable(t, true);
          if(t){
             assignSelection(t);
-            showProperty(t);
+            editor.showProperty(t);
             renderSelectedObject();
          }else{
             deselect();
