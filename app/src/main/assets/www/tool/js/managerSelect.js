@@ -34,7 +34,12 @@ manager.initSelect = function(){
          if(node.selectable){
             return node;
          }
-         if(node.children.length == 0){
+
+         if(node.children){
+            if(node.children.length == 0){
+               return null;
+            }
+         }else{
             return null;
          }
          for(var i in node.children){

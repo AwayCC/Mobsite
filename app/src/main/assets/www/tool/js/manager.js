@@ -111,4 +111,22 @@ manager.init = function(){
    }
    setGestureListener(manager.config);
 };
-
+window.onkeypress = function(e){
+   if(e.keyCode < 105 || e.keyCode > 108){
+      return;
+   }
+   switch(e.keyCode){
+      case 105: //i
+         manager.config.on2FingerMoveUp();
+         break;
+      case 107: //k
+         manager.config.on2FingerMoveDown();
+         break;
+      case 106: //j
+         manager.config.on2FingerMoveLeft();
+         break;
+      case 108: //l
+         manager.config.on2FingerMoveRight();
+         break;
+   }
+};
