@@ -17,6 +17,7 @@ manager.initDrag = function(){
       var dragInterval = 500;
       var dragSetTimeout, dragSetInterval;
       var cursorX, cursorY;
+      var dragExternal;
       var scroll = function(){
          if(cursorY < 100 && window.scrollY > 10){
             window.scrollTo(window.scrollX, window.scrollY - 10);
@@ -62,6 +63,7 @@ manager.initDrag = function(){
             updateCursor(cursorX, cursorY);
          }
       };
+
       var showPlaceholder = function(){
          manager.placeholderStyle.style.display = "block";
          manager.slidePlaceholderStyle.style.display = "block";
@@ -148,6 +150,7 @@ manager.initDrag = function(){
             if(!isExternal){
                 return;
             }
+            dragExternal = isExternal;
             Android.startDrag();
             // Drag from clipboard or element repo
             manager.config.onDoubleTap();
@@ -191,6 +194,7 @@ manager.initDrag = function(){
          if(!isDragging){
             return;
          }
+
          clearInterval(dragSetInterval);
          isDragging = false;
          hidePlaceholder();
@@ -198,29 +202,10 @@ manager.initDrag = function(){
             return;
          }
          // TODO: place hidden flag
-         var startPoint;
-         if(manager.selectedObject.parentNode)
-         {
-            for (var u=0; u<manager.selectedObject.parentElement.childNodes.length; u++)
-            {                                               if(manager.selectedObject.parentElement.childNodes[u].dummy!=true&&manager.selectedObject!=manager.selectedObject.parentElement.childNodes[u])
-                    break;
-                if(u==manager.selectedObject.parentElement.childNodes.length)
-                    manager.selectedObject.parentElement.appendChild(manager.createPlaceholder());
-            }
-            startPoint=document.createElement("div");
-            startPoint.dummy=true;
-            manager.selectedObject.parentElement.insertBefore(startPoint,manager.selectedObject);
+         // TODO: pushAction !!!!
+         if(dragExternal){
+            manager.action.addElement(manager.selectedObject,manager.Cursor);
          }
-            //moveElement(manager.selectedObject, manager.Cursor);
-            var moveact=
-             {
-                 type       :'move',
-                 target     :manager.selectedObject,
-                 destination:manager.Cursor,
-                 start      :startPoint
-             };
-            manager.pushAction(moveact);
-         moveElement(manager.selectedObject, manager.Cursor);
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
          }

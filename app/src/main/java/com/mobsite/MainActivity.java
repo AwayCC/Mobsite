@@ -102,8 +102,6 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_activity);
 
-
-
         // show progress dilaog.
         pDialog = new ProgressDialog(MainActivity.this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -119,7 +117,9 @@ public class MainActivity extends Activity
         }
         Log.v(_logTag, projectName);
         //} else {
-
+        if(StartActivity.debugMode){
+            projectPath = "file:///android_asset/www";
+        }
         //}
         setViews();
     }
@@ -285,6 +285,7 @@ public class MainActivity extends Activity
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
+        Config.init(this);
         //cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.loadUrl("file:///android_asset/www/tool.html");
         cwv.addJavascriptInterface(this, "Android");
@@ -590,6 +591,15 @@ public class MainActivity extends Activity
     @JavascriptInterface
     public String getProjectsPathJSON() {
         JSONArray projects = new JSONArray();
+
+        if(StartActivity.debugMode){
+            Log.v("file debug", "getProjectsPathJSON *debug");
+            String assetPath = "www";
+            assetPathJSON(assetPath, projects);
+            Log.v("file debug", projects.toString());
+            return projects.toString();
+        }
+
         File projectStorage = new File(projectPath);
         Log.v("project Storage", projectStorage.getPath());
         ArrayDeque<File> paths = new ArrayDeque<File>();
@@ -621,6 +631,44 @@ public class MainActivity extends Activity
             paths.removeFirst();
         }
         return projects.toString();
+    }
+
+    private void assetPathJSON(String assetPath, JSONArray projects){
+        String[] list;
+        try{
+            list = getAssets().list(assetPath);
+            String fileName;
+            int length = assetPath.lastIndexOf("/");
+            if(length > -1) {
+                fileName = assetPath.substring(length+1);
+            } else {
+                fileName = assetPath;
+            }
+
+            Log.v("fileName", fileName);
+
+            if(list.length > 0){ // A folder
+                if(fileName.equals("tool"))
+                    return;
+                Log.v("file debug", assetPath+" is folder...");
+                for (String subPath : list){
+                    assetPathJSON(assetPath + "/" + subPath, projects);
+                }
+            }
+            else{ // A file.
+                if(fileName.equals("tool.html") || fileName.equals("index.html") || fileName.equals("cloud.html") ||
+                   fileName.equals("dummy.html") || fileName.equals("marker.png") || fileName.equals("mask.png") ||
+                   fileName.equals("wheel.png") || fileName.equals("cordova.js"))
+                    return;
+                Log.v("file debug", assetPath+" is file...");
+                try{
+                    JSONObject project = new JSONObject();
+                    project.put("path", "file:///android_asset/"+assetPath);
+                    projects.put(project);
+                    //String[] test = {"mosite", "rocks"};
+                }catch (JSONException e) { e.printStackTrace(); }
+            }
+        }catch (IOException e){ e.printStackTrace(); }
     }
 
     @JavascriptInterface
