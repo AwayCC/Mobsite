@@ -157,7 +157,7 @@ manager.initSelect = function(){
       var createDummy = function(){
          var c = document.createElement("hr");
          c.className = "dummy";
-         c.hiddenFlag = true;
+         c.dummy = true;
          return c;
       };
       var renderSelectedObject = function(obj){
