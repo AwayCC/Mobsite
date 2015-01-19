@@ -62,5 +62,4 @@ manager.initProperty = function(){
    })();
    manager.setProperty = initObj.setProperty;
    manager.getProperty = initObj.getProperty;
-   manager.setContent = initObj.setContent;
 };

@@ -9,94 +9,115 @@ if(!manager.config){
 manager.initRecord = function(){
    var initObj = (function(){
       var actionStack = [];
+      var actions = [];
       manager.config.maxActionStackLength = 10;
       var maxActionStackLength = manager.config.maxActionStackLength;
-      var currentPointer = maxActionStackLength;
-      var maximumPointer = currentPointer;
-      var validateAction = function(act){
-         return true;
-      };
-      var execAction = function(act){
-         console.log(actionStack);
-         console.log(currentPointer);
-         console.log(maximumPointer);
-         switch(act.type){
-            case 'move':
-                 manager.moveElement(act.target,act.destination);
-                 break;
-            case 'delete':
-                 break;
-            case 'add':
-                 break;
-            case 'setting':
-                 break;
+      var currentPointer = 0, maxPointer = 0, minPointer = 0;
+      var registerAction = function(act){
+         if(!act.type || !act.execFunction || !act.undoFunction || !act.redoFunction){
+            console.log("Register action failed.");
+            return;
          }
+         actions.push(act);
       };
-      var reverseAction = function(act){
-         switch(act.type){
-            case 'move':
-                 manager.moveElement(act.target,act.start);
-                 break;
-            case 'delete':
-                 break;
-            case 'add':
-                 break;
-            case 'setting':
-                 break;
+      var exec = function(act){
+         for(var i in actions){
+            if(actions[i].type == act.type){
+               actions[i].execFunction();
+               return;
+            }
          }
+         console.log("wrong type");
+      };
+      var redo = function(act){
+         for(var i in actions){
+            if(actions[i].type == act.type){
+               actions[i].redoFunction();
+               return;
+            }
+         }
+         console.log("wrong type");
+      };
+      var undo = function(act){
+         for(var i in actions){
+            if(actions[i].type == act.type){
+               actions[i].undoFunction();
+               return;
+            }
+         }
+         console.log("wrong type");
       };
       var undoAction = function(){
-         if(currentPointer - 1 == maximumPointer ||
-            (currentPointer == 0 && maximumPointer == maxActionStackLength)){
-            console.log("undoAction: Reach undo maximum");
+         if(currentPointer == minPointer){
+            console.log("Reach undo maximum");
             return;
          }
-         var c = currentPointer;
-         currentPointer = (currentPointer == 0) ? maxActionStackLength : currentPointer - 1;
-         reverseAction(actionStack[c]);
+         actionStack[currentPointer].undoFunction();
+         currentPointer = (currentPointer + maxActionStackLength - 1) % maxActionStackLength;
       };
       var redoAction = function(){
-         if(currentPointer == maximumPointer){
-            console.log("redoAction: Reach redo maximum");
+         if(currentPointer == maxPointer){
+            console.log("Reach redo maximum");
             return;
          }
-         currentPointer = (maxActionStackLength) ? 0 : currentPointer + 1;
-         execAction(actionStack[currentPointer]);
+         currentPointer = (++currentPointer) % maxActionStackLength;
+         actionStack[currentPointer].redoFunction();
       };
       var pushAction = function(act){
-         if(!validateAction(act)){
-            console.log("Action is of wrong definition");
-            return;
+         currentPointer = (++currentPointer) % maxActionStackLength;
+         if(currentPointer == minPointer){
+            minPointer++;
          }
-         if(currentPointer == maxActionStackLength){
-            currentPointer = 0;
-         }
+         maxPointer = currentPointer;
          actionStack[currentPointer] = act;
-         maximumPointer = currentPointer;
-         execAction(act);
+         actionStack[currentPointer].execFunction();
       };
-      var reInitActionStack = function(num){
+      var resizeStack = function(num){
          actionStack = [];
          if(!num){
             maxActionStackLength = manager.config.maxActionStackLength;
          }else{
-            maxActionStackLength = num;
+            manager.maxActionStackLength = maxActionStackLength = num;
          }
-         currentPointer = maxActionStackLength;
-         maximumPointer = currentPointer;
+         actionStack.length = maxActionStackLength;
+
+         currentPointer = 0;
+         maxPointer = 0;
+         minPointer = 0;
       };
+
       return {
          undoAction       : undoAction,
          redoAction       : redoAction,
          pushAction       : pushAction,
-         reInitActionStack: reInitActionStack
+         resizeActionStack: resizeStack,
       };
-   })
-   ();
+   })();
 // NOTICE: manager.config.maxActionStackLength is defined above.
+
    manager.undoAction = initObj.undoAction;
    manager.redoAction = initObj.redoAction;
    manager.pushAction = initObj.pushAction;
-   manager.reInitActionStack = initObj.reInitActionStack;
-}
-;
+   manager.resizeActionStack = initObj.resizeActionStack;
+   manager.resizeActionStack(10);
+
+};
+manager.action = {};
+manager.action.setProperty = function(obj, attr, oldValue, newValue){
+   var myAttr = attr, myOldValue = oldValue, myNewValue = newValue;
+   var exec = function(){
+      manager.setProperty(myAttr, myNewValue, myOldValue);
+   };
+   var undo = function(){
+      manager.setProperty(myAttr, myOldValue, myNewValue);
+   };
+   manager.pushAction(
+      {
+      type        : "setProperty",
+      execFunction: exec,
+      redoFunction: exec,
+      undoFunction: undo
+   }
+   );
+};
+

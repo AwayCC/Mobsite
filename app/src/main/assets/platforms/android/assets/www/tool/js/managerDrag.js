@@ -25,6 +25,23 @@ manager.initDrag = function(){
 
          }
       };
+      // Add CSS rule
+      (function(){
+         var managedStyle = document.createElement("style");
+         // WebKit hack :(
+         managedStyle.appendChild(document.createTextNode(""));
+         document.head.appendChild(managedStyle);
+
+         managedStyle.sheet = (managedStyle.sheet) ? managedStyle.sheet : {};
+
+         manager.managedStylesheet = managedStyle.sheet;
+         manager.managedStylesheet.insertRule(".placeholderStyle{display:none;}", 0);
+         manager.managedStylesheet.insertRule(".slidePlaceholderStyle{display:none;}",0);
+
+         manager.slidePlaceholderStyle = manager.managedStylesheet.cssRules[0];
+         manager.placeholderStyle = manager.managedStylesheet.cssRules[1];
+
+      })();
       var moveElement = function(o, ref){
          var c = ref;
          while(c.parentNode){
@@ -46,10 +63,12 @@ manager.initDrag = function(){
          }
       };
       var showPlaceholder = function(){
-         //manager.placeholderStyle.style.display = "block";
+         manager.placeholderStyle.style.display = "block";
+         manager.slidePlaceholderStyle.style.display = "block";
       };
       var hidePlaceholder = function(){
-         //manager.placeholderStyle.style.display = "none";
+         manager.placeholderStyle.style.display = "none";
+         manager.slidePlaceholderStyle.style.display = "none";
       };
       var updateCursor = function(t){
          if(!t.selectable){
@@ -113,7 +132,7 @@ manager.initDrag = function(){
          }
       };
 
-      var dragStart = function(x, y, o){
+      var dragStart = function(x, y, o, isExternal){
          if(o == manager.selectionMask){
             // Drag from inner content
             Android.startDrag();
@@ -126,6 +145,10 @@ manager.initDrag = function(){
             }
             o = manager.selectedObject;
          }else{
+            if(!isExternal){
+                return;
+            }
+            Android.startDrag();
             // Drag from clipboard or element repo
             manager.config.onDoubleTap();
             manager.selectedObject = o;
@@ -175,14 +198,29 @@ manager.initDrag = function(){
             return;
          }
          // TODO: place hidden flag
-         if(manager.selectedObject.parentNode){
-            if(manager.selectedObject.parentNode.childNodes.length == 1){
-               manager.selectedObject.parentNode.appendChild(manager.createPlaceholder());
+         var startPoint;
+         if(manager.selectedObject.parentNode)
+         {
+            for (var u=0; u<manager.selectedObject.parentElement.childNodes.length; u++)
+            {                                               if(manager.selectedObject.parentElement.childNodes[u].dummy!=true&&manager.selectedObject!=manager.selectedObject.parentElement.childNodes[u])
+                    break;
+                if(u==manager.selectedObject.parentElement.childNodes.length)
+                    manager.selectedObject.parentElement.appendChild(manager.createPlaceholder());
             }
+            startPoint=document.createElement("div");
+            startPoint.dummy=true;
+            manager.selectedObject.parentElement.insertBefore(startPoint,manager.selectedObject);
          }
+            //moveElement(manager.selectedObject, manager.Cursor);
+            var moveact=
+             {
+                 type       :'move',
+                 target     :manager.selectedObject,
+                 destination:manager.Cursor,
+                 start      :startPoint
+             };
+            manager.pushAction(moveact);
          moveElement(manager.selectedObject, manager.Cursor);
-
-
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
          }
@@ -215,6 +253,7 @@ manager.initDrag = function(){
 
    // NOTICE: manager.managedStyle is also defined in this file
    // NOTICE: manager.placeholderStyle is also defined in this file
+   manager.moveElement = initObj.moveElement;
    manager.config.onLongPressStart = initObj.onLongPressStart;
    manager.config.onLongPressMove = initObj.onLongPressMove;
    manager.config.onLongPressEnd = initObj.onLongPressEnd;

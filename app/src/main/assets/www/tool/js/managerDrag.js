@@ -201,7 +201,7 @@ manager.initDrag = function(){
          var startPoint;
          if(manager.selectedObject.parentNode)
          {
-            for (u=0; u<manager.selectedObject.parentElement.childNodes.length; u++)
+            for (var u=0; u<manager.selectedObject.parentElement.childNodes.length; u++)
             {                                               if(manager.selectedObject.parentElement.childNodes[u].dummy!=true&&manager.selectedObject!=manager.selectedObject.parentElement.childNodes[u])
                     break;
                 if(u==manager.selectedObject.parentElement.childNodes.length)
@@ -253,6 +253,7 @@ manager.initDrag = function(){
 
    // NOTICE: manager.managedStyle is also defined in this file
    // NOTICE: manager.placeholderStyle is also defined in this file
+   manager.moveElement = initObj.moveElement;
    manager.config.onLongPressStart = initObj.onLongPressStart;
    manager.config.onLongPressMove = initObj.onLongPressMove;
    manager.config.onLongPressEnd = initObj.onLongPressEnd;
