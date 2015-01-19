@@ -278,9 +278,28 @@ editor.initProject=function(wid,hei){
             $("#redo")    .on("touchstart  ",function(startEvent){manager.redoAction();});
             //$("#undo")    .on("touchstart click ",function(startEvent){});
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
-            $("#properBackground").on("touchstart ",function(startEvent){colorSelector($("#properBackground"));});
-            $("#properColor").on("touchstart ",function(startEvent){colorSelector($("#properColor"));});
-            $("#colorCheck").on("touchstart",function(startEvent){var setact=
+            $("#properBackground").on("touchstart ",function(startEvent){
+                colorSelector(getComputedStyle(manager.selectedObject,null).backgroundColor);
+                f.type=1;
+                f.linkTo(manager.selectedObject);
+                f.oldcolor=getComputedStyle(manager.selectedObject,null).backgroundColor;
+                manager.selectionMask.className=("maskOnProperty");
+                alert(f.oldcolor);
+            });
+            $("#properColor").on("touchstart ",function(startEvent){
+                colorSelector(getComputedStyle(manager.selectedObject,null).color);
+                f.linkTo(manager.selectedObject.color);
+                f.type=2;
+                f.linkTo(manager.selectedObject);
+                f.oldcolor=getComputedStyle(manager.selectedObject,null).color;
+                manager.selectionMask.className=("maskOnProperty");
+                alert(f.oldcolor);
+                
+            });
+            $("#colorCheck").on("touchstart",function(startEvent){
+                f.linkTo($('#color'));
+                manager.selectedObject.style.backgroundColor=f.oldcolor;
+                var setact=
                 {
                     style   :"setting",
                     target  :manager.selectedObject,
@@ -288,10 +307,18 @@ editor.initProject=function(wid,hei){
                     orig    :getComputedStyle(manager.selectedObject,null).backgroundColor,
                     value   :f.color
                 };
-                //console.log("original-color wa"+setact.orig+"des");
-                //console.log(f.color);
+                if(f.type==2) setact.attr="color";
+                //manager.pushAction(setact);
+                colorSelectorHide();
+                manager.selectionMask.className=("selectionMask");
             });
-            $('#')
+            $('#colorCancel').on("touchstart",function(startEvent){
+                f.linkTo($('#color'));
+                if(f.type==1)manager.selectedObject.style.backgroundColor=f.oldcolor;
+                if(f.typp==2)manager.selectedObject.style.color=f.oldcolor;
+                colorSelectorHide();
+                manager.selectionMask.className=("selectionMask");
+            })
             $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
         }
         var colorSelector=function (col)
@@ -301,7 +328,17 @@ editor.initProject=function(wid,hei){
                 onanimate=true;
                 $("#previouscolor").css("background-color",col.innerHTML);
                 $("#colorPickerPanel").css("left","20%");
-                $("#colorPickerPanel").transition({opacity: 1 });
+                $("#colorPickerPanel").transition({opacity: 1 },function(){onanimate=false;});
+            }
+        }
+        var colorSelectorHide=function ()
+        {
+            if(!onanimate)
+            {
+                onanimate=true;
+                $("#colorPickerPanel").transition({opacity: 1 },function(){onanimate=false;$("#colorPickerPanel").css("left","-100%");});
+                
+                
             }
         }
         var undo=function()
