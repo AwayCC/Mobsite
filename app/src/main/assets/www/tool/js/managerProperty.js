@@ -20,6 +20,7 @@ manager.initProperty = function(){
                obj.style.fontSize = value;
                break;
             case "src":
+               console.log("set src : "+value);
                obj.setAttribute("src", value);
                break;
             case "font":

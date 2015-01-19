@@ -82,7 +82,9 @@ public class StartActivity extends Activity {
     private Button newListBtn, openListOpenBtn, openListDeleteBtn;
     private ProgressDialog pDialog;
 
-    public static boolean debugMode = true;
+    public static boolean debugMode = false;
+    private static final String _templateFolderPath = "template";
+    private static final String _toolFolderPath = "uiFrame";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,15 +256,12 @@ public class StartActivity extends Activity {
             oldProjectsList.add(addProjectName("Open", s));
         }
 
-        if(!debugMode) {
-            templateList.add(addProjectName("New", "template_1"));
-            templateList.add(addProjectName("New", "template_2"));
-            templateList.add(addProjectName("New", "template_3"));
-            templateList.add(addProjectName("New", "default"));
+        if(debugMode) {
+            templateList.add(addProjectName("New", "DEBUG"));
         } else {
             String[] list;
             try{
-                list = getAssets().list("init");
+                list = getAssets().list(_templateFolderPath);
                 for(String tempName : list)
                     templateList.add(addProjectName("New", tempName));
             } catch (IOException e){ e.printStackTrace(); }
@@ -544,7 +543,7 @@ public class StartActivity extends Activity {
         else {
             // initialize the project with files.
             newProject.mkdirs();
-            String assetPath = "init/"+template;
+            String assetPath = _templateFolderPath+"/"+template;
             String[] list;
             try{
                 // copy template files
@@ -554,7 +553,7 @@ public class StartActivity extends Activity {
                 }
 
                 // copy mobsite tool files
-                assetPath = "tool";
+                assetPath = _toolFolderPath;
                 list = getAssets().list(assetPath);
                 for (String subPath : list){
                     copyRecursively(assetPath+"/"+subPath, newProject);

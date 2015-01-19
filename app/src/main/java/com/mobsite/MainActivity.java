@@ -235,7 +235,7 @@ public class MainActivity extends Activity
             }
 
             try{
-                File internalStorage = new File(projectPath, "img");
+                File internalStorage = new File(projectPath, "image");
                 if (!internalStorage.exists())
                     internalStorage.mkdirs();
 
@@ -259,10 +259,17 @@ public class MainActivity extends Activity
                 fout.close();
 
                 Log.v("FIle size", "File is this big : "+savedImage.length());
-                String js = "javascript:";
-                js += "console.log(\"from set content "+savedImage.getPath()+"\");";
-                js += "manager.action.setProperty(manager.selectedObject, \"src\", manager.selectedObject.src, \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
-                setWebViewURL(js);
+                final String url = savedImage.getPath().substring(projectPath.length()+1);
+                cwv.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        String js = "javascript:";
+                        js += "console.log(\"from set content "+url+"\");";
+                        js += "manager.action.setProperty(manager.selectedObject, \"src\", manager.selectedObject.src, \""+url+"\");";
+                        setWebViewURL(js);
+                    }
+                }, 3000);
+
             } catch (IOException e){ e.printStackTrace(); }
         }// end
 
@@ -291,8 +298,10 @@ public class MainActivity extends Activity
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
-        //cwv.loadUrl("file://"+projectPath+"/tool.html");
-        cwv.loadUrl("file:///android_asset/www/tool.html");
+        if(StartActivity.debugMode)
+            cwv.loadUrl("file:///android_asset/www/tool.html");
+        else
+            cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures();
     }
@@ -640,7 +649,7 @@ public class MainActivity extends Activity
                     paths.addLast(file);
 
             } else {
-                if(!f.getName().equals("tool.html")){
+                if(!f.getName().equals("tool.html") && !f.getName().equals("index.html") ){
                     try{
                         //String fileName = f.getPath().substring(projectPath.length()+1);
                         String fileName = f.getPath();

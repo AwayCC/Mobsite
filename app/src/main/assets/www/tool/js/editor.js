@@ -74,6 +74,8 @@ editor.initProject = function(wid, hei){
          }
       };
       var propertyPanelShow = function(tar){
+         if(!isPropertyShown)
+            return;
          if(!onanimate){
             properTemp=manager.selectedObject;
             var rect = tar.getBoundingClientRect();
@@ -327,15 +329,21 @@ editor.initProject = function(wid, hei){
       var deselect = function(){
          manager.deselect();
       };
+      var isPropertyShown = true;
       var EnvironmentInit = function(){
          $("#addbtn").on("touchstart ", function(startEvent){
             AddPanelToggle();
          });
          $("#editbtn").on("touchstart ", function(startEvent){
+            isPropertyShown = !isPropertyShown;
 
          });
          $("#dissbtn").on("touchstart ", function(startEvent){
             propertyPanelHide();
+         });
+         $("#copybtn").on("touchstart ", function(startEvent){
+            console.log("my beautiful func at "+window.location.pathname);
+             document.getElementById("slide2").children[0].children[0].src = "./image/img1.jpg";
          });
          $("#test").on("touchstart ", function(startEvent){
             ShadowCover();
