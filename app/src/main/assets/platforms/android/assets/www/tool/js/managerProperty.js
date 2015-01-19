@@ -49,7 +49,7 @@ manager.initProperty = function(){
             default :
                break;
          }
-         manager.renderSelectedObject();
+         manager.renderSelectedObject(obj);
       };
       var getProperty = function(attr, o){
          var obj = (o) ? o : ((manager.selectedObject) ? manager.selectedObject : undefined);
@@ -62,5 +62,4 @@ manager.initProperty = function(){
    })();
    manager.setProperty = initObj.setProperty;
    manager.getProperty = initObj.getProperty;
-   manager.setContent = initObj.setContent;
 };

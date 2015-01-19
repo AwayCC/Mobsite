@@ -11,6 +11,9 @@ body {
 .column {
 
 }
+.dummy {
+    display: none;
+}
 .slide {
     margin: 10px 0;
 }

@@ -132,46 +132,53 @@ manager.initSelect = function(){
          var g = getNextSelectable(manager.selectedObject);
          if(g)assignSelection(g);
       };
+      var createDummy = function(){
+         var c = document.createElement("hr");
+         c.className = "dummy";
+         c.hiddenFlag = true;
+         return c;
+      };
       var renderSelectedObject = function(obj){
-          html2canvas(obj, {
-              onrendered: function(canvas) {
-                  var h = obj.getBoundingClientRect().height;
-                  var w = obj.getBoundingClientRect().width;
-                  var myCanvas = document.createElement('canvas');
-                  var data = canvas.toDataURL();
-                  var ctx = myCanvas.getContext('2d');
-                  var img = new Image();
-                  img.onload = function() {
-                      myCanvas.width = img.width;
-                      myCanvas.height = img.height;
-                      myCanvas.style.margin = 0;
-                      myCanvas.style.padding = 0;
-                      ctx.drawImage(img, 0, 0, w, h);
-                      data = myCanvas.toDataURL();
-                      Android.setRenderedShadowDataURL(data, w, h);
-                  }
+         html2canvas(obj, {
+            onrendered: function(canvas){
+               var h = obj.getBoundingClientRect().height;
+               var w = obj.getBoundingClientRect().width;
+               var myCanvas = document.createElement('canvas');
+               var data = canvas.toDataURL();
+               var ctx = myCanvas.getContext('2d');
+               var img = new Image();
+               img.onload = function(){
+                  myCanvas.width = img.width;
+                  myCanvas.height = img.height;
+                  myCanvas.style.margin = 0;
+                  myCanvas.style.padding = 0;
+                  ctx.drawImage(img, 0, 0, w, h);
+                  data = myCanvas.toDataURL();
+                  Android.setRenderedShadowDataURL(data, w, h);
+               };
 
-                  if(manager.selectedObject.tagName == "IMG"){
-                      img.src = obj.src.substring(26);
-                      console.log("src = "+img.src);
-                  }
-                  else
-                      img.src = data;
-              }
-          });
+               if(manager.selectedObject.tagName == "IMG"){
+                  img.src = obj.src.substring(26);
+                  console.log("src = " + img.src);
+               }
+               else
+                  img.src = data;
+            }
+         });
 
       };
       return {
-         selectionMask      : selectionMask,
-         onSingleTap        : select,
-         onDoubleTap        : deselect,
-         assignSelection    : assignSelection,
-         on2FingerMoveDown  : swipeDown,
-         on2FingerMoveLeft  : swipeLeft,
-         on2FingerMoveUp    : swipeUp,
-         on2FingerMoveRight : swipeRight,
-         renderSelectedObject : renderSelectedObject,
-         getParentSelectable: getParentSelectable
+         selectionMask       : selectionMask,
+         onSingleTap         : select,
+         onDoubleTap         : deselect,
+         assignSelection     : assignSelection,
+         on2FingerMoveDown   : swipeDown,
+         on2FingerMoveLeft   : swipeLeft,
+         on2FingerMoveUp     : swipeUp,
+         on2FingerMoveRight  : swipeRight,
+         renderSelectedObject: renderSelectedObject,
+         getParentSelectable : getParentSelectable,
+         createDummy         : createDummy
       }
    })();
    manager.selectedObjectRect = undefined;
@@ -180,6 +187,7 @@ manager.initSelect = function(){
    manager.getParentSelectable = initObj.getParentSelectable;
    manager.assignSelection = initObj.assignSelection;
    manager.renderSelectedObject = initObj.renderSelectedObject;
+   manager.createDummy = initObj.createDummy;
    manager.config.onSingleTap = initObj.onSingleTap;
    manager.config.onDoubleTap = initObj.onDoubleTap;
    manager.config.on2FingerMoveDown = initObj.on2FingerMoveDown;
