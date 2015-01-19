@@ -44,17 +44,17 @@ manager.preLoad = function(){
    var elements = manager.config.listener.getElementsByTagName("*");
    manager.createSlidePlaceholder = function(){
       var c = document.createElement("div");
-      c.appendChild(document.createElement("br"));
+      //c.appendChild(document.createElement("br"));
       c.slidePlaceholder = true;
       c.className = "slidePlaceHolder";
-      c.setAttribute("data-slidePlaceholder","true");
+      c.setAttribute("data-slidePlaceholder", "true");
       return c;
    };
    manager.createPlaceholder = function(){
       var c = document.createElement("div");
       //c.appendChild(document.createElement("br"));
       c.placeholder = true;
-      c.setAttribute("data-placeholder","true");
+      c.setAttribute("data-placeholder", "true");
       c.className = "placeholder";
       c.selectable = true;
       return c;
@@ -111,4 +111,22 @@ manager.init = function(){
    }
    setGestureListener(manager.config);
 };
-
+window.onkeypress = function(e){
+   if(e.keyCode < 105 || e.keyCode > 108){
+      return;
+   }
+   switch(e.keyCode){
+      case 105: //i
+         manager.config.on2FingerMoveUp();
+         break;
+      case 107: //k
+         manager.config.on2FingerMoveDown();
+         break;
+      case 106: //j
+         manager.config.on2FingerMoveLeft();
+         break;
+      case 108: //l
+         manager.config.on2FingerMoveRight();
+         break;
+   }
+};

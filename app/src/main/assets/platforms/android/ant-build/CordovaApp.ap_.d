@@ -132,9 +132,11 @@
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/pastee.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/pencil-write-512.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/picture.png \
+/Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/redo.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/setting.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/text.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/title.png \
+/Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/undo.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/img/icons/wrench.png \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/bootstrap.min.js \
 /Users/Ray/Desktop/Mobsite/app/src/main/assets/platforms/android/assets/www/tool/js/draggable.min.js \

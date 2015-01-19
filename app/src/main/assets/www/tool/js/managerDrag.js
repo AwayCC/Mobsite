@@ -36,7 +36,7 @@ manager.initDrag = function(){
          managedStyle.sheet = (managedStyle.sheet) ? managedStyle.sheet : {};
 
          manager.managedStylesheet = managedStyle.sheet;
-         manager.managedStylesheet.insertRule(".placeholder{display:none;", 0);
+         manager.managedStylesheet.insertRule(".placeholder{display:none;}", 0);
          manager.managedStylesheet.insertRule(".slidePlaceholder{display:none;}", 0);
 
          manager.slidePlaceholderStyle = manager.managedStylesheet.cssRules[0];
@@ -201,8 +201,6 @@ manager.initDrag = function(){
          if(cursorX == undefined){
             return;
          }
-         // TODO: place hidden flag
-         // TODO: pushAction !!!!
          if(dragExternal){
             manager.action.addElement(manager.selectedObject, manager.Cursor);
          }else{

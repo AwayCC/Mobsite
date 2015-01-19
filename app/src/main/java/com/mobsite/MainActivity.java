@@ -358,6 +358,26 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
+    public void showProgressDialog(String title, String msg) {
+        pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setTitle(title);
+        pDialog.setMessage(msg);
+        pDialog.setCanceledOnTouchOutside(false);
+        pDialog.show();
+    }
+
+    @JavascriptInterface
+    public void showPDialogMsg(final String msg) {
+        pDialog.setMessage(msg);
+    }
+
+    @JavascriptInterface
+    public void dismissPDialog() {
+        pDialog.dismiss();
+    }
+
+    @JavascriptInterface
     public void hideSplashView() { pDialog.dismiss(); }
 
     @JavascriptInterface
@@ -577,10 +597,7 @@ public class MainActivity extends Activity
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                String js = "javascript:";
-                                js += "console.log(\"from set Url source "+browser.getUrl()+"\");";
-                                js += "manager.action.setProperty(manager.selectedObject, \"link\", manager.selectedObject.innerHTML, \""+browser.getUrl()+"\");";
-                                setWebViewURL(js);
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

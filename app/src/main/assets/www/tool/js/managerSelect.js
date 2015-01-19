@@ -24,20 +24,45 @@ manager.initSelect = function(){
          }
          do{
             node = node.parentNode;
-            if(!node || node.id == "bd"){
+            if(!node || node == manager){
                return undefined;
             }
          }while(!node.selectable);
          return node;
+      };
+      var dfs = function(node){
+         if(node.selectable){
+            return node;
+         }
+
+         if(node.children){
+            if(node.children.length == 0){
+               return null;
+            }
+         }else{
+            return null;
+         }
+         for(var i in node.children){
+            if(node.selectable){
+               return node;
+            }
+            var x = dfs(node.children[i]);
+            if(x){
+               return x;
+            }
+         }
       };
       var getFirstChildSelectable = function(node){
          if(!node){
             console.error("getFirstChildSelectable: node is null");
             return undefined;
          }
-         return node.children[0];
-
-
+         for(var i in node.children){
+            var x = dfs(node.children[i]);
+            if(x){
+               return x;
+            }
+         }
       };
       var getPreviousSelectable = function(node){
          if(!node){
@@ -52,7 +77,7 @@ manager.initSelect = function(){
             }
             return node.previousElementSibling;
          }
-         console.warn("getPreviousSelectable: no previous selectable");
+         console.log("getPreviousSelectable: no previous selectable");
          return undefined;
       };
       var getNextSelectable = function(node){
@@ -67,7 +92,7 @@ manager.initSelect = function(){
             }
             return node.nextElementSibling;
          }
-         console.warn("getNextSelectable: no next selectable");
+         console.log("getNextSelectable: no next selectable");
          return undefined;
       };
 
@@ -137,7 +162,7 @@ manager.initSelect = function(){
       var createDummy = function(){
          var c = document.createElement("hr");
          c.className = "dummy";
-         c.hiddenFlag = true;
+         c.dummy = true;
          return c;
       };
       var renderSelectedObject = function(obj){
@@ -183,7 +208,8 @@ manager.initSelect = function(){
          getParentSelectable : getParentSelectable,
          createDummy         : createDummy
       }
-   })();
+   })
+   ();
    manager.selectedObjectRect = undefined;
    manager.selectedObject = undefined;
    manager.selectionMask = initObj.selectionMask;
@@ -197,4 +223,5 @@ manager.initSelect = function(){
    manager.config.on2FingerMoveUp = initObj.on2FingerMoveUp;
    manager.config.on2FingerMoveLeft = initObj.on2FingerMoveLeft;
    manager.config.on2FingerMoveRight = initObj.on2FingerMoveRight;
-};
+}
+;
