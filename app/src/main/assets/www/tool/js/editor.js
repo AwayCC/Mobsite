@@ -309,6 +309,8 @@ editor.initProject = function(wid, hei){
       var FullScreenPreview = function(){
          isFullScreen = true;
          ShadowCover();
+         var x = document.getElementById("preview-panel");
+         x.innerHTML = document.getElementById("innercontent").innerHTML;
          $('#preview-panel').first().load('index.html');
          $('#preview-panel').css('top', '0');
          setTimeout("$('#preview-panel').transition({ opacity: 1 });", 500);

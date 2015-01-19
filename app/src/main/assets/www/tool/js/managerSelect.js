@@ -118,9 +118,9 @@ manager.initSelect = function(){
 
       };
       var deselect = function(){
+         editor.propertyPanelHide();
          manager.selectedObject = undefined;
          selectionMask.style.display = "none";
-         editor.propertyPanelHide();
          Android.deselect();
       };
       var select = function(x, y, t){

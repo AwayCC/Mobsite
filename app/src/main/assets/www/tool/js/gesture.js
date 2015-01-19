@@ -1,8 +1,11 @@
 // gestureListener
 var Android = (Android) ? Android : {
-   startDrag: function(){},
-   setSelectedHTML: function(s){},
-   hideSplashView: function(){}
+   startDrag      : function(){
+   },
+   setSelectedHTML: function(s){
+   },
+   hideSplashView : function(){
+   }
 };
 function setGestureListener(responses){
 
@@ -37,14 +40,15 @@ function setGestureListener(responses){
    var touchTarget;
 
    var onTouchStart = function(event){
-      if(touch_longPress)
+      if(touch_longPress){
          return;
+      }
       if(event.touches.length > 2)
          return;
       touchTarget = event.target;
       if(touch_quickDown){
          touch_doubleTap = true;
-         responses.onDoubleTap(event.touches.item(0).clientX, event.touches.item(0).clientY,touchTarget);
+         responses.onDoubleTap(event.touches.item(0).clientX, event.touches.item(0).clientY, touchTarget);
          //myLog("double tap.");
       }else{
          // modify gesture flags.
@@ -76,7 +80,7 @@ function setGestureListener(responses){
 
       if(touch_longPress){
          event.preventDefault();
-         responses.onLongPressMove(event.touches.item(0).clientX, event.touches.item(0).clientY,touchTarget);
+         responses.onLongPressMove(event.touches.item(0).clientX, event.touches.item(0).clientY, touchTarget);
          ////myLog("onLongPressMove")
       }else{
          // handles "2 finger scroll"
@@ -86,24 +90,24 @@ function setGestureListener(responses){
             if(secondTouch == null)
                return;
 
-            var delta_x1 = touch.pageX - touch_x;
-            var delta_y1 = touch.pageY - touch_y;
-            var delta_x2 = secondTouch.pageX - touch_x2;
-            var delta_y2 = secondTouch.pageY - touch_y2;
-            var innerProduct = delta_x1*delta_x2 + delta_y1*delta_y2;
-            var distance1 = Math.sqrt(delta_x1*delta_x1 + delta_y1*delta_y1);
-            var distance2 = Math.sqrt(delta_x2*delta_x2 + delta_y2*delta_y2);
+            var delta_x1 = touch.clientX - touch_x;
+            var delta_y1 = touch.clientY - touch_y;
+            var delta_x2 = secondTouch.clientX - touch_x2;
+            var delta_y2 = secondTouch.clientY - touch_y2;
+            var innerProduct = delta_x1 * delta_x2 + delta_y1 * delta_y2;
+            var distance1 = Math.sqrt(delta_x1 * delta_x1 + delta_y1 * delta_y1);
+            var distance2 = Math.sqrt(delta_x2 * delta_x2 + delta_y2 * delta_y2);
 
             if(innerProduct == 0)
                return;
 
             //console.log("inner product = "+innerProduct);
 
-            if(innerProduct > 50 && !touch_pinch) { // swipe
+            if(innerProduct > 50 && !touch_pinch){ // swipe
                //console.log("swipe");
-               if( Math.abs(delta_x1) > Math.abs(delta_y1) ){
-                  if( (delta_x1) > 0){
-                     if(touch_2fingerUpCount>0 || touch_2fingerDownCount>0 || touch_2fingerLeftCount>0)
+               if(Math.abs(delta_x1) > Math.abs(delta_y1)){
+                  if((delta_x1) > 0){
+                     if(touch_2fingerUpCount > 0 || touch_2fingerDownCount > 0 || touch_2fingerLeftCount > 0)
                         myLog("change direction");
                      touch_2fingerRightCount++;
                      touch_2fingerUpCount = touch_2fingerDownCount = touch_2fingerLeftCount = 0;
@@ -112,8 +116,8 @@ function setGestureListener(responses){
                         responses.on2FingerMoveRight();
                         touch_2FingerMoved = true;
                      }
-                  } else {
-                     if(touch_2fingerUpCount>0 || touch_2fingerDownCount>0 || touch_2fingerRightCount>0)
+                  }else{
+                     if(touch_2fingerUpCount > 0 || touch_2fingerDownCount > 0 || touch_2fingerRightCount > 0)
                         myLog("change direction");
                      touch_2fingerLeftCount++;
                      touch_2fingerUpCount = touch_2fingerDownCount = touch_2fingerRightCount = 0;
@@ -123,9 +127,9 @@ function setGestureListener(responses){
                         touch_2FingerMoved = true;
                      }
                   }
-               } else {
-                  if( (delta_y1) > 0){
-                     if(touch_2fingerUpCount>0 || touch_2fingerLeftCount>0 || touch_2fingerRightCount>0)
+               }else{
+                  if((delta_y1) > 0){
+                     if(touch_2fingerUpCount > 0 || touch_2fingerLeftCount > 0 || touch_2fingerRightCount > 0)
                         myLog("change direction");
                      touch_2fingerDownCount++;
                      touch_2fingerUpCount = touch_2fingerLeftCount = touch_2fingerRightCount = 0;
@@ -134,8 +138,8 @@ function setGestureListener(responses){
                         responses.on2FingerMoveDown();
                         touch_2FingerMoved = true;
                      }
-                  } else {
-                     if(touch_2fingerDownCount>0 || touch_2fingerLeftCount>0 || touch_2fingerRightCount>0)
+                  }else{
+                     if(touch_2fingerDownCount > 0 || touch_2fingerLeftCount > 0 || touch_2fingerRightCount > 0)
                         myLog("change direction");
                      touch_2fingerUpCount++;
                      touch_2fingerDownCount = touch_2fingerLeftCount = touch_2fingerRightCount = 0;
@@ -146,18 +150,20 @@ function setGestureListener(responses){
                      }
                   }
                }
-            } else if(innerProduct < -50) { // pinch
+            }else if(innerProduct < -50){ // pinch
                touch_pinch = true;
 
                if(distance1 > distance2){
                   touch_pinchCount++;
                   if(touch_pinchCount == 3){
-                     responses.onPinchIn(); touch_pinchCount = 0;
+                     responses.onPinchIn();
+                     touch_pinchCount = 0;
                   }
-               } else {
+               }else{
                   touch_pinchCount++;
-                  if(touch_pinchCount = 3){
-                     responses.onPinchOut(); touch_pinchCount = 0;
+                  if(touch_pinchCount == 3){
+                     responses.onPinchOut();
+                     touch_pinchCount = 0;
                   }
                }
             }
@@ -172,14 +178,14 @@ function setGestureListener(responses){
       touch_up = true;
       touch_pinch = false;
       touch_pinchCount = 0;
-      if(event.touches.length == 0) {
+      if(event.touches.length == 0){
          if(touch_longPress){
-             responses.onLongPressEnd();
-             touch_longPress = false;
-             return;
+            responses.onLongPressEnd();
+            // resetAllVariable();
+            return;
          }
       }
-          
+
       if(!touch_2Finger && !touch_longPress){
          touch_quickDown = true;
          setTimeout(doubleTapChecker, responses.doubleTapThreshold);
@@ -189,7 +195,7 @@ function setGestureListener(responses){
    var longPressChecker = function(){
       if(touch_still && !touch_up && !touch_2Finger){
          touch_longPress = true;
-         responses.onLongPressStart(touch_x, touch_y,touchTarget);
+         responses.onLongPressStart(touch_x, touch_y, touchTarget);
          //myLog("onLongPressStart");
       }
    };
@@ -197,7 +203,8 @@ function setGestureListener(responses){
    var doubleTapChecker = function(){
       touch_quickDown = false;
       if(!touch_doubleTap && touch_still){
-         responses.onSingleTap(touch_x, touch_y,touchTarget);
+         responses.onSingleTap(touch_x, touch_y, touchTarget);
+         // resetAllVariable();
          //myLog("single tap.");
       }
    };
@@ -208,6 +215,26 @@ function setGestureListener(responses){
       }
    };
 
+   var resetAllVariable = function(){
+      touch_longPress = false;
+      touch_doubleTap = false;
+      touch_still = false;
+      touch_2Finger = false;
+      touch_2FingerMoved = false;
+      touch_quickDown = false;
+      touch_up = false;
+      touch_x = 0;
+      touch_y = 0;
+      touch_x2 = 0;
+      touch_y2 = 0;
+      touch_2fingerUpCount = 0;
+      touch_2fingerDownCount = 0;
+      touch_2fingerLeftCount = 0;
+      touch_2fingerRightCount = 0;
+      touch_pinch = false;
+      touch_pinchCount = 0;
+      touchTarget = 0;
+   };
    myListener.addEventListener('touchstart', onTouchStart, false);
    myListener.addEventListener('touchmove', onTouchMove, false);
    myListener.addEventListener('touchend', onTouchEnd, false);
