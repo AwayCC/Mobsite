@@ -7,7 +7,8 @@ var Android = (Android) ? Android : {
    openTextInputDialog: function(){},
    openBrowserDialog: function(){},
    openPhotoDialog: function(){},
-   setRenderedShadowDataURL: function(){}
+   setRenderedShadowDataURL: function(){},
+   getProjectsPathJSON: function(){}
 };
 var editor={};
 editor.initProject=function(wid,hei){
@@ -188,47 +189,19 @@ editor.initProject=function(wid,hei){
             //if(properpaneshow)
            // propertyPanelHide();
             var computedStyle = getComputedStyle(tar);
-            var propertypanel = document.getElementById("scroller");
-            
             //$("#propertyPanel").css("left","0");
             var c=document.getElementById("properTable");
             c.style.display="none";
             document.getElementById("properCategory").innerHTML=tar.tagName;
             if(tar.tagName=="IMG")
-            {
-                document.getElementById("properSource").innerHTML=tar.src.replace(/^.*[\\\/]/, '');
-                document.getElementById("properText").innerHTML="";
-                for (var gg=0 ; gg<propertypanel.children.length;gg++)
-                {
-                    console.log(propertypanel.children[gg].lastChild.id+" is "+propertypanel.children[gg].className);
-                    if(propertypanel.children[gg].className!="pImg"&&propertypanel.children[gg].className!="pAll")
-                        propertypanel.children[gg].style.display="none";
-                    else
-                        propertypanel.children[gg].style.display="table";
-                        
-                }
-            }
+                document.getElementById("properContent").innerHTML=tar.src.replace(/^.*[\\\/]/, '');
             if(tar.tagName=="P"||tar.tagName[0]=="H")
-            {
-                document.getElementById("properText").innerHTML=tar.innerHTML;
-                document.getElementById("properSource").innerHTML="";
-                for (var gg=0 ; gg<propertypanel.children.length;gg++)
-                {
-                   console.log(propertypanel.children[gg].lastChild.id+" is "+propertypanel.children[gg].className);
-                    if(propertypanel.children[gg].className!="pText"&&propertypanel.children[gg].className!="pAll")
-                        propertypanel.children[gg].style.display="none";
-                    else
-                        propertypanel.children[gg].style.display="table";
-                }
-            }
-            document.getElementById('textAlign').value=computedStyle.textAlign;
+                document.getElementById("properContent").innerHTML=tar.innerHTML;
             document.getElementById("properHeight").innerHTML=computedStyle.height;
             document.getElementById("properWidth").innerHTML=computedStyle.width;
             document.getElementById("properColor").innerHTML=computedStyle.color;
-            document.getElementById("properBackgroundColor").innerHTML=computedStyle.backgroundColor;
-        //    document.getElementById("rangevalue").value=computedStyle.opacity;
-            document.getElementById("opacitySlider").value=computedStyle.opacity*10;
-            
+            document.getElementById("properBackground").innerHTML=computedStyle.backgroundColor;
+            document.getElementById("properOpacity").innerHTML=computedStyle.opacity;
             document.getElementById("properMargin").innerHTML="("+computedStyle.marginTop+','+computedStyle.marginBottom+','+computedStyle.marginLeft+','+computedStyle.marginRight+')';
             if(c.hasAttribute("style"))
                 c.removeAttribute("style");
@@ -294,31 +267,26 @@ editor.initProject=function(wid,hei){
         };
         var EnvironmentInit=function ()
         {
-            $("#addbtn")         .on("touchstart ",function(startEvent){AddPanelToggle();});
-            $("#editbtn")        .on("touchstart ",function(startEvent){setContent() });
-            $("#dissbtn")        .on("touchstart ",function(startEvent){propertyPanelHide();});
-            $("#test")           .on("touchstart ",function(startEvent){ShadowCover();});
-            $("#shadow")         .on("touchstart ",function(startEvent){ShadowFade();});
-            $("#fullscreen")     .on("touchstart ",function(startEvent){FullScreenPreview();});
-            $("#setting")        .on("touchstart ",function(startEvent){SettingPanelToggle();});
-            $("#github")         .on("touchstart ",function(startEvent){githubPanelShow();});
-            $("#gallery")        .on("touchstart ",function(startEvent){galleryPanelToggle();});
-            $("#redo")           .on("touchstart ",function(startEvent){manager.redoAction();});
-            $("#delebtn")        .on("touchstart ",function(startEvent){manager.action.deleteElement(manager.selectedObject)});
-            $("#properSource")   .on("touchstart ",function(startEvent){Android.openPhotoDialog()});
-            $("#properText")     .on("touchstart ",function(startEvent){Android.openTextInputDialog();});
-            $("#properLink")     .on("touchstart ",function(startEvent){Android.openBrowserDialog();})
+            $("#addbtn")    .on("touchstart ",function(startEvent){AddPanelToggle();});
+            $("#editbtn")    .on("touchstart ",function(startEvent){ setContent() });
+            $("#dissbtn")    .on("touchstart ",function(startEvent){propertyPanelHide();});
+            $("#copybtn")    .on("touchstart ",function(startEvent){ githubPanelShow(); });
+            $("#test")      .on("touchstart ",function(startEvent){ShadowCover();});
+            $("#shadow")    .on("touchstart ",function(startEvent){ShadowFade();});
+            $("#fullscreen").on("touchstart ",function(startEvent){FullScreenPreview();});
+            $("#setting")   .on("touchstart ",function(startEvent){SettingPanelToggle();});
+            $("#github")    .on("touchstart ",function(startEvent){githubPanelShow();});
+            $("#gallery")    .on("touchstart ",function(startEvent){galleryPanelToggle();});
+            $("#redo")    .on("touchstart  ",function(startEvent){manager.redoAction();});
+            //$("#undo")    .on("touchstart click ",function(startEvent){});
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
-            $("#properTextAlign").on("touchstart ",function(startEvent){});
-            $("#undoBtn")        .on("touchstart ",function(startEvent){manager.redoAction();});
-            $("#redoBtn")        .on("touchstart ",function(startEvent){manager.undoAction();});
             $("#properBackground").on("touchstart ",function(startEvent){
                 colorSelector(getComputedStyle(manager.selectedObject,null).backgroundColor);
                 f.type=1;
                 f.linkTo(manager.selectedObject);
                 f.oldcolor=getComputedStyle(manager.selectedObject,null).backgroundColor;
                 manager.selectionMask.className=("maskOnProperty");
-               // alert(f.oldcolor);
+                alert(f.oldcolor);
             });
             $("#properColor").on("touchstart ",function(startEvent){
                 colorSelector(getComputedStyle(manager.selectedObject,null).color);
@@ -327,11 +295,12 @@ editor.initProject=function(wid,hei){
                 f.linkTo(manager.selectedObject);
                 f.oldcolor=getComputedStyle(manager.selectedObject,null).color;
                 manager.selectionMask.className=("maskOnProperty");
+                alert(f.oldcolor);
+                
             });
             $("#colorCheck").on("touchstart",function(startEvent){
-               
-                if(f.type==1)manager.selectedObject.style.backgroundColor=f.oldcolor;
-                else manager.selectedObject.style.color=f.oldcolor;
+                f.linkTo($('#color'));
+                manager.selectedObject.style.backgroundColor=f.oldcolor;
                 var setact=
                 {
                     style   :"setting",
@@ -340,36 +309,19 @@ editor.initProject=function(wid,hei){
                     orig    :getComputedStyle(manager.selectedObject,null).backgroundColor,
                     value   :f.color
                 };
-                //alert(f.color);
-                 f.linkTo($('#color'));
                 if(f.type==2) setact.attr="color";
-                manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
-                
                 //manager.pushAction(setact);
                 colorSelectorHide();
                 manager.selectionMask.className=("selectionMask");
             });
             $('#colorCancel').on("touchstart",function(startEvent){
-                
+                f.linkTo($('#color'));
                 if(f.type==1)manager.selectedObject.style.backgroundColor=f.oldcolor;
                 if(f.typp==2)manager.selectedObject.style.color=f.oldcolor;
                 colorSelectorHide();
                 manager.selectionMask.className=("selectionMask");
-                f.linkTo($('#color'));
-            });
+            })
             $("#propertyPanel").on("touchmove",function(startEvent){startEvent.preventDefault();});
-               $( document.body ).on( 'click', '.dropdown-menu li', function( event ) {
-
-      var $target = $( event.currentTarget );
-
-      $target.closest( '.btn-group' )
-         .find( '[data-bind="label"]' ).text( $target.text() )
-            .end()
-         .children( '.dropdown-toggle' ).dropdown( 'toggle' );
-
-      return false;
-
-   });
         }
         var colorSelector=function (col)
         {
@@ -566,20 +518,6 @@ editor.initProject=function(wid,hei){
                     break;
             }
         }
-        var textAlignChange=function()
-        {
-            var setact=
-                {
-                    style   :"setting",
-                    target  :manager.selectedObject,
-                    attr    :"text-align",
-                    orig    :getComputedStyle(manager.selectedObject,null).textAlign,
-                    value   :document.getElementById('textAlign').value
-                };
-            manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
-                  //  alert(getComputedStyle(manager.selectedObject,null).textAlign);
-           // alert(document.getElementById('textAlign').value);
-        }
         console.log("helloworld!!!:D");
         
         EnvironmentInit();
@@ -591,13 +529,9 @@ editor.initProject=function(wid,hei){
             shadowFade:ShadowFade,
             shadowCover:ShadowCover,
             setAddPanelDragListner:setAddPanelDragLister,
-            showProperty:showProperty,
-            textAlignChange:textAlignChange,
-            propertyPanelHide:propertyPanelHide
+            showProperty:showProperty
         }
    })();
-    editor.propertyPanelHide=initObj.propertyPanelHide;
-    editor.textAlignChange=initObj.textAlignChange;
     editor.showProperty=initObj.showProperty;
     editor.shadowFade=initObj.shadowFade;
     editor.setAddPanelDragListner=initObj.setAddPanelDragListner;

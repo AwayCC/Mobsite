@@ -24,22 +24,32 @@
   cursor: crosshair;
 }
 .farbtastic, .farbtastic .wheel {
-  width: 195px;
-  height: 195px;
+  width: 400px;
+  height: 400px;
 }
 .farbtastic .color, .farbtastic .overlay {
-  top: 47px;
-  left: 47px;
-  width: 101px;
-  height: 101px;
+  top: 96.5px;
+  left: 96.5px;
+  width: 208.5px;
+  height: 208.5px;
 }
 .farbtastic .wheel {
   background: url(wheel.png) no-repeat;
-  width: 195px;
-  height: 195px;
+    background-size: contain;
+  width: 402px;
+  height: 402px;
 }
 .farbtastic .overlay {
   background: url(mask.png) no-repeat;
+  background-size: contain;
+}
+.farbtastic .marker2 {
+  width: 40px;
+  height: 40px;
+  margin: -21px 0 0 -21px;
+  overflow: hidden; 
+  background: url(marker.png) no-repeat;
+    background-size: contain;
 }
 .farbtastic .marker {
   width: 17px;

@@ -82,6 +82,8 @@ public class StartActivity extends Activity {
     private Button newListBtn, openListOpenBtn, openListDeleteBtn;
     private ProgressDialog pDialog;
 
+    public static boolean debugMode = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,14 +165,14 @@ public class StartActivity extends Activity {
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                            if(debugMode) {
                                 Intent edit = new Intent();
                                 edit.setClass(StartActivity.this, MainActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("projectName", "DEBUG_VERSION");
                                 edit.putExtras(bundle);
                                 startActivity(edit);
-
-                                /* UNCOMMENT TO ENABLE FILE SYSTEM
+                            } else {
                                 EditText editText = (EditText) v.findViewById(R.id.newProjectName);
                                 String newName = editText.getText().toString();
 
@@ -194,10 +196,10 @@ public class StartActivity extends Activity {
                                 InitTask task = new InitTask();
                                 task.setProjectStrs(newName, templateName);
                                 task.execute();
-                                */
                             }
-                        })
-                        .show();
+                        }
+                })
+                .show();
             }
 
         });
@@ -252,10 +254,19 @@ public class StartActivity extends Activity {
             oldProjectsList.add(addProjectName("Open", s));
         }
 
-        templateList.add(addProjectName("New","template_1"));
-        templateList.add(addProjectName("New","template_2"));
-        templateList.add(addProjectName("New","template_3"));
-        templateList.add(addProjectName("New","default"));
+        if(!debugMode) {
+            templateList.add(addProjectName("New", "template_1"));
+            templateList.add(addProjectName("New", "template_2"));
+            templateList.add(addProjectName("New", "template_3"));
+            templateList.add(addProjectName("New", "default"));
+        } else {
+            String[] list;
+            try{
+                list = getAssets().list("init");
+                for(String tempName : list)
+                    templateList.add(addProjectName("New", tempName));
+            } catch (IOException e){ e.printStackTrace(); }
+        }
     }
 
     private HashMap<String, String> addProjectName(String key, String name) {

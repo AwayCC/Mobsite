@@ -230,11 +230,22 @@ output
     background-color: #404040;
     z-index: 40;
 }
+.maskOnProperty
+{
+    background-color: transparent;
+    border: 2px;
+    border-color: grey;
+    border-style: dotted;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    z-index: 20;
+}
 #colorPickerPanel
 {
     opacity: 0;
     border-radius: 8px;
-    position: absolute;
+    position: fixed;
     height: auto;
     padding-bottom: 10px;
     width: auto;
