@@ -313,6 +313,8 @@ function openDeployDialog(){
     
     selectBtn.addEventListener("click", onClickSelect, false);
     
+    
+    
     function onClickSelect(){
         GHErr2.innerHTML = "";
         if(GHNewRepoNameInput.value == GHUsernameInput.value+".github.io"){
