@@ -221,13 +221,15 @@ editor.initProject=function(wid,hei){
                         propertypanel.children[gg].style.display="table";
                 }
             }
+            document.getElementById('properSize').innerHTML=computedStyle.fontSize;
+            document.getElementById('properFont').innerHTML=computedStyle.fontFamily;
             document.getElementById('textAlign').value=computedStyle.textAlign;
             document.getElementById("properHeight").innerHTML=computedStyle.height;
             document.getElementById("properWidth").innerHTML=computedStyle.width;
             document.getElementById("properColor").innerHTML=computedStyle.color;
             document.getElementById("properBackgroundColor").innerHTML=computedStyle.backgroundColor;
         //    document.getElementById("rangevalue").value=computedStyle.opacity;
-            document.getElementById("opacitySlider").value=computedStyle.opacity*10;
+            document.getElementById("opacitySlider").value=computedStyle.opacity*100;
             
             document.getElementById("properMargin").innerHTML="("+computedStyle.marginTop+','+computedStyle.marginBottom+','+computedStyle.marginLeft+','+computedStyle.marginRight+')';
             if(c.hasAttribute("style"))
@@ -310,8 +312,22 @@ editor.initProject=function(wid,hei){
             $("#properLink")     .on("touchstart ",function(startEvent){Android.openBrowserDialog();})
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
             $("#properTextAlign").on("touchstart ",function(startEvent){});
-            $("#undoBtn")        .on("touchstart ",function(startEvent){manager.redoAction();});
-            $("#redoBtn")        .on("touchstart ",function(startEvent){manager.undoAction();});
+            $("#undoBtn")        .on("touchstart ",function(startEvent){manager.undoAction();});
+            $("#redoBtn")        .on("touchstart ",function(startEvent){manager.redoAction();});
+            document.getElementById('opacitySlider').onchange=function(){
+                document.getElementById('rangevalue').value=document.getElementById('opacitySlider').value/100; 
+                console.log('opacity changed '+rangevalue.value);
+                var setact=
+                {
+                    style   :"setting",
+                    target  :manager.selectedObject,
+                    attr    :"opacity",
+                    orig    :getComputedStyle(manager.selectedObject,null).opacity,
+                    value   :document.getElementById('rangevalue').value
+                };
+                manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
+                //manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
+            };
             $("#properBackground").on("touchstart ",function(startEvent){
                 colorSelector(getComputedStyle(manager.selectedObject,null).backgroundColor);
                 f.type=1;
@@ -593,9 +609,11 @@ editor.initProject=function(wid,hei){
             setAddPanelDragListner:setAddPanelDragLister,
             showProperty:showProperty,
             textAlignChange:textAlignChange,
-            propertyPanelHide:propertyPanelHide
+            propertyPanelHide:propertyPanelHide,
+            githubPanelHide:githubPanelHide
         }
    })();
+    editor.githubPanelHide=initObj.githubPanelHide;
     editor.propertyPanelHide=initObj.propertyPanelHide;
     editor.textAlignChange=initObj.textAlignChange;
     editor.showProperty=initObj.showProperty;
