@@ -120,70 +120,53 @@ manager.action.setProperty = function(obj, attr, oldValue, newValue){
       }
    );
 };
-manager.action.addElement = function(obj, ref, callback){
-   var myObj = obj, myRef = ref, myCallback = callback;
-   var isRefParentPlaceholder;
+manager.action.addElement = function(obj, ref){
+   var myObj = obj, myRef = ref;
+   var myRefPlaceholder;
    var exec = function(){
       if(myRef.parentNode){
          if(myRef.parentNode.placeholder){
-            var x = myRef.parentNode.parentNode;
-            x.removeChild(myRef.parentNode);
-            isRefParentPlaceholder = true;
-            x.appendChild(myObj);
-            myRef.parentNode.removeChild(myRef);
+            myRefPlaceholder = myRef.parentNode;
+            myRefPlaceholder.parentNode.insertBefore(myObj, myRef);
+            myRefPlaceholder.removeChild(myRef);
          }else{
-            var x = myRef.parentNode;
-            x.insertBefore(myObj, myRef);
-            x.removeChild(myRef);
-         }
-         if(myCallback){
-            myCallback();
+            myRef.parentNode.insertBefore(myObj, myRef);
+            myRef.parentNode.removeChild(myRef);
+            myRef = manager.createDummy();
          }
       }else{
          console.log("addElement: ref has no parentNode");
       }
    };
    var undo = function(){
-      if(isRefParentPlaceholder){
-         var g = manager.createDummy();
-         var x = manager.createPlaceholder();
-         x.appendChild(g);
-         if(myObj.parentNode){
-            myObj.parentNode.insertBefore(x, myObj);
-            myObj.parentNode.removeChild(myObj);
-            myRef = g;
-            if(myObj == manager.selectedObject){
-               manager.config.onDoubleTap();
-            }
-         }else{
-            console.log("addElement: uedo failed");
-         }
+      if(myRefPlaceholder){
+         myRefPlaceholder.parentNode.insertBefore(myObj, myRefPlaceholder);
+         myRefPlaceholder.parentNode.removeChild(myRefPlaceholder);
       }else{
-         if(myObj.parentNode){
-            var g = manager.createDummy();
-            myObj.parentNode.insertBefore(g, myObj);
-            myObj.parentNode.removeChild(myObj);
-            myRef = g;
-            if(myObj == manager.selectedObject){
-               manager.config.onDoubleTap();
-            }
-         }else{
-            console.log("addElement: uedo failed");
-         }
+         myRef.parentNode.insertBefore(myObj, myRef);
+         myRef.parentNode.removeChild(myRef);
       }
-
+   };
+   var redo = function(){
+      if(myRefPlaceholder){
+         myObj.parentNode.insertBefore(myRefPlaceholder, myObj);
+         myObj.parentNode.removeChild(myObj);
+      }else{
+         myObj.parentNode.insertBefore(myRef, myObj);
+         myObj.parentNode.removeChild(myObj);
+      }
    };
    manager.pushAction(
       {
          type        : "addElement",
          execFunction: exec,
-         redoFunction: exec,
+         redoFunction: redo,
          undoFunction: undo
       }
    );
 };
-manager.action.deleteElement = function(obj, callback){
-   var myObj = obj, myRef = null, myCallback = callback, isAddPlaceholder = false;
+manager.action.deleteElement = function(obj){
+   var myObj = obj, start, myObjPlaceholder;
    if(!myObj){
       return;
    }
@@ -198,41 +181,40 @@ manager.action.deleteElement = function(obj, callback){
             }
             if(count == 1){
                // Add placeholder
-               isObjPlaceholder = true;
-               var g = manager.createDummy();
-               myRef = manager.createPlaceholder();
-               myRef.appendChild(g);
-               myObj.parentNode.insertBefore(myRef, myObj);
+               myObjPlaceholder = manager.createPlaceholder();
+               myObj.parentNode.insertBefore(myObjPlaceholder, myObj);
                myObj.parentNode.removeChild(myObj);
-               manager.config.onDoubleTap();
-               return;
+            }else{
+               start = manager.createDummy();
+               myObj.parentNode.insertBefore(start, myObj);
+               myObj.parentNode.removeChild(myObj);
             }
-         }
-         var g = manager.createDummy();
-         myObj.parentNode.insertBefore(g, myObj);
-         myObj.parentNode.removeChild(myObj);
-         myRef = g;
-         if(myObj == manager.selectedObject){
-            manager.config.onDoubleTap();
+         }else{
+            start = manager.createDummy();
+            myObj.parentNode.insertBefore(start, myObj);
+            myObj.parentNode.removeChild(myObj);
          }
       }else{
-         console.log("deleteElement failed");
+         console.log("moveElement: myObj have no parentNode");
       }
    };
    var undo = function(){
-      if(myRef.parentNode){
-         myRef.parentNode.insertBefore(myObj, myRef);
-         myRef.parentNode.removeChild(myRef);
+      if(myObjPlaceholder){
+         myObjPlaceholder.parentNode.insertBefore(myObj, myObjPlaceholder);
+         myObjPlaceholder.parentNode.removeChild(myObjPlaceholder);
       }else{
-         console.log("deleteElement undo failed");
+         start.parentNode.insertBefore(myObj, start);
+         start.parentNode.removeChild(start);
       }
+      manager.assignSelection(myObj);
    };
    var redo = function(){
-      if(myObj.parentNode){
-         myObj.parentNode.insertBefore(myRef, myObj);
-         myRef.parentNode.removeChild(myObj);
+      if(myObjPlaceholder){
+         myObj.parentNode.insertBefore(myObjPlaceholder, myObj);
+         myObj.parentNode.removeChild(myObj);
       }else{
-         console.log("deleteElement redo failed");
+         myObj.parentNode.insertBefore(start, myObj);
+         myObj.parentNode.removeChild(myObj);
       }
    };
    manager.pushAction(
@@ -261,7 +243,10 @@ manager.action.moveElement = function(obj, ref){
                myObjPlaceholder = manager.createPlaceholder();
                myObj.parentNode.insertBefore(myObjPlaceholder, myObj);
                myObj.parentNode.removeChild(myObj);
-
+            }else{
+               start = manager.createDummy();
+               myObj.parentNode.insertBefore(start, myObj);
+               myObj.parentNode.removeChild(myObj);
             }
          }else{
             start = manager.createDummy();
@@ -275,7 +260,9 @@ manager.action.moveElement = function(obj, ref){
       if(myRef.parentNode){
          if(myRef.parentNode.placeholder){
             myRefPlaceholder = myRef.parentNode;
+            myRefPlaceholder.parentNode.insertBefore(myObj, myRefPlaceholder);
             myRefPlaceholder.removeChild(myRef);
+            myRefPlaceholder.parentNode.removeChild(myRefPlaceholder);
          }else{
             var x = myRef.parentNode;
             x.insertBefore(myObj, myRef);

@@ -52,12 +52,11 @@ manager.preLoad = function(){
    };
    manager.createPlaceholder = function(){
       var c = document.createElement("div");
-      c.appendChild(document.createElement("br"));
+      //c.appendChild(document.createElement("br"));
       c.placeholder = true;
       c.setAttribute("data-placeholder","true");
-      c.className = "placeHolder";
+      c.className = "placeholder";
       c.selectable = true;
-      c.style.minHeight = "40px";
       return c;
    };
    for(var i = elements.length - 1; i >= 0; --i){
