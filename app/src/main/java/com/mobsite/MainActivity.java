@@ -291,10 +291,8 @@ public class MainActivity extends Activity
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
-        if(StartActivity.debugMode)
-            cwv.loadUrl("file:///android_asset/www/tool.html");
-        else
-            cwv.loadUrl("file://"+projectPath+"/tool.html");
+        //cwv.loadUrl("file://"+projectPath+"/tool.html");
+        cwv.loadUrl("file:///android_asset/www/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures();
     }
@@ -367,33 +365,16 @@ public class MainActivity extends Activity
         pDialog.setMessage(msg);
         pDialog.setCanceledOnTouchOutside(false);
         pDialog.show();
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
     @JavascriptInterface
     public void showPDialogMsg(final String msg) {
-        //runOnUiThread(new Runnable() {
-        //    @Override
-        //    public void run() {
-                pDialog.setMessage(msg);
-        //    }
-        //});
+        pDialog.setMessage(msg);
     }
 
     @JavascriptInterface
     public void dismissPDialog() {
         pDialog.dismiss();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
     @JavascriptInterface
@@ -616,10 +597,7 @@ public class MainActivity extends Activity
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                String js = "javascript:";
-                                js += "console.log(\"from set Url source "+browser.getUrl()+"\");";
-                                js += "manager.action.setProperty(manager.selectedObject, \"link\", manager.selectedObject.innerHTML, \""+browser.getUrl()+"\");";
-                                setWebViewURL(js);
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
