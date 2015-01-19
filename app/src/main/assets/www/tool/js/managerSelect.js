@@ -162,7 +162,7 @@ manager.initSelect = function(){
                if(manager.selectedObject.tagName == "IMG"){
                   // TODO
                   img.src = obj.src.substring(26);
-                  console.log("src = " + img.src);
+                  //console.log("src = " + img.src);
                }
                else
                   img.src = data;

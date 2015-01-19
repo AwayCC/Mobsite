@@ -48,7 +48,7 @@ editor.initProject = function(wid, hei){
       f.linkTo($('#color'));
       //////////  Controls of Panels //////////////
       var AddPanelShow = function(){
-         hidePanels();
+         hidePanels(false);
          if(!onanimate){
             onanimate = true;
             $("#Add-panel").css("left", "2%");
@@ -72,27 +72,34 @@ editor.initProject = function(wid, hei){
          }
       };
       var propertyPanelShow = function(tar){
-         if(!onanimate){
+        // if(!onanimate){
             var rect = tar.getBoundingClientRect();
             $("#propertyPanel").css("opacity", "1");
             console.log("rect-top:" + rect.top);
-            console.log("rect-bottom" + rect.bottom);
-            console.log("rect-left" + rect.left);
-            console.log("rect-right" + rect.right);
-            console.log("screen-width" + scwidth);
-            console.log("screen-height" + scheight);
+          //  console.log("rect-bottom" + rect.bottom);
+         ///   console.log("rect-left" + rect.left);
+         //   console.log("rect-right" + rect.right);
+          //  console.log("screen-width" + scwidth);
+         //   console.log("screen-height" + scheight);
             onanimate = true;
+             
             var wid = $('#propertyPanel').width();
             var hei = $('#propertyPanel').height();
             if(rect.top <= 0.5 * scheight)
+            {
+               console.log("Top is: "+window.scrollY + rect.bottom);
                $("#propertyPanel").css("top", window.scrollY + rect.bottom);
+            }
             else
+            {
+               console.log("Top is: "+window.scrollY + rect.top - hei);
                $('#propertyPanel').css("top", window.scrollY + rect.top - hei);
+            }
             if(rect.left <= 0.5 * scwidth){
                if(rect.right + wid < scwidth)
                   $("#propertyPanel").css("left", rect.right);
                else
-                  $("#propertyPanel").css("right", 0);
+                  $("#propertyPanel").css("left", scwidth-wid);
             }
             else{
                if(rect.left - wid > 0)
@@ -100,21 +107,26 @@ editor.initProject = function(wid, hei){
                else
                   $('#propertyPanel').css("left", 0);
             }
-            properpaneshow = true;
-            onanimate = false;
-         }
+             console.log("Show Showed");
+             console.log(window.scrollY + rect.bottom);
+             $("#propertyPanel").css("top", window.scrollY + rect.bottom);
+             properpaneshow = true;
+             onanimate = false;
+        // }
       };
       var propertyPanelHide = function(){
          if(!onanimate && properpaneshow){
             onanimate = true;
-            $("#propertyPanel").transition({opacity: 0});
-            $("#propertyPanel").css("left", "-100%");
-            onanimate = false;
-            properpaneshow = false;
+            $("#propertyPanel").transition({opacity: 0},function(){
+                onanimate = false;
+                $("#propertyPanel").css("left", "-100%");
+                properpaneshow = false;    
+            });
+            
          }
       };
       var galleryPanelShow = function(){
-         hidePanels();
+         hidePanels(false);
          if(!onanimate){
             if(c.hasAttribute("style"))
                c.removeAttribute("style");
@@ -141,7 +153,7 @@ editor.initProject = function(wid, hei){
          }
       };
       var SettingPanelShow = function(){
-         hidePanels();
+         hidePanels(false);
          if(!onanimate){
             onanimate = true;
             $("#setting-panel").css("top", "11%");
@@ -183,8 +195,9 @@ editor.initProject = function(wid, hei){
          ShadowFade();
       };
 
-      var hidePanels = function(){
-         if(properpaneshow) propertyPanelHide();
+      var hidePanels = function(prop){
+          if(!prop) {if(properpaneshow) propertyPanelHide();
+                    console("try to hide proper");}
          if(addpanelshow) AddPanelHide();
          if(settingshow) SettingPanelHide();
          if(githubpanelshow) githubPanelHide();
@@ -237,6 +250,7 @@ editor.initProject = function(wid, hei){
          document.getElementById("properMargin").innerHTML = "(" + computedStyle.marginTop + ',' + computedStyle.marginBottom + ',' + computedStyle.marginLeft + ',' + computedStyle.marginRight + ')';
          if(c.hasAttribute("style"))
             c.removeAttribute("style");
+          console.log("Show Called");
          propertyPanelShow(tar);
       };
       var galleryPanelToggle = function(){

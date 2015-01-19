@@ -261,8 +261,7 @@ public class MainActivity extends Activity
                 Log.v("FIle size", "File is this big : "+savedImage.length());
                 String js = "javascript:";
                 js += "console.log(\"from set content "+savedImage.getPath()+"\");";
-                //js += "manager.setProperty(\"src\", \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
-                js += "manager.action.setProperty(manager.selectedObject, \"text\", manager.selectedObject.innerHTML, \""+inputHTML+"\");";
+                js += "manager.action.setProperty(manager.selectedObject, \"src\", manager.selectedObject.src, \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
                 setWebViewURL(js);
             } catch (IOException e){ e.printStackTrace(); }
         }// end
@@ -578,7 +577,10 @@ public class MainActivity extends Activity
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                String js = "javascript:";
+                                js += "console.log(\"from set Url source "+browser.getUrl()+"\");";
+                                js += "manager.action.setProperty(manager.selectedObject, \"link\", manager.selectedObject.innerHTML, \""+browser.getUrl()+"\");";
+                                setWebViewURL(js);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
