@@ -44,17 +44,17 @@ manager.preLoad = function(){
    var elements = manager.config.listener.getElementsByTagName("*");
    manager.createSlidePlaceholder = function(){
       var c = document.createElement("div");
-      c.appendChild(document.createElement("br"));
+      //c.appendChild(document.createElement("br"));
       c.slidePlaceholder = true;
       c.className = "slidePlaceHolder";
-      c.setAttribute("data-slidePlaceholder","true");
+      c.setAttribute("data-slidePlaceholder", "true");
       return c;
    };
    manager.createPlaceholder = function(){
       var c = document.createElement("div");
       //c.appendChild(document.createElement("br"));
       c.placeholder = true;
-      c.setAttribute("data-placeholder","true");
+      c.setAttribute("data-placeholder", "true");
       c.className = "placeholder";
       c.selectable = true;
       return c;

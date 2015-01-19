@@ -14,10 +14,13 @@
         
 </head>
 <body id="test1">
+    
     <div id="header" >
+        
         <div id="headericon">
             <div class="col-sm-3 title">
-                <div id="tool"></div>
+                <img id="undoBtn" src="tool/img/icons/undo.png" style="padding-left:5%; height:80%; width:auto;"/>
+                <img id="redoBtn" src="tool/img/icons/redo.png" style="padding-left:5%; height:80%; width:auto;"/>
             </div>
             <div class="col-sm-6 title">
                 <h1 id="projecttitle">HelloWorld</h1>
@@ -221,26 +224,43 @@
     <div id="setting-panel" class="bubble_top">
     </div>
     <div id="propertyPanel" class="draggable">
+        
         <div class="panelMark"><p>Property</p></div>
         <div class="CSSTableGenerator container" >
                 <table id="properTable" class="trapScroll child">
                  <tbody id="scroller">
-                    <tr><td>Category</td><td id="properCategory"></td></tr>
-                    <tr><td>Content</td><td id="properContent"></td></tr>
-                    <tr><td>Rect - Height</td><td id="properHeight"></td></tr>
-                    <tr><td>Rect - Width</td><td id="properWidth"></td></tr>
-                    <tr><td>Text - Color</td><td id="properColor"></td></tr>
-                    <tr><td>Background</td><td id="properBackground"></td></tr>
-                    <tr><td>Opacity</td><td id="properOpacity"> 
+                    <tr class="pAll" ><td>Category      </td><td id="properCategory"></td></tr>
+                    <tr class="pText"><td>Content       </td><td id="properText"></td></tr>
+                    <tr class="pImg" ><td>Source        </td><td id="properSource"></td></tr>
+                    <tr class="pAll" ><td>Rect - Height </td><td id="properHeight"></td></tr>
+                    <tr class="pAll" ><td>Rect - Width  </td><td id="properWidth"></td></tr>
+                    <tr class="pText"><td>Text - Size   </td><td id="properSize"></td></tr>
+                    <tr class="pText"><td>Text - Font   </td><td id="properFont"></td></tr>
+                    <tr class="pText"><td>Text - Color  </td><td id="properColor"></td></tr>
+                    <tr class="pText"><td>Text - Align  </td><td id="properTextAlign">
+                        <form method="post" action="demoform.asp">
+                            <fieldset class="ui-field-contain">
+                                <label for="day"></label>
+                                <select onchange="editor.textAlignChange()" onmousedown="this.value='';"  name="day" id="textAlign">
+                                        <option value="start">Start</option>
+                                        <option value="left">Left</option>
+                                        <option value="center">Center</option>
+                                        <option value="right">Right</option>
+                                        <option value="end">End</option>
+                                </select>
+                            </fieldset>
+                        </form>
+                    </td></tr>
+                    <tr class="pAll" ><td>Bg - Color    </td><td id="properBackgroundColor"></td></tr>
+                    <tr class="pAll" ><td>Bg - Image    </td><td id="properBackgroundImage"></td></tr>
+                    <tr class="pAll" ><td>Opacity       </td><td id="properOpacity"> 
                         <div class="slider">
-                            <output id="rangevalue">50</output>
-                            <input type = "range" min="0" max="100" onchange="rangevalue.value=value"/>
-	                        
+                            <output id="rangevalue">1</output>
+                            <input id="opacitySlider" type = "range" min="0" max="100" />
                         </div>
                     </td></tr>
-                   
-
-                    <tr><td>Margin</td><td id="properMargin"></td></tr>
+                    <tr class="pAll" ><td>Margin        </td><td id="properMargin"></td></tr>
+                    <tr class="pAll" ><td>Linking       </td><td id="properLink"></td>
                   </tbody>
                 </table>
         </div>      
@@ -255,8 +275,8 @@
     <script src="tool/gallery/galleria-1.4.2.min.js"></script>
     <script src="tool/js/farbtastic.js"></script>
     <script src="tool/js/editor.js"></script>
-    <script src="tool/js/index.js"></script>
     <script src="tool/js/bootstrap.min.js"></script>
+    <script src="tool/js/index.js"></script>
     <script src="tool/js/jquery.transit.min.js"></script>
     <script src="tool/js/github.js"></script>
     <script src="tool/js/main.js"></script>

@@ -201,8 +201,6 @@ manager.initDrag = function(){
          if(cursorX == undefined){
             return;
          }
-         // TODO: place hidden flag
-         // TODO: pushAction !!!!
          if(dragExternal){
             manager.action.addElement(manager.selectedObject, manager.Cursor);
          }else{
