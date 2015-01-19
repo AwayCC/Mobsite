@@ -514,7 +514,7 @@ h1 {
     padding: 0;
     z-index: 60;
     vertical-align: middle;
-    text-align: center;
+    
 }
 #headericon .title #setting
 {
@@ -584,7 +584,6 @@ h1 {
     padding-right: 0;
     display: table;
     vertical-align: middle;
-    text-align: center;
     height: 100%;
 }
 
@@ -935,6 +934,7 @@ a.image_container img {
 	border-width:0px 1px 0px 0px;
 }.CSSTableGenerator tr td:last-child{
 	border-width:0px 0px 1px 0px;
+    overflow-y: visible;
 }.CSSTableGenerator tr:last-child td:last-child{
 	border-width:0px 0px 0px 0px;
 }
@@ -951,7 +951,13 @@ a.image_container img {
 	font-weight:bold;
 	color:#ffffff;
 }
-
+.dropdown-backdrop {
+    position: static;
+}
+select
+{
+    background-color: #464342;
+}
 .CSSTableGenerator tr:first-child td:first-child{
 	border-width:0px 0px 1px 0px;
 }
