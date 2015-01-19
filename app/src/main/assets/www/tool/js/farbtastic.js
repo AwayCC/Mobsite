@@ -32,13 +32,13 @@ jQuery._farbtastic = function (container, callback) {
   var fb = this;
 
   // Insert markup
-  $(container).html('<div class="farbtastic"><div class="color"></div><div class="wheel"></div><div class="overlay"></div><div class="h-marker marker"></div><div class="sl-marker marker"></div></div>');
+  $(container).html('<div class="farbtastic"><div class="color"></div><div class="wheel"></div><div class="overlay"></div><div class="h-marker marker2"></div><div class="sl-marker marker"></div></div>');
   var e = $('.farbtastic', container);
   fb.wheel = $('.wheel', container).get(0);
   // Dimensions
-  fb.radius = 84;
-  fb.square = 100;
-  fb.width = 194;
+  fb.radius = 170;
+  fb.square = 208.5;
+  fb.width = 400;
 
   // Fix background PNGs in IE6
   if (navigator.appVersion.match(/MSIE [0-6]\./)) {
@@ -214,11 +214,10 @@ jQuery._farbtastic = function (container, callback) {
     // Linked elements or callback
     if (typeof fb.callback == 'object') {
       // Set background/foreground color
-      $(fb.callback).css({
-        backgroundColor: fb.color,
-        color: fb.hsl[2] > 0.5 ? '#000' : '#fff'
-      });
-
+        if(fb.type==1)
+            $(fb.callback).css({backgroundColor: fb.color});
+        if(fb.type==2)
+            $(fb.callback).css({color:fb.color});
       // Change linked value
       $(fb.callback).each(function() {
         if (this.value && this.value != fb.color) {
