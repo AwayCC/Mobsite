@@ -49,7 +49,7 @@ manager.initProperty = function(){
             default :
                break;
          }
-         manager.renderSelectedObject();
+         manager.renderSelectedObject(obj);
       };
       var getProperty = function(attr, o){
          var obj = (o) ? o : ((manager.selectedObject) ? manager.selectedObject : undefined);

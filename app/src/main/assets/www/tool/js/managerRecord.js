@@ -106,10 +106,10 @@ manager.action = {};
 manager.action.setProperty = function(obj, attr, oldValue, newValue){
    var myAttr = attr, myOldValue = oldValue, myNewValue = newValue;
    var exec = function(){
-      manager.setProperty(myAttr, myNewValue, myOldValue);
+      manager.setProperty(myAttr, myNewValue, obj);
    };
    var undo = function(){
-      manager.setProperty(myAttr, myOldValue, myNewValue);
+      manager.setProperty(myAttr, myOldValue, obj);
    };
    manager.pushAction(
       {
