@@ -36,8 +36,8 @@ manager.initDrag = function(){
          managedStyle.sheet = (managedStyle.sheet) ? managedStyle.sheet : {};
 
          manager.managedStylesheet = managedStyle.sheet;
-         manager.managedStylesheet.insertRule(".placeholderStyle{display:none;}", 0);
-         manager.managedStylesheet.insertRule(".slidePlaceholderStyle{display:none;}",0);
+         manager.managedStylesheet.insertRule(".placeholder{display:none;", 0);
+         manager.managedStylesheet.insertRule(".slidePlaceholder{display:none;}", 0);
 
          manager.slidePlaceholderStyle = manager.managedStylesheet.cssRules[0];
          manager.placeholderStyle = manager.managedStylesheet.cssRules[1];
@@ -148,7 +148,7 @@ manager.initDrag = function(){
             o = manager.selectedObject;
          }else{
             if(!isExternal){
-                return;
+               return;
             }
             dragExternal = isExternal;
             Android.startDrag();
@@ -188,7 +188,7 @@ manager.initDrag = function(){
             clearTimeout(dragSetTimeout);
             dragSetTimeout = undefined;
          }
-         updateCursor(document.elementFromPoint(x,y));
+         updateCursor(document.elementFromPoint(x, y));
       };
       var dragEnd = function(){
          if(!isDragging){
@@ -204,9 +204,9 @@ manager.initDrag = function(){
          // TODO: place hidden flag
          // TODO: pushAction !!!!
          if(dragExternal){
-            manager.action.addElement(manager.selectedObject,manager.Cursor);
+            manager.action.addElement(manager.selectedObject, manager.Cursor);
          }else{
-            manager.action.moveElement(manager.selectedObject,manager.Cursor);
+            manager.action.moveElement(manager.selectedObject, manager.Cursor);
          }
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
