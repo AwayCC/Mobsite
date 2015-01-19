@@ -244,7 +244,9 @@ manager.action.deleteElement = function(obj, callback){
       }
    );
 };
+manager.action.moveElement = function(){
 
+};
 /*
  //moveElement(manager.selectedObject, manager.Cursor);
  var moveact =
