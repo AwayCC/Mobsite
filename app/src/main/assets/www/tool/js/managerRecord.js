@@ -183,22 +183,22 @@ manager.action.addElement = function(obj, ref, callback){
    );
 };
 manager.action.deleteElement = function(obj, callback){
+   var myObj = obj, myRef = null, myCallback = callback, isAddPlaceholder = false;
    if(!myObj){
       return;
    }
-   var myObj = obj, myRef = null, myCallback = callback, isAddPlaceholder = false;
    var exec = function(){
       if(myObj.parentNode){
          if(myObj.parentNode.column){
             var count = 0;
-            for(var i in myObj.parentNode.children){
+            for(var i = 0; i < myObj.parentNode.children.length; ++i){
                if(myObj.parentNode.children[i].dummy != true){
                   ++count;
                }
             }
             if(count == 1){
                // Add placeholder
-               isAddPlaceholder = true;
+               isObjPlaceholder = true;
                var g = manager.createDummy();
                myRef = manager.createPlaceholder();
                myRef.appendChild(g);
@@ -244,9 +244,92 @@ manager.action.deleteElement = function(obj, callback){
       }
    );
 };
-manager.action.moveElement = function(){
+manager.action.moveElement = function(obj, ref){
+   var myObjPlaceholder, myRefPlaceholder;
+   var myObj = obj, start, myRef = ref;
+   var exec = function(){
+      if(myObj.parentNode){
+         if(myObj.parentNode.column){
+            var count = 0;
+            for(var i = 0; i < myObj.parentNode.children.length; ++i){
+               if(myObj.parentNode.children[i].dummy != true){
+                  ++count;
+               }
+            }
+            if(count == 1){
+               // Add placeholder
+               myObjPlaceholder = manager.createPlaceholder();
+               myObj.parentNode.insertBefore(myObjPlaceholder, myObj);
+               myObj.parentNode.removeChild(myObj);
 
+            }
+         }else{
+            start = manager.createDummy();
+            myObj.parentNode.insertBefore(start, myObj);
+            myObj.parentNode.removeChild(myObj);
+         }
+      }else{
+         console.log("moveElement: myObj have no parentNode.");
+         return;
+      }
+      if(myRef.parentNode){
+         if(myRef.parentNode.placeholder){
+            myRefPlaceholder = myRef.parentNode;
+            myRefPlaceholder.removeChild(myRef);
+         }else{
+            var x = myRef.parentNode;
+            x.insertBefore(myObj, myRef);
+            x.removeChild(myRef);
+            myRef = manager.createDummy();
+         }
+      }else{
+         console.log("moveElement: ref has no parentNode");
+      }
+   };
+   var undo = function(){
+      if(myRefPlaceholder){
+         myObj.parentNode.insertBefore(myRefPlaceholder, myObj);
+         myObj.parentNode.removeChild(myObj);
+      }else{
+         myObj.parentNode.insertBefore(myRef, myObj);
+         myObj.parentNode.removeChild(myObj);
+      }
+      if(myObjPlaceholder){
+         myObjPlaceholder.parentNode.insertBefore(myObj, myObjPlaceholder);
+         myObjPlaceholder.parentNode.removeChild(myObjPlaceholder);
+      }else{
+         start.parentNode.insertBefore(myObj, start);
+         start.parentNode.removeChild(start);
+      }
+      manager.assignSelection(manager.selectedObject);
+   };
+   var redo = function(){
+      if(myObjPlaceholder){
+         myObj.parentNode.insertBefore(myObjPlaceholder, myObj);
+         myObj.parentNode.removeChild(myObj);
+      }else{
+         myObj.parentNode.insertBefore(start, myObj);
+         myObj.parentNode.removeChild(myObj);
+      }
+      if(myRefPlaceholder){
+         myRefPlaceholder.parentNode.insertBefore(myObj, myRefPlaceholder);
+         myRefPlaceholder.parentNode.removeChild(myRefPlaceholder);
+      }else{
+         myRef.parentNode.insertBefore(myObj, myRef);
+         myRef.parentNode.removeChild(myRef);
+      }
+      manager.assignSelection(manager.selectedObject);
+   };
+   manager.pushAction(
+      {
+         type        : "moveElement",
+         execFunction: exec,
+         undoFunction: undo,
+         redoFunction: redo
+      }
+   );
 };
+
 /*
  //moveElement(manager.selectedObject, manager.Cursor);
  var moveact =

@@ -205,6 +205,8 @@ manager.initDrag = function(){
          // TODO: pushAction !!!!
          if(dragExternal){
             manager.action.addElement(manager.selectedObject,manager.Cursor);
+         }else{
+            manager.action.moveElement(manager.selectedObject,manager.Cursor);
          }
          if(manager.Cursor.parentNode){
             manager.Cursor.parentNode.removeChild(manager.Cursor);
