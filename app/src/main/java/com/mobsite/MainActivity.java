@@ -261,7 +261,8 @@ public class MainActivity extends Activity
                 Log.v("FIle size", "File is this big : "+savedImage.length());
                 String js = "javascript:";
                 js += "console.log(\"from set content "+savedImage.getPath()+"\");";
-                js += "manager.setProperty(\"src\", \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
+                //js += "manager.setProperty(\"src\", \""+savedImage.getPath().substring(getProjectPath().length())+"\");";
+                js += "manager.action.setProperty(manager.selectedObject, \"text\", manager.selectedObject.innerHTML, \""+inputHTML+"\");";
                 setWebViewURL(js);
             } catch (IOException e){ e.printStackTrace(); }
         }// end
