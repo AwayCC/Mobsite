@@ -291,8 +291,10 @@ public class MainActivity extends Activity
 
         cwv = (CordovaWebView) findViewById(R.id.main_webview);
         Config.init(this);
-        //cwv.loadUrl("file://"+projectPath+"/tool.html");
-        cwv.loadUrl("file:///android_asset/www/tool.html");
+        if(StartActivity.debugMode)
+            cwv.loadUrl("file:///android_asset/www/tool.html");
+        else
+            cwv.loadUrl("file://"+projectPath+"/tool.html");
         cwv.addJavascriptInterface(this, "Android");
         setCordovaWebViewGestures();
     }
@@ -355,6 +357,43 @@ public class MainActivity extends Activity
                     }
                 })
                 .show();
+    }
+
+    @JavascriptInterface
+    public void showProgressDialog(String title, String msg) {
+        pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setTitle(title);
+        pDialog.setMessage(msg);
+        pDialog.setCanceledOnTouchOutside(false);
+        pDialog.show();
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void showPDialogMsg(final String msg) {
+        //runOnUiThread(new Runnable() {
+        //    @Override
+        //    public void run() {
+                pDialog.setMessage(msg);
+        //    }
+        //});
+    }
+
+    @JavascriptInterface
+    public void dismissPDialog() {
+        pDialog.dismiss();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     @JavascriptInterface

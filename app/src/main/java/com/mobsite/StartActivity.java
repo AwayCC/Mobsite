@@ -107,8 +107,8 @@ public class StartActivity extends Activity {
         splashVid.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash));
         splashVid.start();
 
-        // REMOVE TO ENABLE SPLASH VIEW.
-        splashView.setVisibility(View.GONE);
+        if(debugMode)
+            splashView.setVisibility(View.GONE);
 
         FrameLayout startFrame = (FrameLayout) findViewById(R.id.startFrame);
         LayoutTransition splashTrans = new LayoutTransition();
