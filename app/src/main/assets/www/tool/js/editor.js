@@ -172,6 +172,7 @@ editor.initProject=function(wid,hei){
             $('#githubPanel').transition({opacity: 0 });
             setTimeout("$('#githubPanel').css('left','-1000%');",500);
             githubpanelshow=false;
+            ShadowFade();
         };
         
         var hidePanels=function()
@@ -290,8 +291,6 @@ editor.initProject=function(wid,hei){
         };
         var deselect=function ()
         {
-        // Android function should be put inside manager.deselect();
-            Android.deselect();
             manager.deselect();
         };
         var EnvironmentInit=function ()
@@ -308,12 +307,12 @@ editor.initProject=function(wid,hei){
             $("#redo")           .on("touchstart ",function(startEvent){manager.redoAction();});
             $("#delebtn")        .on("touchstart ",function(startEvent){manager.action.deleteElement(manager.selectedObject)});
             $("#properSource")   .on("touchstart ",function(startEvent){Android.openPhotoDialog()});
-            $("#properText")     .on("touchstart ",function(startEvent){Android.openTextInputDialog();});
+            $("#properText")     .on("touchstart ",function(startEvent){Android.openTextInputDialog(manager.selectedObject.innerHTML);});
             $("#properLink")     .on("touchstart ",function(startEvent){Android.openBrowserDialog();})
             $("#preview-control").on("touchstart ",function(startEvent){FullScreenCancel();});
             $("#properTextAlign").on("touchstart ",function(startEvent){});
-            $("#undoBtn")        .on("touchstart ",function(startEvent){manager.undoAction();});
-            $("#redoBtn")        .on("touchstart ",function(startEvent){manager.redoAction();});
+            $("#undoBtn")        .on("touchstart ",function(startEvent){console.log("editor : call undo");manager.undoAction();});
+            $("#redoBtn")        .on("touchstart ",function(startEvent){console.log("editor : call redo");manager.redoAction();});
             document.getElementById('opacitySlider').onchange=function(){
                 document.getElementById('rangevalue').value=document.getElementById('opacitySlider').value/100; 
                 console.log('opacity changed '+rangevalue.value);
@@ -495,7 +494,7 @@ editor.initProject=function(wid,hei){
                     object = document.createElement("p");
                     object.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
                     break;
-                case "Container 1":
+                case "Container1":
                     object = document.createElement("div");
                     object.className = "row";
                     col = document.createElement("div");
@@ -503,7 +502,7 @@ editor.initProject=function(wid,hei){
                     col.appendChild(manager.createPlaceholder());
                     object.appendChild(col);
                     break;
-                case "Container 2":
+                case "Container2":
                     object = document.createElement("div");
                     object.className = "row";
                     for(var i=0;i<2;i++){
@@ -513,7 +512,7 @@ editor.initProject=function(wid,hei){
                         object.appendChild(col);
                     }
                     break;
-                case "Container 3":
+                case "Container3":
                     object = document.createElement("div");
                     object.className = "row";
                     for(var i=0;i<3;i++){
@@ -523,7 +522,7 @@ editor.initProject=function(wid,hei){
                         object.appendChild(col);
                     }
                     break;
-                case "Container 4":
+                case "Container4":
                     object = document.createElement("div");
                     object.className = "row";
                     for(var i=0;i<4;i++){
@@ -533,7 +532,7 @@ editor.initProject=function(wid,hei){
                         object.appendChild(col);
                     }
                     break;
-                case "Container 6":
+                case "Container6":
                     object = document.createElement("div");
                     object.className = "row";
                     for(var i=0;i<6;i++){

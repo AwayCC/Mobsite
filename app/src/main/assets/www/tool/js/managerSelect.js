@@ -95,7 +95,8 @@ manager.initSelect = function(){
       var deselect = function(){
          manager.selectedObject = undefined;
          selectionMask.style.display = "none";
-
+         editor.propertyPanelHide();
+         Android.deselect();
       };
       var select = function(x, y, t){
          if(!t){
@@ -159,6 +160,7 @@ manager.initSelect = function(){
                };
 
                if(manager.selectedObject.tagName == "IMG"){
+                  // TODO
                   img.src = obj.src.substring(26);
                   console.log("src = " + img.src);
                }

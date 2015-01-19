@@ -161,7 +161,12 @@ public class MainActivity extends Activity
 
     private void setWebViewURL(final String url){
         Log.v("URL", url);
-        cwv.loadUrl(url);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                cwv.loadUrl(url);
+            }
+        });
     }
 
     // Plugin to call when activity result is received
@@ -374,7 +379,7 @@ public class MainActivity extends Activity
 
                 shadow.setLayoutParams(new ViewGroup.LayoutParams(shadowWidth,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
-
+                shadow.setVisibility(View.INVISIBLE);
                 shadowP.addView(shadow);
                 shadowP.setAlpha(0);
                 shadowP.invalidate();
@@ -415,9 +420,11 @@ public class MainActivity extends Activity
     }
 
     @JavascriptInterface
-    public void openTextInputDialog() {
+    public void openTextInputDialog(String content) {
         LayoutInflater inflater = getLayoutInflater();
         final View v = inflater.inflate(R.layout.multiline_text_input_dialog, null);
+        final EditText input = (EditText) v.findViewById(R.id.inputText);
+        input.setText(content);
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(v)
                 .setTitle("Input Content")
@@ -440,7 +447,6 @@ public class MainActivity extends Activity
                     @Override
                     public void onClick(View view) {
 
-                        EditText input = (EditText) v.findViewById(R.id.inputText);
                         String inputHTML = input.getText().toString();
                         //Log.v("before sanitize", inputHTML);
                         inputHTML = inputHTML.replace("&","&amp");
@@ -452,8 +458,7 @@ public class MainActivity extends Activity
                         } else {
                             String js = "javascript:";
                             js += "console.log(\"from set content "+inputHTML+"\");";
-                            js += "manager.setProperty(\"text\", \""+inputHTML+"\", manager.selectedObject);";
-                            //js += "manager.selectedObject.innerHTML = \""+inputHTML+"\";";
+                            js += "manager.action.setProperty(manager.selectedObject, \"text\", manager.selectedObject.innerHTML, \""+inputHTML+"\");";
                             MainActivity.this.setWebViewURL(js);
                             dialog.dismiss();
                         }
