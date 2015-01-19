@@ -100,35 +100,47 @@ function setGestureListener(responses){
             //console.log("inner product = "+innerProduct);
 
             if(innerProduct > 50 && !touch_pinch) { // swipe
-               console.log("swipe");
+               //console.log("swipe");
                if( Math.abs(delta_x1) > Math.abs(delta_y1) ){
                   if( (delta_x1) > 0){
+                     if(touch_2fingerUpCount>0 || touch_2fingerDownCount>0 || touch_2fingerLeftCount>0)
+                        myLog("change direction");
                      touch_2fingerRightCount++;
                      touch_2fingerUpCount = touch_2fingerDownCount = touch_2fingerLeftCount = 0;
                      if(touch_2fingerRightCount == responses.gestureCountThreshold){
+                        myLog("2 finger right");
                         responses.on2FingerMoveRight();
                         touch_2FingerMoved = true;
                      }
                   } else {
+                     if(touch_2fingerUpCount>0 || touch_2fingerDownCount>0 || touch_2fingerRightCount>0)
+                        myLog("change direction");
                      touch_2fingerLeftCount++;
                      touch_2fingerUpCount = touch_2fingerDownCount = touch_2fingerRightCount = 0;
                      if(touch_2fingerLeftCount == responses.gestureCountThreshold){
+                        myLog("2 finger left");
                         responses.on2FingerMoveLeft();
                         touch_2FingerMoved = true;
                      }
                   }
                } else {
                   if( (delta_y1) > 0){
+                     if(touch_2fingerUpCount>0 || touch_2fingerLeftCount>0 || touch_2fingerRightCount>0)
+                        myLog("change direction");
                      touch_2fingerDownCount++;
                      touch_2fingerUpCount = touch_2fingerLeftCount = touch_2fingerRightCount = 0;
                      if(touch_2fingerDownCount == responses.gestureCountThreshold){
+                        myLog("2 finger down");
                         responses.on2FingerMoveDown();
                         touch_2FingerMoved = true;
                      }
                   } else {
+                     if(touch_2fingerDownCount>0 || touch_2fingerLeftCount>0 || touch_2fingerRightCount>0)
+                        myLog("change direction");
                      touch_2fingerUpCount++;
                      touch_2fingerDownCount = touch_2fingerLeftCount = touch_2fingerRightCount = 0;
                      if(touch_2fingerUpCount == responses.gestureCountThreshold){
+                        myLog("2 finger up");
                         responses.on2FingerMoveUp();
                         touch_2FingerMoved = true;
                      }

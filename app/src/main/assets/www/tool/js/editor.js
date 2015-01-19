@@ -196,8 +196,10 @@ editor.initProject = function(wid, hei){
       };
 
       var hidePanels = function(prop){
-          if(!prop) {if(properpaneshow) propertyPanelHide();
-                    console("try to hide proper");}
+         if(!prop) {
+            if(properpaneshow) propertyPanelHide();
+            console.log("try to hide proper");
+         }
          if(addpanelshow) AddPanelHide();
          if(settingshow) SettingPanelHide();
          if(githubpanelshow) githubPanelHide();
@@ -225,6 +227,17 @@ editor.initProject = function(wid, hei){
                   propertypanel.children[gg].style.display = "table";
 
             }
+         }
+         if(tar.tagName == "DIV"){
+                     document.getElementById("properText").innerHTML = "";
+                     for(var gg = 0; gg < propertypanel.children.length; gg++){
+                        console.log(propertypanel.children[gg].lastChild.id + " is " + propertypanel.children[gg].className);
+                        if(propertypanel.children[gg].className != "pAll")
+                           propertypanel.children[gg].style.display = "none";
+                        else
+                           propertypanel.children[gg].style.display = "table";
+
+                     }
          }
          if(tar.tagName == "P" || tar.tagName[0] == "H"){
             document.getElementById("properText").innerHTML = tar.innerHTML;
@@ -311,7 +324,7 @@ editor.initProject = function(wid, hei){
             AddPanelToggle();
          });
          $("#editbtn").on("touchstart ", function(startEvent){
-            setContent()
+
          });
          $("#dissbtn").on("touchstart ", function(startEvent){
             propertyPanelHide();
@@ -376,7 +389,7 @@ editor.initProject = function(wid, hei){
             manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
             //manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
          };
-         $("#properBackground").on("touchstart ", function(startEvent){
+         $("#properBackgroundColor").on("touchstart ", function(startEvent){
             colorSelector(getComputedStyle(manager.selectedObject, null).backgroundColor);
             f.type = 1;
             f.linkTo(manager.selectedObject);
