@@ -42,6 +42,7 @@ editor.initProject = function(wid, hei){
       var githubpanelshow = false;
       var isFullScreen = false;
       var galleryMember;
+      var properTemp;
       var propertyPanel = document.getElementById("propertyPanel");
       var addPanel = document.getElementById("Add-panel");
       var f = $.farbtastic('#picker');
@@ -60,6 +61,7 @@ editor.initProject = function(wid, hei){
          }
       };
       var AddPanelHide = function(){
+         console.log("AddHide");
          if(!onanimate){
             onanimate = true;
             $("#Add-panel").transition({opacity: 0});
@@ -72,15 +74,16 @@ editor.initProject = function(wid, hei){
          }
       };
       var propertyPanelShow = function(tar){
-        // if(!onanimate){
+         if(!onanimate){
+            properTemp=manager.selectedObject;
             var rect = tar.getBoundingClientRect();
             $("#propertyPanel").css("opacity", "1");
             console.log("rect-top:" + rect.top);
           //  console.log("rect-bottom" + rect.bottom);
-         ///   console.log("rect-left" + rect.left);
-         //   console.log("rect-right" + rect.right);
+          //  console.log("rect-left" + rect.left);
+          //  console.log("rect-right" + rect.right);
           //  console.log("screen-width" + scwidth);
-         //   console.log("screen-height" + scheight);
+          //  console.log("screen-height" + scheight);
             onanimate = true;
              
             var wid = $('#propertyPanel').width();
@@ -112,17 +115,20 @@ editor.initProject = function(wid, hei){
              $("#propertyPanel").css("top", window.scrollY + rect.bottom);
              properpaneshow = true;
              onanimate = false;
-        // }
+         }
       };
       var propertyPanelHide = function(){
-         if(!onanimate && properpaneshow){
-            onanimate = true;
-            $("#propertyPanel").transition({opacity: 0},function(){
-                onanimate = false;
-                $("#propertyPanel").css("left", "-100%");
-                properpaneshow = false;    
-            });
+         if(properTemp==manager.selectedObject){
+             console.log("propertyHide");
+             if(!onanimate && properpaneshow){
+                 onanimate = true;
+                 $("#propertyPanel").transition({opacity: 0},function(){
+                     onanimate = false;
+                     $("#propertyPanel").css("left", "-100%");
+                     properpaneshow = false;    
+                });
             
+            }  
          }
       };
       var galleryPanelShow = function(){
@@ -141,6 +147,7 @@ editor.initProject = function(wid, hei){
          }
       };
       var galleryPanelHide = function(){
+          console.log("galleryHide");
          if(!onanimate){
             onanimate = true;
             $("#galleryPanel").transition({opacity: 0}, function(){
@@ -165,6 +172,7 @@ editor.initProject = function(wid, hei){
          }
       };
       var SettingPanelHide = function(){
+          console.log("settinghide");
          if(!onanimate){
             onanimate = true;
             $('#setting').transition({rotate: '0deg'});
@@ -188,7 +196,7 @@ editor.initProject = function(wid, hei){
          }
       };
       var githubPanelHide = function(){
-
+          console.log("githubhide");
          $('#githubPanel').transition({opacity: 0});
          setTimeout("$('#githubPanel').css('left','-1000%');", 500);
          githubpanelshow = false;
@@ -376,7 +384,7 @@ editor.initProject = function(wid, hei){
             manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
             //manager.action.setProperty(setact.target, setact.attr, setact.orig, setact.value);
          };
-         $("#properBackground").on("touchstart ", function(startEvent){
+         $("#properBackgroundColor").on("touchstart ", function(startEvent){
             colorSelector(getComputedStyle(manager.selectedObject, null).backgroundColor);
             f.type = 1;
             f.linkTo(manager.selectedObject);
@@ -441,7 +449,9 @@ editor.initProject = function(wid, hei){
          if(!onanimate){
             onanimate = true;
             $("#previouscolor").css("background-color", col.innerHTML);
-            $("#colorPickerPanel").css("left", "20%");
+             console.log(propertyPanel);
+            $("#colorPickerPanel").css("left", propertyPanel.style.left);
+            $("#colorPickerPanel").css("top", propertyPanel.style.top);
             $("#colorPickerPanel").transition({opacity: 1}, function(){
                onanimate = false;
             });
