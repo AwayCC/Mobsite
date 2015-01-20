@@ -41,8 +41,7 @@ textarea {
 }
 
 body {
-    font-size: 1em;
-    line-height: 1.4;
+    height: 100%;
 }
 
 /*
@@ -120,7 +119,7 @@ body, html {
 	background-color: #000000;
 }
 body {
-	
+	height: 100%;
 }
 .no-js {
 	padding-top: 106px;
@@ -246,6 +245,9 @@ main {
 .homeSlide
 {
     background-color: white;
+    color: transparent;
+    height: 100%;
+    opacity: 1;
 }
 /* Slide 3 */
 #slide-3 .bcg {background-color: white;}
@@ -309,7 +311,9 @@ main {
     background-repeat: no-repeat;
     background-position: center;
     border: 5px;
-    height: 50%;
+    height: 33%;
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
 .visuallyhidden {
     border: 0;
