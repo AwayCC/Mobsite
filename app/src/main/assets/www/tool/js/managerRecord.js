@@ -218,6 +218,7 @@ manager.action.deleteElement = function(obj){
          myObj.parentNode.insertBefore(start, myObj);
          myObj.parentNode.removeChild(myObj);
       }
+      manager.config.onDoubleTap();
    };
    manager.pushAction(
       {
