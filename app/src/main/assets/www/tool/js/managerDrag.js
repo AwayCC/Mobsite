@@ -135,6 +135,7 @@ manager.initDrag = function(){
       };
 
       var dragStart = function(x, y, o, isExternal){
+         dragExternal = false;
          if(o == manager.selectionMask){
             // Drag from inner content
             Android.startDrag();

@@ -127,8 +127,9 @@ manager.action.addElement = function(obj, ref){
       if(myRef.parentNode){
          if(myRef.parentNode.placeholder){
             myRefPlaceholder = myRef.parentNode;
-            myRefPlaceholder.parentNode.insertBefore(myObj, myRef);
+            myRefPlaceholder.parentNode.insertBefore(myObj, myRefPlaceholder);
             myRefPlaceholder.removeChild(myRef);
+            myRefPlaceholder.parentNode.removeChild(myRefPlaceholder)
          }else{
             myRef.parentNode.insertBefore(myObj, myRef);
             myRef.parentNode.removeChild(myRef);
@@ -138,7 +139,7 @@ manager.action.addElement = function(obj, ref){
          console.log("addElement: ref has no parentNode");
       }
    };
-   var undo = function(){
+   var redo = function(){
       if(myRefPlaceholder){
          myRefPlaceholder.parentNode.insertBefore(myObj, myRefPlaceholder);
          myRefPlaceholder.parentNode.removeChild(myRefPlaceholder);
@@ -147,7 +148,7 @@ manager.action.addElement = function(obj, ref){
          myRef.parentNode.removeChild(myRef);
       }
    };
-   var redo = function(){
+   var undo = function(){
       if(myRefPlaceholder){
          myObj.parentNode.insertBefore(myRefPlaceholder, myObj);
          myObj.parentNode.removeChild(myObj);
@@ -194,6 +195,7 @@ manager.action.deleteElement = function(obj){
             myObj.parentNode.insertBefore(start, myObj);
             myObj.parentNode.removeChild(myObj);
          }
+         manager.config.onDoubleTap();
       }else{
          console.log("moveElement: myObj have no parentNode");
       }
@@ -216,6 +218,7 @@ manager.action.deleteElement = function(obj){
          myObj.parentNode.insertBefore(start, myObj);
          myObj.parentNode.removeChild(myObj);
       }
+      manager.config.onDoubleTap();
    };
    manager.pushAction(
       {
